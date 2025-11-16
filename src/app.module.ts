@@ -8,6 +8,7 @@ import { join } from 'path';
 
 import { AppResolver } from './app.resolver';
 import { PrismaService } from './prisma.service';
+import { RehabImportModule } from './imports/rehab-import.module';
 import { InsuranceProvidersModule } from './insurance-providers/insurance-providers.module';
 import { ProspectiveRehabsModule } from './prospective-rehabs/prospective-rehabs.module';
 import { GraphqlClientModule } from './graphql-client/graphql-client.module';
@@ -69,6 +70,7 @@ import { CacheableMemory } from 'cacheable';
     ProspectiveRehabsModule,
     RehabModule,
     GraphqlClientModule,
+    RehabImportModule,
   ],
   providers: [AppResolver, PrismaService],
 })
