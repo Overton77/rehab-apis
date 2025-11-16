@@ -58,4 +58,12 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 /generated/prisma
 
 
-**/personal_docs/**  
+**/personal_docs/**   
+
+src/graphql_sdk/** 
+
+src/@generated/ 
+
+
+# Entirely ignore line ending changes
+* text=auto 
