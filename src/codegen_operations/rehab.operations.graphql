@@ -1,0 +1,50 @@
+mutation CreateManyRehabsWithNested($data: [RehabCreateInput!]!) {
+  createManyRehabsWithNested(data: $data) {
+    npi_number
+    city
+    createdAt
+    country
+    _count {
+      accreditations
+      amenities
+      detoxServices
+      environments
+      insurancePayers
+      languages
+      levelsOfCare
+      luxuryTiers
+      paymentOptions
+      populations
+      programFeatures
+      services
+      settingStyles
+    }
+  }
+}
+
+mutation CreateRehabWithConnectOrCreate($data: RehabCreateWithLookupsInput!) {
+  createRehabWithConnectOrCreate(data: $data) {
+    _count {
+      accreditations
+      amenities
+      detoxServices
+      environments
+      insurancePayers
+      languages
+      levelsOfCare
+      luxuryTiers
+      paymentOptions
+      populations
+      programFeatures
+      services
+      settingStyles
+    }
+    city
+    country
+    createdAt
+    description
+    id
+    npi_number
+    name
+  }
+}

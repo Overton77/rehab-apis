@@ -7,5 +7,11 @@
     "assets": [],
     "watchAssets": false
   },
-  "exclude": ["docs/**/*", "node_modules/**/*", "test/**/*", "dist/**/*"]
+  "exclude": [
+    "docs/**/*",
+    "node_modules/**/*",
+    "test/**/*",
+    "dist/**/*",
+    "personal_docs/**/*"
+  ]
 }

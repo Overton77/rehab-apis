@@ -1,5 +1,4 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
-import { GraphQLDateTime } from 'graphql-scalars';
 
 @ObjectType()
 export class ProspectiveRehab {
@@ -19,15 +18,23 @@ export class ProspectiveRehab {
   @Field({ nullable: true }) phone?: string | null;
   @Field({ nullable: true }) taxonomy_code?: string | null;
   @Field({ nullable: true }) taxonomy_desc?: string | null;
-  @Field(() => GraphQLDateTime, { nullable: true })
+
+  // Let Nest infer the DateTime scalar from Date
+  @Field(() => Date, { nullable: true })
   last_updated?: Date | null;
-  @Field() ingested!: boolean;
+
+  @Field()
+  ingested!: boolean;
 }
 
 @InputType()
 export class CreateProspectiveRehabInput {
-  @Field() npi_number!: string;
-  @Field() organization_name!: string;
+  @Field()
+  npi_number!: string;
+
+  @Field()
+  organization_name!: string;
+
   @Field({ nullable: true }) address?: string;
   @Field({ nullable: true }) city?: string;
   @Field({ nullable: true }) state?: string;
@@ -35,8 +42,12 @@ export class CreateProspectiveRehabInput {
   @Field({ nullable: true }) phone?: string;
   @Field({ nullable: true }) taxonomy_code?: string;
   @Field({ nullable: true }) taxonomy_desc?: string;
-  @Field(() => GraphQLDateTime, { nullable: true }) last_updated?: Date;
-  @Field({ defaultValue: false }) ingested?: boolean;
+
+  @Field(() => Date, { nullable: true })
+  last_updated?: Date;
+
+  @Field({ defaultValue: false })
+  ingested?: boolean;
 }
 
 @InputType()
@@ -49,6 +60,10 @@ export class UpdateProspectiveRehabInput {
   @Field({ nullable: true }) phone?: string;
   @Field({ nullable: true }) taxonomy_code?: string;
   @Field({ nullable: true }) taxonomy_desc?: string;
-  @Field(() => GraphQLDateTime, { nullable: true }) last_updated?: Date;
-  @Field({ nullable: true }) ingested?: boolean;
+
+  @Field(() => Date, { nullable: true })
+  last_updated?: Date;
+
+  @Field({ nullable: true })
+  ingested?: boolean;
 }

@@ -7,12 +7,53 @@
 generator client {
   provider = "prisma-client-js"
 
+} 
+generator nestgraphql {
+  provider = "node node_modules/prisma-nestjs-graphql"
+  // for yarn monorepos you can also use:
+  // provider = "prisma-nestjs-graphql"
+  output   = "../src/@generated"  // adjust path as you like
+  // emitSingle = true            // optional; single merged file
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+} 
+
+
+enum ServiceKind {
+  COUNSELING_TYPE   // individual, group, family, couples, etc.
+  THERAPY_MODEL     // CBT, MI, 12-step, Matrix, etc.
+  OTHER
 }
+
+enum PopulationCategory {
+  AGE_GROUP
+  MILITARY
+  FAMILY
+  IDENTITY
+  LIFE_STAGE
+  SPECIALTY_PROGRAM
+}
+
+enum AmenityCategory {
+  LODGING
+  FOOD
+  TECH
+  TRANSPORT
+  OTHER
+}
+
+enum ProgramFeatureCategory {
+  ADMISSION
+  ACCESS
+  STAFFING
+  VA
+  WORK_LIFE
+  OTHER
+}
+
 
 
 model ProspectiveRehabs {
@@ -38,11 +79,353 @@ ingested Boolean @default(false)
 model InsuranceProvider {
 id Int @id @default(autoincrement())
 payer_code String @unique
-payer_name String
+payer_name String 
+display_name String? 
 type String?
 eligibility String?
 
 
 @@index([payer_code])
 @@map("insurance_providers")
+} 
+
+
+model Rehab {
+  id           String   @id @default(cuid())
+  name         String 
+  npi_number   String? @unique
+  slug         String   @unique
+  description  String?
+  websiteUrl   String?
+  phone        String?
+  email        String?
+
+  // Address fields (can be factored to Address later if needed)
+  street       String
+  city         String
+  state        String
+  postalCode   String
+  country      String
+
+  // Geo for radius search
+  latitude     Float?
+  longitude    Float?
+
+  // Provenance / verification
+  verifiedExists   Boolean  @default(false)
+  primarySourceUrl String?
+  otherSourceUrls  String[]
+
+  // Self-pay pricing (full rack rate / private pay)
+  fullPrivatePrice Decimal? @db.Decimal(10, 2)
+
+  // Relationships
+  insurancePayers   RehabInsurancePayer[]
+  paymentOptions    RehabPaymentOption[]
+  levelsOfCare      RehabLevelOfCare[]
+  services          RehabService[]
+  detoxServices     RehabDetoxService[]
+  populations       RehabPopulation[]
+  accreditations    RehabAccreditation[]
+  languages         RehabLanguage[]
+  amenities         RehabAmenity[]
+  environments      RehabEnvironment[]
+  settingStyles     RehabSettingStyle[]
+  luxuryTiers       RehabLuxuryTier[]
+  programFeatures   RehabProgramFeature[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// -----------------------------
+// Insurance & payment
+// -----------------------------
+
+model InsurancePayer {
+  id          String  @id @default(cuid())
+  slug        String  @unique   // "aetna", "unitedhealthcare", "tricare", ...
+  displayName String
+  popular     Boolean @default(false)
+
+  rehabs RehabInsurancePayer[]
+}
+
+// Junction table: Rehab x InsurancePayer
+// Includes average price of admission for that payer at that rehab.
+model RehabInsurancePayer {
+  rehabId          String
+  insurancePayerId String
+
+  // Average all-in admission price for this payer at this rehab
+  // (e.g. 30000.00 for a 30-day residential stay)
+  averageAdmissionPrice Decimal? @db.Decimal(10, 2)
+
+  rehab          Rehab          @relation(fields: [rehabId], references: [id])
+  insurancePayer InsurancePayer @relation(fields: [insurancePayerId], references: [id])
+
+  @@id([rehabId, insurancePayerId])
+  @@index([insurancePayerId])
+}
+
+model PaymentOption {
+  id          String @id @default(cuid())
+  slug        String @unique   // "cash_self_pay", "sliding_scale", "payment_assistance", "free", ...
+  displayName String
+  category    String           // e.g. "FINANCIAL_ASSISTANCE"
+
+  rehabs RehabPaymentOption[]
+}
+
+model RehabPaymentOption {
+  rehabId         String
+  paymentOptionId String
+
+  rehab         Rehab         @relation(fields: [rehabId], references: [id])
+  paymentOption PaymentOption @relation(fields: [paymentOptionId], references: [id])
+
+  @@id([rehabId, paymentOptionId])
+  @@index([paymentOptionId])
+}
+
+// -----------------------------
+// Levels of care & services
+// -----------------------------
+
+model LevelOfCare {
+  id          String @id @default(cuid())
+  slug        String @unique   // "detox", "inpatient", "outpatient", "aftercare", "telehealth", ...
+  displayName String
+  // Optionally: asamLevel String? // "3.7", "2.5", etc.
+
+  rehabs RehabLevelOfCare[]
+}
+
+model RehabLevelOfCare {
+  rehabId      String
+  levelOfCareId String
+
+  rehab       Rehab       @relation(fields: [rehabId], references: [id])
+  levelOfCare LevelOfCare @relation(fields: [levelOfCareId], references: [id])
+
+  @@id([rehabId, levelOfCareId])
+  @@index([levelOfCareId])
+}
+
+model Service {
+  id          String      @id @default(cuid())
+  slug        String      @unique   // "individual_counseling", "cbt", "relapse_prevention", ...
+  displayName String
+  kind        ServiceKind
+
+  rehabs RehabService[]
+}
+
+model RehabService {
+  rehabId   String
+  serviceId String
+
+  rehab   Rehab   @relation(fields: [rehabId], references: [id])
+  service Service @relation(fields: [serviceId], references: [id])
+
+  @@id([rehabId, serviceId])
+  @@index([serviceId])
+}
+
+model DetoxService {
+  id          String @id @default(cuid())
+  slug        String @unique   // "alcohol_detox", "benzo_detox", ...
+  displayName String           // "Alcohol Detoxification"
+  substance   String           // "Alcohol", "Benzodiazepines", "Cocaine", etc.
+
+  rehabs RehabDetoxService[]
+}
+
+model RehabDetoxService {
+  rehabId        String
+  detoxServiceId String
+
+  rehab        Rehab        @relation(fields: [rehabId], references: [id])
+  detoxService DetoxService @relation(fields: [detoxServiceId], references: [id])
+
+  @@id([rehabId, detoxServiceId])
+  @@index([detoxServiceId])
+}
+
+// -----------------------------
+// Populations / specialty groups
+// -----------------------------
+
+model Population {
+  id          String             @id @default(cuid())
+  slug        String             @unique   // "adults", "teens", "veterans", "lgbtq", ...
+  displayName String
+  category    PopulationCategory
+
+  rehabs RehabPopulation[]
+}
+
+model RehabPopulation {
+  rehabId      String
+  populationId String
+
+  rehab      Rehab      @relation(fields: [rehabId], references: [id])
+  population Population @relation(fields: [populationId], references: [id])
+
+  @@id([rehabId, populationId])
+  @@index([populationId])
+}
+
+// -----------------------------
+// Accreditations
+// -----------------------------
+
+model Accreditation {
+  id          String @id @default(cuid())
+  slug        String @unique   // "carf", "joint_commission"
+  displayName String           // "Commission on Accreditation of Rehabilitation Facilities (CARF)"
+  acronym     String?          // "CARF", "TJC"
+  url         String?
+
+  rehabs RehabAccreditation[]
+}
+
+model RehabAccreditation {
+  rehabId         String
+  accreditationId String
+
+  rehab         Rehab         @relation(fields: [rehabId], references: [id])
+  accreditation Accreditation @relation(fields: [accreditationId], references: [id])
+
+  @@id([rehabId, accreditationId])
+  @@index([accreditationId])
+}
+
+// -----------------------------
+// Languages
+// -----------------------------
+
+model Language {
+  id          String @id @default(cuid())
+  code        String @unique   // "en", "es", "zh", ...
+  displayName String           // "English", "Spanish", ...
+
+  rehabs RehabLanguage[]
+}
+
+model RehabLanguage {
+  rehabId    String
+  languageId String
+
+  rehab    Rehab    @relation(fields: [rehabId], references: [id])
+  language Language @relation(fields: [languageId], references: [id])
+
+  @@id([rehabId, languageId])
+  @@index([languageId])
+}
+
+// -----------------------------
+// Amenities, environment, setting, luxury
+// -----------------------------
+
+model Amenity {
+  id          String          @id @default(cuid())
+  slug        String          @unique   // "private_rooms", "pet_friendly", "gourmet_meals", ...
+  displayName String
+  category    AmenityCategory
+
+  rehabs RehabAmenity[]
+}
+
+model RehabAmenity {
+  rehabId   String
+  amenityId String
+
+  rehab   Rehab   @relation(fields: [rehabId], references: [id])
+  amenity Amenity @relation(fields: [amenityId], references: [id])
+
+  @@id([rehabId, amenityId])
+  @@index([amenityId])
+}
+
+model Environment {
+  id          String @id @default(cuid())
+  slug        String @unique   // "beach", "desert", "lakeside", "mountains", "oceanfront", "wilderness"
+  displayName String
+
+  rehabs RehabEnvironment[]
+}
+
+model RehabEnvironment {
+  rehabId       String
+  environmentId String
+
+  rehab       Rehab       @relation(fields: [rehabId], references: [id])
+  environment Environment @relation(fields: [environmentId], references: [id])
+
+  @@id([rehabId, environmentId])
+  @@index([environmentId])
+}
+
+model SettingStyle {
+  id          String @id @default(cuid())
+  slug        String @unique   // "hospital", "residential_neighborhood", "resort", "private_secluded", ...
+  displayName String
+
+  rehabs RehabSettingStyle[]
+}
+
+model RehabSettingStyle {
+  rehabId        String
+  settingStyleId String
+
+  rehab        Rehab        @relation(fields: [rehabId], references: [id])
+  settingStyle SettingStyle @relation(fields: [settingStyleId], references: [id])
+
+  @@id([rehabId, settingStyleId])
+  @@index([settingStyleId])
+}
+
+model LuxuryTier {
+  id          String @id @default(cuid())
+  slug        String @unique   // "average", "executive", "luxury", "ultra_luxury"
+  displayName String
+  rank        Int              // 1=Average, 2=Executive, 3=Luxury, 4=Ultra
+
+  rehabs RehabLuxuryTier[]
+}
+
+model RehabLuxuryTier {
+  rehabId      String
+  luxuryTierId String
+
+  rehab      Rehab      @relation(fields: [rehabId], references: [id])
+  luxuryTier LuxuryTier @relation(fields: [luxuryTierId], references: [id])
+
+  @@id([rehabId, luxuryTierId])
+  @@index([luxuryTierId])
+}
+
+// -----------------------------
+// Program / operational features
+// -----------------------------
+
+model ProgramFeature {
+  id          String                @id @default(cuid())
+  slug        String                @unique   // "accepting_new_clients", "same_day_admission", ...
+  displayName String
+  category    ProgramFeatureCategory
+
+  rehabs RehabProgramFeature[]
+}
+
+model RehabProgramFeature {
+  rehabId          String
+  programFeatureId String
+
+  rehab          Rehab          @relation(fields: [rehabId], references: [id])
+  programFeature ProgramFeature @relation(fields: [programFeatureId], references: [id])
+
+  @@id([rehabId, programFeatureId])
+  @@index([programFeatureId])
 }

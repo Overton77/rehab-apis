@@ -38,7 +38,11 @@ export class ProspectiveRehabsService {
   }
 
   create(data: Prisma.ProspectiveRehabsCreateInput) {
-    return this.prisma.prospectiveRehabs.create({ data });
+    return this.prisma.prospectiveRehabs.upsert({
+      where: { npi_number: data.npi_number },
+      create: data,
+      update: data,
+    });
   }
 
   createMany(data: Prisma.ProspectiveRehabsCreateManyInput[]) {
