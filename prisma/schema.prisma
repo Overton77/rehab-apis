@@ -109,7 +109,8 @@ model Rehab {
 
   // Geo for radius search
   latitude     Float?
-  longitude    Float?
+  longitude    Float? 
+  patientStory String?  
 
   // Provenance / verification
   verifiedExists   Boolean  @default(false)
@@ -172,8 +173,8 @@ model PaymentOption {
   id          String @id @default(cuid())
   slug        String @unique   // "cash_self_pay", "sliding_scale", "payment_assistance", "free", ...
   displayName String
-  category    String           // e.g. "FINANCIAL_ASSISTANCE"
-
+  category    String           // e.g. "FINANCIAL_ASSISTANCE" 
+  description String 
   rehabs RehabPaymentOption[]
 }
 
@@ -196,7 +197,8 @@ model LevelOfCare {
   id          String @id @default(cuid())
   slug        String @unique   // "detox", "inpatient", "outpatient", "aftercare", "telehealth", ...
   displayName String
-  // Optionally: asamLevel String? // "3.7", "2.5", etc.
+  // Optionally: asamLevel String? // "3.7", "2.5", etc. 
+  description String 
 
   rehabs RehabLevelOfCare[]
 }
@@ -214,7 +216,8 @@ model RehabLevelOfCare {
 
 model Service {
   id          String      @id @default(cuid())
-  slug        String      @unique   // "individual_counseling", "cbt", "relapse_prevention", ...
+  slug        String      @unique   // "individual_counseling", "cbt", "relapse_prevention", ... 
+  description String 
   displayName String
   kind        ServiceKind
 
@@ -236,7 +239,8 @@ model DetoxService {
   id          String @id @default(cuid())
   slug        String @unique   // "alcohol_detox", "benzo_detox", ...
   displayName String           // "Alcohol Detoxification"
-  substance   String           // "Alcohol", "Benzodiazepines", "Cocaine", etc.
+  substance   String           // "Alcohol", "Benzodiazepines", "Cocaine", etc.  
+  description String 
 
   rehabs RehabDetoxService[]
 }
@@ -260,6 +264,7 @@ model Population {
   id          String             @id @default(cuid())
   slug        String             @unique   // "adults", "teens", "veterans", "lgbtq", ...
   displayName String
+  description String 
   category    PopulationCategory
 
   rehabs RehabPopulation[]
@@ -283,7 +288,8 @@ model RehabPopulation {
 model Accreditation {
   id          String @id @default(cuid())
   slug        String @unique   // "carf", "joint_commission"
-  displayName String           // "Commission on Accreditation of Rehabilitation Facilities (CARF)"
+  displayName String           // "Commission on Accreditation of Rehabilitation Facilities (CARF)" 
+  description String 
   acronym     String?          // "CARF", "TJC"
   url         String?
 
@@ -307,7 +313,8 @@ model RehabAccreditation {
 
 model Language {
   id          String @id @default(cuid())
-  code        String @unique   // "en", "es", "zh", ...
+  code        String @unique   // "en", "es", "zh", ... 
+  description String 
   displayName String           // "English", "Spanish", ...
 
   rehabs RehabLanguage[]
@@ -330,7 +337,8 @@ model RehabLanguage {
 
 model Amenity {
   id          String          @id @default(cuid())
-  slug        String          @unique   // "private_rooms", "pet_friendly", "gourmet_meals", ...
+  slug        String          @unique   // "private_rooms", "pet_friendly", "gourmet_meals", ... 
+  description String 
   displayName String
   category    AmenityCategory
 
@@ -350,7 +358,8 @@ model RehabAmenity {
 
 model Environment {
   id          String @id @default(cuid())
-  slug        String @unique   // "beach", "desert", "lakeside", "mountains", "oceanfront", "wilderness"
+  slug        String @unique   // "beach", "desert", "lakeside", "mountains", "oceanfront", "wilderness" 
+  description String 
   displayName String
 
   rehabs RehabEnvironment[]
@@ -369,7 +378,8 @@ model RehabEnvironment {
 
 model SettingStyle {
   id          String @id @default(cuid())
-  slug        String @unique   // "hospital", "residential_neighborhood", "resort", "private_secluded", ...
+  slug        String @unique   // "hospital", "residential_neighborhood", "resort", "private_secluded", ... 
+  description String 
   displayName String
 
   rehabs RehabSettingStyle[]
@@ -388,7 +398,8 @@ model RehabSettingStyle {
 
 model LuxuryTier {
   id          String @id @default(cuid())
-  slug        String @unique   // "average", "executive", "luxury", "ultra_luxury"
+  slug        String @unique   // "average", "executive", "luxury", "ultra_luxury" 
+  description String 
   displayName String
   rank        Int              // 1=Average, 2=Executive, 3=Luxury, 4=Ultra
 
@@ -413,7 +424,8 @@ model RehabLuxuryTier {
 model ProgramFeature {
   id          String                @id @default(cuid())
   slug        String                @unique   // "accepting_new_clients", "same_day_admission", ...
-  displayName String
+  displayName String 
+  description String 
   category    ProgramFeatureCategory
 
   rehabs RehabProgramFeature[]
@@ -421,7 +433,7 @@ model ProgramFeature {
 
 model RehabProgramFeature {
   rehabId          String
-  programFeatureId String
+  programFeatureId String 
 
   rehab          Rehab          @relation(fields: [rehabId], references: [id])
   programFeature ProgramFeature @relation(fields: [programFeatureId], references: [id])

@@ -5,26 +5,25 @@ import { PrismaService } from '../prisma.service';
 import {
   Prisma,
   Rehab as RehabModel,
-  InsurancePayer as InsurancePayerModel,
-  PaymentOption as PaymentOptionModel,
-  LevelOfCare as LevelOfCareModel,
-  Service as ServiceModel,
-  DetoxService as DetoxServiceModel,
-  Population as PopulationModel,
-  Accreditation as AccreditationModel,
-  Language as LanguageModel,
-  Amenity as AmenityModel,
-  Environment as EnvironmentModel,
-  SettingStyle as SettingStyleModel,
-  LuxuryTier as LuxuryTierModel,
-  ProgramFeature as ProgramFeatureModel,
+  RehabInsurancePayer as RehabInsurancePayerModel,
+  RehabPaymentOption as RehabPaymentOptionModel,
+  RehabLevelOfCare as RehabLevelOfCareModel,
+  RehabService as RehabServiceModel,
+  RehabDetoxService as RehabDetoxServiceModel,
+  RehabPopulation as RehabPopulationModel,
+  RehabAccreditation as RehabAccreditationModel,
+  RehabLanguage as RehabLanguageModel,
+  RehabAmenity as RehabAmenityModel,
+  RehabEnvironment as RehabEnvironmentModel,
+  RehabSettingStyle as RehabSettingStyleModel,
+  RehabLuxuryTier as RehabLuxuryTierModel,
+  RehabProgramFeature as RehabProgramFeatureModel,
 } from '@prisma/client';
 import {
   RehabFiltersInput,
   RehabFindOneInput,
   RehabCreateWithLookupsInput,
 } from './rehab-filters.input';
-import { Rehab } from 'src/@generated/rehab/rehab.model';
 import { RehabCreateInput } from 'src/@generated/rehab/rehab-create.input';
 import { RehabUpdateInput } from 'src/@generated/rehab/rehab-update.input';
 
@@ -468,6 +467,8 @@ export class RehabService {
       orderBy,
     });
 
+    console.log('cacheKey', cacheKey);
+
     // Try to get from cache
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
@@ -476,6 +477,8 @@ export class RehabService {
 
     // Build where clause from your custom filters
     const where = this.buildFindManyRehabWhereClause(filters);
+
+    console.log('where', JSON.stringify(where, null, 2));
 
     // Fetch from database
     const rehabs = await this.prisma.rehab.findMany({
@@ -486,7 +489,15 @@ export class RehabService {
       include: this.INCLUDE_RELATIONS,
     });
 
-    const transformed = rehabs as unknown as Rehab[];
+    console.log('rehabs', rehabs);
+
+    rehabs.map((rehab) => {
+      rehab.insurancePayers.map((payer) => {
+        console.log('payer', payer);
+      });
+    });
+
+    const transformed = rehabs as RehabModel[];
 
     // Cache the result
     await this.cacheManager.set(cacheKey, transformed, this.CACHE_TTL_LIST);
@@ -950,12 +961,14 @@ export class RehabService {
   // RELATIONSHIP LOADERS (for Field Resolvers)
   // ============================================
 
-  async getInsurancePayers(rehabId: string): Promise<InsurancePayerModel[]> {
+  async getInsurancePayers(
+    rehabId: string,
+  ): Promise<RehabInsurancePayerModel[]> {
     const cacheKey = this.getCacheKey('rehab:insurancePayers', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as InsurancePayerModel[];
+      return cached as RehabInsurancePayerModel[];
     }
 
     const relations = await this.prisma.rehabInsurancePayer.findMany({
@@ -965,41 +978,35 @@ export class RehabService {
       },
     });
 
-    const result = relations.map((rel) => rel.insurancePayer);
-
-    await this.cacheManager.set(cacheKey, result, this.CACHE_TTL_RELATIONS);
-    return result;
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
-  async getPaymentOptions(rehabId: string): Promise<PaymentOptionModel[]> {
+  async getPaymentOptions(rehabId: string): Promise<RehabPaymentOptionModel[]> {
     const cacheKey = this.getCacheKey('rehab:paymentOptions', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as PaymentOptionModel[];
+      return cached as RehabPaymentOptionModel[];
     }
 
-    const paymentOptions = await this.prisma.rehabPaymentOption.findMany({
+    const relations = await this.prisma.rehabPaymentOption.findMany({
       where: { rehabId },
       include: {
         paymentOption: true,
       },
     });
 
-    await this.cacheManager.set(
-      cacheKey,
-      paymentOptions.map((rel) => rel.paymentOption),
-      this.CACHE_TTL_RELATIONS,
-    );
-    return paymentOptions.map((rel) => rel.paymentOption);
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
-  async getLevelsOfCare(rehabId: string): Promise<LevelOfCareModel[]> {
+  async getLevelsOfCare(rehabId: string): Promise<RehabLevelOfCareModel[]> {
     const cacheKey = this.getCacheKey('rehab:levelsOfCare', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as LevelOfCareModel[];
+      return cached as RehabLevelOfCareModel[];
     }
 
     const relations = await this.prisma.rehabLevelOfCare.findMany({
@@ -1009,18 +1016,16 @@ export class RehabService {
       },
     });
 
-    const result = relations.map((rel) => rel.levelOfCare);
-
-    await this.cacheManager.set(cacheKey, result, this.CACHE_TTL_RELATIONS);
-    return result;
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
-  async getServices(rehabId: string): Promise<ServiceModel[]> {
+  async getServices(rehabId: string): Promise<RehabServiceModel[]> {
     const cacheKey = this.getCacheKey('rehab:services', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as ServiceModel[];
+      return cached as RehabServiceModel[];
     }
 
     const relations = await this.prisma.rehabService.findMany({
@@ -1030,18 +1035,16 @@ export class RehabService {
       },
     });
 
-    const result = relations.map((rel) => rel.service);
-
-    await this.cacheManager.set(cacheKey, result, this.CACHE_TTL_RELATIONS);
-    return result;
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
-  async getDetoxServices(rehabId: string): Promise<DetoxServiceModel[]> {
+  async getDetoxServices(rehabId: string): Promise<RehabDetoxServiceModel[]> {
     const cacheKey = this.getCacheKey('rehab:detoxServices', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as DetoxServiceModel[];
+      return cached as RehabDetoxServiceModel[];
     }
 
     const relations = await this.prisma.rehabDetoxService.findMany({
@@ -1051,18 +1054,16 @@ export class RehabService {
       },
     });
 
-    const result = relations.map((rel) => rel.detoxService);
-
-    await this.cacheManager.set(cacheKey, result, this.CACHE_TTL_RELATIONS);
-    return result;
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
-  async getPopulations(rehabId: string): Promise<PopulationModel[]> {
+  async getPopulations(rehabId: string): Promise<RehabPopulationModel[]> {
     const cacheKey = this.getCacheKey('rehab:populations', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as PopulationModel[];
+      return cached as RehabPopulationModel[];
     }
 
     const relations = await this.prisma.rehabPopulation.findMany({
@@ -1072,18 +1073,16 @@ export class RehabService {
       },
     });
 
-    const result = relations.map((rel) => rel.population);
-
-    await this.cacheManager.set(cacheKey, result, this.CACHE_TTL_RELATIONS);
-    return result;
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
-  async getAccreditations(rehabId: string): Promise<AccreditationModel[]> {
+  async getAccreditations(rehabId: string): Promise<RehabAccreditationModel[]> {
     const cacheKey = this.getCacheKey('rehab:accreditations', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as AccreditationModel[];
+      return cached as RehabAccreditationModel[];
     }
 
     const relations = await this.prisma.rehabAccreditation.findMany({
@@ -1093,18 +1092,16 @@ export class RehabService {
       },
     });
 
-    const result = relations.map((rel) => rel.accreditation);
-
-    await this.cacheManager.set(cacheKey, result, this.CACHE_TTL_RELATIONS);
-    return result;
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
-  async getLanguages(rehabId: string): Promise<LanguageModel[]> {
+  async getLanguages(rehabId: string): Promise<RehabLanguageModel[]> {
     const cacheKey = this.getCacheKey('rehab:languages', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as LanguageModel[];
+      return cached as RehabLanguageModel[];
     }
 
     const relations = await this.prisma.rehabLanguage.findMany({
@@ -1114,18 +1111,16 @@ export class RehabService {
       },
     });
 
-    const result = relations.map((rel) => rel.language);
-
-    await this.cacheManager.set(cacheKey, result, this.CACHE_TTL_RELATIONS);
-    return result;
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
-  async getAmenities(rehabId: string): Promise<AmenityModel[]> {
+  async getAmenities(rehabId: string): Promise<RehabAmenityModel[]> {
     const cacheKey = this.getCacheKey('rehab:amenities', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as AmenityModel[];
+      return cached as RehabAmenityModel[];
     }
 
     const relations = await this.prisma.rehabAmenity.findMany({
@@ -1135,18 +1130,16 @@ export class RehabService {
       },
     });
 
-    const result = relations.map((rel) => rel.amenity);
-
-    await this.cacheManager.set(cacheKey, result, this.CACHE_TTL_RELATIONS);
-    return result;
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
-  async getEnvironments(rehabId: string): Promise<EnvironmentModel[]> {
+  async getEnvironments(rehabId: string): Promise<RehabEnvironmentModel[]> {
     const cacheKey = this.getCacheKey('rehab:environments', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as EnvironmentModel[];
+      return cached as RehabEnvironmentModel[];
     }
 
     const relations = await this.prisma.rehabEnvironment.findMany({
@@ -1156,18 +1149,16 @@ export class RehabService {
       },
     });
 
-    const result = relations.map((rel) => rel.environment);
-
-    await this.cacheManager.set(cacheKey, result, this.CACHE_TTL_RELATIONS);
-    return result;
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
-  async getSettingStyles(rehabId: string): Promise<SettingStyleModel[]> {
+  async getSettingStyles(rehabId: string): Promise<RehabSettingStyleModel[]> {
     const cacheKey = this.getCacheKey('rehab:settingStyles', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as SettingStyleModel[];
+      return cached as RehabSettingStyleModel[];
     }
 
     const relations = await this.prisma.rehabSettingStyle.findMany({
@@ -1177,18 +1168,16 @@ export class RehabService {
       },
     });
 
-    const result = relations.map((rel) => rel.settingStyle);
-
-    await this.cacheManager.set(cacheKey, result, this.CACHE_TTL_RELATIONS);
-    return result;
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
-  async getLuxuryTiers(rehabId: string): Promise<LuxuryTierModel[]> {
+  async getLuxuryTiers(rehabId: string): Promise<RehabLuxuryTierModel[]> {
     const cacheKey = this.getCacheKey('rehab:luxuryTiers', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as LuxuryTierModel[];
+      return cached as RehabLuxuryTierModel[];
     }
 
     const relations = await this.prisma.rehabLuxuryTier.findMany({
@@ -1198,18 +1187,18 @@ export class RehabService {
       },
     });
 
-    const result = relations.map((rel) => rel.luxuryTier);
-
-    await this.cacheManager.set(cacheKey, result, this.CACHE_TTL_RELATIONS);
-    return result;
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
-  async getProgramFeatures(rehabId: string): Promise<ProgramFeatureModel[]> {
+  async getProgramFeatures(
+    rehabId: string,
+  ): Promise<RehabProgramFeatureModel[]> {
     const cacheKey = this.getCacheKey('rehab:programFeatures', rehabId);
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) {
-      return cached as ProgramFeatureModel[];
+      return cached as RehabProgramFeatureModel[];
     }
 
     const relations = await this.prisma.rehabProgramFeature.findMany({
@@ -1219,10 +1208,8 @@ export class RehabService {
       },
     });
 
-    const result = relations.map((rel) => rel.programFeature);
-
-    await this.cacheManager.set(cacheKey, result, this.CACHE_TTL_RELATIONS);
-    return result;
+    await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
+    return relations;
   }
 
   // ============================================

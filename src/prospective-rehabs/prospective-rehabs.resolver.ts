@@ -11,7 +11,7 @@ export class ProspectiveRehabsResolver {
   constructor(private service: ProspectiveRehabsService) {}
 
   @Query(() => [ProspectiveRehab])
-  rehabs(
+  prospectiveRehabs(
     @Args('skip', { type: () => Int, nullable: true }) skip?: number,
     @Args('take', { type: () => Int, nullable: true }) take?: number,
     @Args('cursorId', { type: () => Int, nullable: true }) cursorId?: number,
@@ -21,17 +21,17 @@ export class ProspectiveRehabsResolver {
   }
 
   @Query(() => ProspectiveRehab, { nullable: true })
-  rehab(@Args('id', { type: () => Int }) id: number) {
+  prospectiveRehab(@Args('id', { type: () => Int }) id: number) {
     return this.service.findById(id);
   }
 
   @Mutation(() => ProspectiveRehab)
-  createRehab(@Args('data') data: CreateProspectiveRehabInput) {
+  createProspectiveRehab(@Args('data') data: CreateProspectiveRehabInput) {
     return this.service.create(data);
   }
 
   @Mutation(() => [ProspectiveRehab])
-  createManyRehabs(
+  createManyProspectiveRehabs(
     @Args({ name: 'data', type: () => [CreateProspectiveRehabInput] })
     data: CreateProspectiveRehabInput[],
   ) {
@@ -39,7 +39,7 @@ export class ProspectiveRehabsResolver {
   }
 
   @Mutation(() => ProspectiveRehab)
-  updateRehab(
+  updateProspectiveRehab(
     @Args('id', { type: () => Int }) id: number,
     @Args('data') data: UpdateProspectiveRehabInput,
   ) {
@@ -47,7 +47,7 @@ export class ProspectiveRehabsResolver {
   }
 
   @Mutation(() => ProspectiveRehab)
-  deleteRehab(@Args('id', { type: () => Int }) id: number) {
+  deleteProspectiveRehab(@Args('id', { type: () => Int }) id: number) {
     return this.service.delete(id);
   }
 }
