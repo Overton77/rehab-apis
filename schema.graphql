@@ -5,6 +5,7 @@
 type Accreditation {
   _count: AccreditationCount!
   acronym: String
+  description: String!
   displayName: String!
   id: ID!
   rehabs: [RehabAccreditation!]
@@ -29,6 +30,7 @@ input AccreditationCreateOrConnectWithoutRehabsInput {
 
 input AccreditationCreateWithoutRehabsInput {
   acronym: String
+  description: String!
   displayName: String!
   id: String
   slug: String!
@@ -55,6 +57,7 @@ input AccreditationUpdateToOneWithWhereWithoutRehabsInput {
 
 input AccreditationUpdateWithoutRehabsInput {
   acronym: NullableStringFieldUpdateOperationsInput
+  description: StringFieldUpdateOperationsInput
   displayName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   slug: StringFieldUpdateOperationsInput
@@ -72,6 +75,7 @@ input AccreditationWhereInput {
   NOT: [AccreditationWhereInput!]
   OR: [AccreditationWhereInput!]
   acronym: StringNullableFilter
+  description: StringFilter
   displayName: StringFilter
   id: StringFilter
   rehabs: RehabAccreditationListRelationFilter
@@ -84,6 +88,7 @@ input AccreditationWhereUniqueInput {
   NOT: [AccreditationWhereInput!]
   OR: [AccreditationWhereInput!]
   acronym: StringNullableFilter
+  description: StringFilter
   displayName: StringFilter
   id: String
   rehabs: RehabAccreditationListRelationFilter
@@ -94,6 +99,7 @@ input AccreditationWhereUniqueInput {
 type Amenity {
   _count: AmenityCount!
   category: AmenityCategory!
+  description: String!
   displayName: String!
   id: ID!
   rehabs: [RehabAmenity!]
@@ -125,6 +131,7 @@ input AmenityCreateOrConnectWithoutRehabsInput {
 
 input AmenityCreateWithoutRehabsInput {
   category: AmenityCategory!
+  description: String!
   displayName: String!
   id: String
   slug: String!
@@ -150,6 +157,7 @@ input AmenityUpdateToOneWithWhereWithoutRehabsInput {
 
 input AmenityUpdateWithoutRehabsInput {
   category: EnumAmenityCategoryFieldUpdateOperationsInput
+  description: StringFieldUpdateOperationsInput
   displayName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   slug: StringFieldUpdateOperationsInput
@@ -166,6 +174,7 @@ input AmenityWhereInput {
   NOT: [AmenityWhereInput!]
   OR: [AmenityWhereInput!]
   category: EnumAmenityCategoryFilter
+  description: StringFilter
   displayName: StringFilter
   id: StringFilter
   rehabs: RehabAmenityListRelationFilter
@@ -177,6 +186,7 @@ input AmenityWhereUniqueInput {
   NOT: [AmenityWhereInput!]
   OR: [AmenityWhereInput!]
   category: EnumAmenityCategoryFilter
+  description: StringFilter
   displayName: StringFilter
   id: String
   rehabs: RehabAmenityListRelationFilter
@@ -249,6 +259,7 @@ input DecimalNullableFilter {
 
 type DetoxService {
   _count: DetoxServiceCount!
+  description: String!
   displayName: String!
   id: ID!
   rehabs: [RehabDetoxService!]
@@ -272,6 +283,7 @@ input DetoxServiceCreateOrConnectWithoutRehabsInput {
 }
 
 input DetoxServiceCreateWithoutRehabsInput {
+  description: String!
   displayName: String!
   id: String
   slug: String!
@@ -297,6 +309,7 @@ input DetoxServiceUpdateToOneWithWhereWithoutRehabsInput {
 }
 
 input DetoxServiceUpdateWithoutRehabsInput {
+  description: StringFieldUpdateOperationsInput
   displayName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   slug: StringFieldUpdateOperationsInput
@@ -313,6 +326,7 @@ input DetoxServiceWhereInput {
   AND: [DetoxServiceWhereInput!]
   NOT: [DetoxServiceWhereInput!]
   OR: [DetoxServiceWhereInput!]
+  description: StringFilter
   displayName: StringFilter
   id: StringFilter
   rehabs: RehabDetoxServiceListRelationFilter
@@ -324,6 +338,7 @@ input DetoxServiceWhereUniqueInput {
   AND: [DetoxServiceWhereInput!]
   NOT: [DetoxServiceWhereInput!]
   OR: [DetoxServiceWhereInput!]
+  description: StringFilter
   displayName: StringFilter
   id: String
   rehabs: RehabDetoxServiceListRelationFilter
@@ -377,6 +392,7 @@ input EnumServiceKindFilter {
 
 type Environment {
   _count: EnvironmentCount!
+  description: String!
   displayName: String!
   id: ID!
   rehabs: [RehabEnvironment!]
@@ -399,6 +415,7 @@ input EnvironmentCreateOrConnectWithoutRehabsInput {
 }
 
 input EnvironmentCreateWithoutRehabsInput {
+  description: String!
   displayName: String!
   id: String
   slug: String!
@@ -423,6 +440,7 @@ input EnvironmentUpdateToOneWithWhereWithoutRehabsInput {
 }
 
 input EnvironmentUpdateWithoutRehabsInput {
+  description: StringFieldUpdateOperationsInput
   displayName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   slug: StringFieldUpdateOperationsInput
@@ -438,6 +456,7 @@ input EnvironmentWhereInput {
   AND: [EnvironmentWhereInput!]
   NOT: [EnvironmentWhereInput!]
   OR: [EnvironmentWhereInput!]
+  description: StringFilter
   displayName: StringFilter
   id: StringFilter
   rehabs: RehabEnvironmentListRelationFilter
@@ -448,6 +467,7 @@ input EnvironmentWhereUniqueInput {
   AND: [EnvironmentWhereInput!]
   NOT: [EnvironmentWhereInput!]
   OR: [EnvironmentWhereInput!]
+  description: StringFilter
   displayName: StringFilter
   id: String
   rehabs: RehabEnvironmentListRelationFilter
@@ -469,6 +489,7 @@ type InsurancePayer {
   _count: InsurancePayerCount!
   displayName: String!
   id: ID!
+  overview: String
   popular: Boolean!
   rehabs: [RehabInsurancePayer!]
   slug: String!
@@ -492,6 +513,7 @@ input InsurancePayerCreateOrConnectWithoutRehabsInput {
 input InsurancePayerCreateWithoutRehabsInput {
   displayName: String!
   id: String
+  overview: String
   popular: Boolean
   slug: String!
 }
@@ -517,6 +539,7 @@ input InsurancePayerUpdateToOneWithWhereWithoutRehabsInput {
 input InsurancePayerUpdateWithoutRehabsInput {
   displayName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
+  overview: NullableStringFieldUpdateOperationsInput
   popular: BoolFieldUpdateOperationsInput
   slug: StringFieldUpdateOperationsInput
 }
@@ -533,6 +556,7 @@ input InsurancePayerWhereInput {
   OR: [InsurancePayerWhereInput!]
   displayName: StringFilter
   id: StringFilter
+  overview: StringNullableFilter
   popular: BoolFilter
   rehabs: RehabInsurancePayerListRelationFilter
   slug: StringFilter
@@ -544,6 +568,7 @@ input InsurancePayerWhereUniqueInput {
   OR: [InsurancePayerWhereInput!]
   displayName: StringFilter
   id: String
+  overview: StringNullableFilter
   popular: BoolFilter
   rehabs: RehabInsurancePayerListRelationFilter
   slug: String
@@ -662,6 +687,7 @@ input LanguageWhereUniqueInput {
 
 type LevelOfCare {
   _count: LevelOfCareCount!
+  description: String!
   displayName: String!
   id: ID!
   rehabs: [RehabLevelOfCare!]
@@ -684,6 +710,7 @@ input LevelOfCareCreateOrConnectWithoutRehabsInput {
 }
 
 input LevelOfCareCreateWithoutRehabsInput {
+  description: String!
   displayName: String!
   id: String
   slug: String!
@@ -708,6 +735,7 @@ input LevelOfCareUpdateToOneWithWhereWithoutRehabsInput {
 }
 
 input LevelOfCareUpdateWithoutRehabsInput {
+  description: StringFieldUpdateOperationsInput
   displayName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   slug: StringFieldUpdateOperationsInput
@@ -723,6 +751,7 @@ input LevelOfCareWhereInput {
   AND: [LevelOfCareWhereInput!]
   NOT: [LevelOfCareWhereInput!]
   OR: [LevelOfCareWhereInput!]
+  description: StringFilter
   displayName: StringFilter
   id: StringFilter
   rehabs: RehabLevelOfCareListRelationFilter
@@ -733,6 +762,7 @@ input LevelOfCareWhereUniqueInput {
   AND: [LevelOfCareWhereInput!]
   NOT: [LevelOfCareWhereInput!]
   OR: [LevelOfCareWhereInput!]
+  description: StringFilter
   displayName: StringFilter
   id: String
   rehabs: RehabLevelOfCareListRelationFilter
@@ -741,6 +771,7 @@ input LevelOfCareWhereUniqueInput {
 
 type LuxuryTier {
   _count: LuxuryTierCount!
+  description: String!
   displayName: String!
   id: ID!
   rank: Int!
@@ -764,6 +795,7 @@ input LuxuryTierCreateOrConnectWithoutRehabsInput {
 }
 
 input LuxuryTierCreateWithoutRehabsInput {
+  description: String!
   displayName: String!
   id: String
   rank: Int!
@@ -795,6 +827,7 @@ input LuxuryTierUpdateToOneWithWhereWithoutRehabsInput {
 }
 
 input LuxuryTierUpdateWithoutRehabsInput {
+  description: StringFieldUpdateOperationsInput
   displayName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   rank: IntFieldUpdateOperationsInput
@@ -811,6 +844,7 @@ input LuxuryTierWhereInput {
   AND: [LuxuryTierWhereInput!]
   NOT: [LuxuryTierWhereInput!]
   OR: [LuxuryTierWhereInput!]
+  description: StringFilter
   displayName: StringFilter
   id: StringFilter
   rank: IntFilter
@@ -822,6 +856,7 @@ input LuxuryTierWhereUniqueInput {
   AND: [LuxuryTierWhereInput!]
   NOT: [LuxuryTierWhereInput!]
   OR: [LuxuryTierWhereInput!]
+  description: StringFilter
   displayName: StringFilter
   id: String
   rank: IntFilter
@@ -986,6 +1021,7 @@ input NullableStringFieldUpdateOperationsInput {
 type PaymentOption {
   _count: PaymentOptionCount!
   category: String!
+  description: String!
   displayName: String!
   id: ID!
   rehabs: [RehabPaymentOption!]
@@ -1009,6 +1045,7 @@ input PaymentOptionCreateOrConnectWithoutRehabsInput {
 
 input PaymentOptionCreateWithoutRehabsInput {
   category: String!
+  description: String!
   displayName: String!
   id: String
   slug: String!
@@ -1034,6 +1071,7 @@ input PaymentOptionUpdateToOneWithWhereWithoutRehabsInput {
 
 input PaymentOptionUpdateWithoutRehabsInput {
   category: StringFieldUpdateOperationsInput
+  description: StringFieldUpdateOperationsInput
   displayName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   slug: StringFieldUpdateOperationsInput
@@ -1050,6 +1088,7 @@ input PaymentOptionWhereInput {
   NOT: [PaymentOptionWhereInput!]
   OR: [PaymentOptionWhereInput!]
   category: StringFilter
+  description: StringFilter
   displayName: StringFilter
   id: StringFilter
   rehabs: RehabPaymentOptionListRelationFilter
@@ -1061,6 +1100,7 @@ input PaymentOptionWhereUniqueInput {
   NOT: [PaymentOptionWhereInput!]
   OR: [PaymentOptionWhereInput!]
   category: StringFilter
+  description: StringFilter
   displayName: StringFilter
   id: String
   rehabs: RehabPaymentOptionListRelationFilter
@@ -1070,6 +1110,7 @@ input PaymentOptionWhereUniqueInput {
 type Population {
   _count: PopulationCount!
   category: PopulationCategory!
+  description: String!
   displayName: String!
   id: ID!
   rehabs: [RehabPopulation!]
@@ -1102,6 +1143,7 @@ input PopulationCreateOrConnectWithoutRehabsInput {
 
 input PopulationCreateWithoutRehabsInput {
   category: PopulationCategory!
+  description: String!
   displayName: String!
   id: String
   slug: String!
@@ -1127,6 +1169,7 @@ input PopulationUpdateToOneWithWhereWithoutRehabsInput {
 
 input PopulationUpdateWithoutRehabsInput {
   category: EnumPopulationCategoryFieldUpdateOperationsInput
+  description: StringFieldUpdateOperationsInput
   displayName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   slug: StringFieldUpdateOperationsInput
@@ -1143,6 +1186,7 @@ input PopulationWhereInput {
   NOT: [PopulationWhereInput!]
   OR: [PopulationWhereInput!]
   category: EnumPopulationCategoryFilter
+  description: StringFilter
   displayName: StringFilter
   id: StringFilter
   rehabs: RehabPopulationListRelationFilter
@@ -1154,6 +1198,7 @@ input PopulationWhereUniqueInput {
   NOT: [PopulationWhereInput!]
   OR: [PopulationWhereInput!]
   category: EnumPopulationCategoryFilter
+  description: StringFilter
   displayName: StringFilter
   id: String
   rehabs: RehabPopulationListRelationFilter
@@ -1163,6 +1208,7 @@ input PopulationWhereUniqueInput {
 type ProgramFeature {
   _count: ProgramFeatureCount!
   category: ProgramFeatureCategory!
+  description: String!
   displayName: String!
   id: ID!
   rehabs: [RehabProgramFeature!]
@@ -1195,6 +1241,7 @@ input ProgramFeatureCreateOrConnectWithoutRehabsInput {
 
 input ProgramFeatureCreateWithoutRehabsInput {
   category: ProgramFeatureCategory!
+  description: String!
   displayName: String!
   id: String
   slug: String!
@@ -1220,6 +1267,7 @@ input ProgramFeatureUpdateToOneWithWhereWithoutRehabsInput {
 
 input ProgramFeatureUpdateWithoutRehabsInput {
   category: EnumProgramFeatureCategoryFieldUpdateOperationsInput
+  description: StringFieldUpdateOperationsInput
   displayName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   slug: StringFieldUpdateOperationsInput
@@ -1236,6 +1284,7 @@ input ProgramFeatureWhereInput {
   NOT: [ProgramFeatureWhereInput!]
   OR: [ProgramFeatureWhereInput!]
   category: EnumProgramFeatureCategoryFilter
+  description: StringFilter
   displayName: StringFilter
   id: StringFilter
   rehabs: RehabProgramFeatureListRelationFilter
@@ -1247,6 +1296,7 @@ input ProgramFeatureWhereUniqueInput {
   NOT: [ProgramFeatureWhereInput!]
   OR: [ProgramFeatureWhereInput!]
   category: EnumProgramFeatureCategoryFilter
+  description: StringFilter
   displayName: StringFilter
   id: String
   rehabs: RehabProgramFeatureListRelationFilter
@@ -1319,6 +1369,7 @@ type Rehab {
   name: String!
   npi_number: String
   otherSourceUrls: [String!]
+  patientStory: String
   paymentOptions: [RehabPaymentOption!]
   phone: String
   populations: [RehabPopulation!]
@@ -1592,6 +1643,7 @@ input RehabCreateInput {
   name: String!
   npi_number: String
   otherSourceUrls: RehabCreateotherSourceUrlsInput
+  patientStory: String
   paymentOptions: RehabPaymentOptionCreateNestedManyWithoutRehabInput
   phone: String
   populations: RehabPopulationCreateNestedManyWithoutRehabInput
@@ -1629,6 +1681,7 @@ input RehabCreateWithLookupsInput {
   name: String!
   npi_number: String
   otherSourceUrls: RehabCreateotherSourceUrlsInput
+  patientStory: String
   paymentOptions: [SlugRelationInput!]
   phone: String
   populations: [SlugRelationInput!]
@@ -2932,6 +2985,7 @@ input RehabUpdateInput {
   name: StringFieldUpdateOperationsInput
   npi_number: NullableStringFieldUpdateOperationsInput
   otherSourceUrls: RehabUpdateotherSourceUrlsInput
+  patientStory: NullableStringFieldUpdateOperationsInput
   paymentOptions: RehabPaymentOptionUpdateManyWithoutRehabNestedInput
   phone: NullableStringFieldUpdateOperationsInput
   populations: RehabPopulationUpdateManyWithoutRehabNestedInput
@@ -2977,6 +3031,7 @@ input RehabWhereInput {
   name: StringFilter
   npi_number: StringNullableFilter
   otherSourceUrls: StringNullableListFilter
+  patientStory: StringNullableFilter
   paymentOptions: RehabPaymentOptionListRelationFilter
   phone: StringNullableFilter
   populations: RehabPopulationListRelationFilter
@@ -2995,6 +3050,7 @@ input RehabWhereInput {
 
 type Service {
   _count: ServiceCount!
+  description: String!
   displayName: String!
   id: ID!
   kind: ServiceKind!
@@ -3018,6 +3074,7 @@ input ServiceCreateOrConnectWithoutRehabsInput {
 }
 
 input ServiceCreateWithoutRehabsInput {
+  description: String!
   displayName: String!
   id: String
   kind: ServiceKind!
@@ -3049,6 +3106,7 @@ input ServiceUpdateToOneWithWhereWithoutRehabsInput {
 }
 
 input ServiceUpdateWithoutRehabsInput {
+  description: StringFieldUpdateOperationsInput
   displayName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   kind: EnumServiceKindFieldUpdateOperationsInput
@@ -3065,6 +3123,7 @@ input ServiceWhereInput {
   AND: [ServiceWhereInput!]
   NOT: [ServiceWhereInput!]
   OR: [ServiceWhereInput!]
+  description: StringFilter
   displayName: StringFilter
   id: StringFilter
   kind: EnumServiceKindFilter
@@ -3076,6 +3135,7 @@ input ServiceWhereUniqueInput {
   AND: [ServiceWhereInput!]
   NOT: [ServiceWhereInput!]
   OR: [ServiceWhereInput!]
+  description: StringFilter
   displayName: StringFilter
   id: String
   kind: EnumServiceKindFilter
@@ -3085,6 +3145,7 @@ input ServiceWhereUniqueInput {
 
 type SettingStyle {
   _count: SettingStyleCount!
+  description: String!
   displayName: String!
   id: ID!
   rehabs: [RehabSettingStyle!]
@@ -3107,6 +3168,7 @@ input SettingStyleCreateOrConnectWithoutRehabsInput {
 }
 
 input SettingStyleCreateWithoutRehabsInput {
+  description: String!
   displayName: String!
   id: String
   slug: String!
@@ -3131,6 +3193,7 @@ input SettingStyleUpdateToOneWithWhereWithoutRehabsInput {
 }
 
 input SettingStyleUpdateWithoutRehabsInput {
+  description: StringFieldUpdateOperationsInput
   displayName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   slug: StringFieldUpdateOperationsInput
@@ -3146,6 +3209,7 @@ input SettingStyleWhereInput {
   AND: [SettingStyleWhereInput!]
   NOT: [SettingStyleWhereInput!]
   OR: [SettingStyleWhereInput!]
+  description: StringFilter
   displayName: StringFilter
   id: StringFilter
   rehabs: RehabSettingStyleListRelationFilter
@@ -3156,6 +3220,7 @@ input SettingStyleWhereUniqueInput {
   AND: [SettingStyleWhereInput!]
   NOT: [SettingStyleWhereInput!]
   OR: [SettingStyleWhereInput!]
+  description: StringFilter
   displayName: StringFilter
   id: String
   rehabs: RehabSettingStyleListRelationFilter

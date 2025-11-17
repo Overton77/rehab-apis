@@ -61,6 +61,7 @@ export function mapJsonRehabToInput(
     insurancePayers: insurancePayers?.map((p) => ({
       slug: p.slug ?? generateSlug(p.displayName),
       displayName: p.displayName,
+      ...(p.overview && { overview: p.overview }),
       // NOTE: averageAdmissionPrice, notes, popular are not in SlugRelationInput
     })),
 
@@ -68,36 +69,42 @@ export function mapJsonRehabToInput(
     paymentOptions: paymentOptions?.map((po) => ({
       slug: po.slug ?? generateSlug(po.displayName),
       displayName: po.displayName,
+      description: po.description,
     })),
 
     // Levels of care → SlugRelationInput[]
     levelsOfCare: levelsOfCare?.map((loc) => ({
       slug: loc.slug ?? generateSlug(loc.displayName),
       displayName: loc.displayName,
+      description: loc.description,
     })),
 
     // Services → SlugRelationInput[]
     services: services?.map((s) => ({
       slug: s.slug ?? generateSlug(s.displayName),
       displayName: s.displayName,
+      description: s.description,
     })),
 
     // Detox services → SlugRelationInput[]
     detoxServices: detoxServices?.map((ds) => ({
       slug: ds.slug ?? generateSlug(ds.displayName),
       displayName: ds.displayName,
+      description: ds.description,
     })),
 
     // Populations → SlugRelationInput[]
     populations: populations?.map((p) => ({
       slug: p.slug ?? generateSlug(p.displayName),
       displayName: p.displayName,
+      description: p.description,
     })),
 
     // Accreditations → SlugRelationInput[]
     accreditations: accreditations?.map((a) => ({
       slug: a.slug ?? generateSlug(a.displayName),
       displayName: a.displayName,
+      description: a.description,
     })),
 
     // Languages → LanguageRelationInput[] (uses code instead of slug)
@@ -110,18 +117,21 @@ export function mapJsonRehabToInput(
     amenities: amenities?.map((a) => ({
       slug: a.slug ?? generateSlug(a.displayName),
       displayName: a.displayName,
+      description: a.description,
     })),
 
     // Environments → SlugRelationInput[]
     environments: environments?.map((e) => ({
       slug: e.slug ?? generateSlug(e.displayName),
       displayName: e.displayName,
+      description: e.description,
     })),
 
     // Setting styles → SlugRelationInput[]
     settingStyles: settingStyles?.map((ss) => ({
       slug: ss.slug ?? generateSlug(ss.displayName),
       displayName: ss.displayName,
+      description: ss.description,
     })),
 
     // Luxury tiers → LuxuryTierRelationInput[] (includes rank)
@@ -129,12 +139,14 @@ export function mapJsonRehabToInput(
       slug: lt.slug ?? generateSlug(lt.displayName),
       displayName: lt.displayName,
       rank: lt.rank,
+      description: lt.description,
     })),
 
     // Program features → SlugRelationInput[]
     programFeatures: programFeatures?.map((pf) => ({
       slug: pf.slug ?? generateSlug(pf.displayName),
       displayName: pf.displayName,
+      description: pf.description,
     })),
   };
 

@@ -1,12 +1,7 @@
 import { Controller, Post, Req } from '@nestjs/common';
 import type { FastifyRequest } from 'fastify';
 import { GraphqlClientService } from '../graphql-client/graphql-client.service';
-import type {
-  RehabCreateWithLookupsInput,
-  SlugRelationInput,
-  LanguageRelationInput,
-  LuxuryTierRelationInput,
-} from 'src/graphql_sdk/graphql';
+import type { RehabCreateWithLookupsInput } from 'src/graphql_sdk/graphql';
 import { RehabEnrichmentJson } from './rehab-import.types';
 import { mapJsonRehabToInput } from './rehab-import.mapper';
 

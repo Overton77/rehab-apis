@@ -631,6 +631,8 @@ export class RehabService {
     return rehabs;
   }
 
+  // Fix the Input types for ConnectOrCreate . Moving on for now for the Ingestion Agent.
+
   async createRehabWithConnectOrCreate(
     data: RehabCreateWithLookupsInput,
   ): Promise<RehabModel> {
@@ -667,6 +669,7 @@ export class RehabService {
                     slug: payer.slug,
                     displayName: payer.displayName ?? payer.slug,
                     // popular will default to false
+                    ...(payer.overview && { overview: payer.overview }),
                   },
                 },
               },
@@ -688,6 +691,7 @@ export class RehabService {
                     displayName: po.displayName ?? po.slug,
 
                     category: 'FINANCIAL_ASSISTANCE',
+                    description: po.description ?? '',
                   },
                 },
               },
@@ -707,6 +711,7 @@ export class RehabService {
                   create: {
                     slug: loc.slug,
                     displayName: loc.displayName ?? loc.slug,
+                    description: loc.description ?? '',
                   },
                 },
               },
@@ -726,6 +731,7 @@ export class RehabService {
                   create: {
                     slug: svc.slug,
                     displayName: svc.displayName ?? svc.slug,
+                    description: svc.description ?? '',
                     // you can pick a default kind if you want:
                     kind: 'OTHER',
                   },
@@ -747,6 +753,7 @@ export class RehabService {
                   create: {
                     slug: ds.slug,
                     displayName: ds.displayName ?? ds.slug,
+                    description: ds.description ?? '',
                     // you can derive substance or just reuse slug/displayName for now
                     substance: ds.displayName ?? ds.slug,
                   },
@@ -768,6 +775,7 @@ export class RehabService {
                   create: {
                     slug: pop.slug,
                     displayName: pop.displayName ?? pop.slug,
+                    description: pop.description ?? '',
                     // pick a default if you don't pass category:
                     category: 'SPECIALTY_PROGRAM',
                   },
@@ -789,6 +797,7 @@ export class RehabService {
                   create: {
                     slug: acc.slug,
                     displayName: acc.displayName ?? acc.slug,
+                    description: acc.description ?? '',
                     acronym: undefined,
                     url: undefined,
                   },
@@ -830,6 +839,7 @@ export class RehabService {
                     slug: a.slug,
                     displayName: a.displayName ?? a.slug,
                     category: 'OTHER', // or smarter default
+                    description: a.description ?? '',
                   },
                 },
               },
@@ -849,6 +859,7 @@ export class RehabService {
                   create: {
                     slug: env.slug,
                     displayName: env.displayName ?? env.slug,
+                    description: env.description ?? '',
                   },
                 },
               },
@@ -868,6 +879,7 @@ export class RehabService {
                   create: {
                     slug: style.slug,
                     displayName: style.displayName ?? style.slug,
+                    description: style.description ?? '',
                   },
                 },
               },
@@ -888,6 +900,7 @@ export class RehabService {
                     slug: tier.slug,
                     displayName: tier.displayName,
                     rank: tier.rank,
+                    description: tier.description ?? '',
                   },
                 },
               },
@@ -908,6 +921,7 @@ export class RehabService {
                     slug: pf.slug,
                     displayName: pf.displayName ?? pf.slug,
                     category: 'OTHER',
+                    description: pf.description ?? '',
                   },
                 },
               },

@@ -147,7 +147,8 @@ model InsurancePayer {
   id          String  @id @default(cuid())
   slug        String  @unique   // "aetna", "unitedhealthcare", "tricare", ...
   displayName String
-  popular     Boolean @default(false)
+  popular     Boolean @default(false) 
+  overview    String? 
 
   rehabs RehabInsurancePayer[]
 }
@@ -314,7 +315,6 @@ model RehabAccreditation {
 model Language {
   id          String @id @default(cuid())
   code        String @unique   // "en", "es", "zh", ... 
-  description String 
   displayName String           // "English", "Spanish", ...
 
   rehabs RehabLanguage[]

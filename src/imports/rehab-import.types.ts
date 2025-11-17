@@ -31,36 +31,43 @@ export interface RehabEnrichmentJson {
     popular?: boolean | null;
     averageAdmissionPrice?: number | null;
     notes?: string;
+    overview?: string;
   }>;
 
   paymentOptions?: Array<{
     slug?: string;
     displayName: string;
+    description: string;
   }>;
 
   levelsOfCare?: Array<{
     slug?: string;
     displayName: string;
+    description: string;
   }>;
 
   services?: Array<{
     slug?: string;
     displayName: string;
+    description: string;
   }>;
 
   detoxServices?: Array<{
     slug?: string;
     displayName: string;
+    description: string;
   }>;
 
   populations?: Array<{
     slug?: string;
     displayName: string;
+    description: string;
   }>;
 
   accreditations?: Array<{
     slug?: string;
     displayName: string;
+    description: string;
   }>;
 
   languages?: Array<{
@@ -71,26 +78,31 @@ export interface RehabEnrichmentJson {
   amenities?: Array<{
     slug?: string;
     displayName: string;
+    description: string;
   }>;
 
   environments?: Array<{
     slug?: string;
     displayName: string;
+    description: string;
   }>;
 
   settingStyles?: Array<{
     slug?: string;
     displayName: string;
+    description: string;
   }>;
 
   luxuryTiers?: Array<{
     slug?: string;
     displayName: string;
     rank: number;
+    description: string;
   }>;
 
   programFeatures?: Array<{
     slug?: string;
     displayName: string;
+    description: string;
   }>;
 }

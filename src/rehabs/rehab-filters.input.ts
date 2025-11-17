@@ -116,9 +116,23 @@ export class RehabFindOneInput {
 export class SlugRelationInput {
   @Field()
   slug: string;
+  description: string;
 
   @Field({ nullable: true })
   displayName?: string;
+}
+
+@InputType()
+export class InsurancePayerRelationInput {
+  @Field()
+  slug: string;
+  description: string;
+
+  @Field({ nullable: true })
+  displayName?: string;
+
+  @Field({ nullable: true })
+  overview?: string;
 }
 
 // Language is keyed by code
@@ -126,6 +140,7 @@ export class SlugRelationInput {
 export class LanguageRelationInput {
   @Field()
   code: string;
+  description: string;
 
   @Field()
   displayName: string;
@@ -136,6 +151,7 @@ export class LanguageRelationInput {
 export class LuxuryTierRelationInput {
   @Field()
   slug: string;
+  description: string;
 
   @Field()
   displayName: string;
@@ -161,7 +177,7 @@ export class RehabCreateWithLookupsInput extends OmitType(RehabCreateInput, [
   'programFeatures',
 ] as const) {
   @Field(() => [SlugRelationInput], { nullable: true })
-  insurancePayers?: SlugRelationInput[];
+  insurancePayers?: InsurancePayerRelationInput[];
 
   @Field(() => [SlugRelationInput], { nullable: true })
   paymentOptions?: SlugRelationInput[];
