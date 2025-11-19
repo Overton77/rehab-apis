@@ -1,20 +1,137 @@
-mutation CreateManyRehabsWithNested($data: [RehabCreateInput!]!) {
-  createManyRehabsWithNested(data: $data) {
+mutation CreateProspectiveRehab($data: CreateProspectiveRehabInput!) {
+  createProspectiveRehab(data: $data) {
+    npi_number
+    address
+    city
+    id
+    ingested
+    organization_name
+    phone
+    postal_code
+    state
+  }
+}
+
+mutation CreateManyProspectiveRehabs($data: [CreateProspectiveRehabInput!]!) {
+  createManyProspectiveRehabs(data: $data) {
     npi_number
     city
+    state
+    postal_code
+    address
+    taxonomy_code
+  }
+}
+
+mutation UpdateProspectiveRehab(
+  $data: UpdateProspectiveRehabInput!
+  $updateProspectiveRehabId: Int!
+) {
+  updateProspectiveRehab(data: $data, id: $updateProspectiveRehabId) {
+    id
+    ingested
+    npi_number
+    city
+    state
+    postal_code
+    organization_name
+  }
+}
+
+mutation CreateRehabOrgWithConnectOrCreate($data: CreateRehabOrgInput!) {
+  createRehabOrgWithConnectOrCreate(data: $data) {
+    npi_number
+    isNonProfit
     createdAt
+    description
+    id
+    legalName
+    name
+    mainEmail
+    mainPhone
+    slug
+    state
+    city
+    country
+
+    websiteUrl
+    tagline
+    fullPrivatePrice
+    parentCompany {
+      name
+      id
+    }
+  }
+}
+
+mutation UpsertRehabOrgWithConnectOrCreate($data: UpsertRehabOrgInput!) {
+  upsertRehabOrgWithConnectOrCreate(data: $data) {
+    city
+    country
+    description
+    fullPrivatePrice
+    id
+    isNonProfit
+    mainEmail
+    mainPhone
+    name
+    npi_number
+    websiteUrl
+    state
+    zip
+    slug
+    updatedAt
+  }
+}
+
+mutation CreateRehabCampusWithConnectOrCreate($data: CreateRehabCampusInput!) {
+  createRehabCampusWithConnectOrCreate(data: $data) {
+    bedsTotal
+    city
+    country
+    id
+    name
+    latitude
+    longitude
+    street
+    state
+    slug
+  }
+}
+
+mutation UpsertRehabCampusWithConnectOrCreate($data: UpsertRehabCampusInput!) {
+  upsertRehabCampusWithConnectOrCreate(data: $data) {
+    street
+    state
+    slug
+    postalCode
+    phone
+    name
+    longitude
+    latitude
+    id
+    displayName
+    description
+    city
     country
   }
 }
 
-mutation CreateRehabWithConnectOrCreate($data: RehabCreateWithLookupsInput!) {
-  createRehabWithConnectOrCreate(data: $data) {
-    city
-    country
-    createdAt
-    description
+mutation CreateRehabProgramWithConnectOrCreate(
+  $data: CreateRehabProgramInput!
+) {
+  createRehabProgramWithConnectOrCreate(data: $data) {
     id
-    npi_number
     name
+    slug
+  }
+}
+
+mutation UpsertRehabProgramWithConnectOrCreate(
+  $data: UpsertRehabProgramInput!
+) {
+  upsertRehabProgramWithConnectOrCreate(data: $data) {
+    name
+    id
   }
 }

@@ -60,6 +60,9 @@ import { CacheableMemory } from 'cacheable';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'schema.graphql'),
+      buildSchemaOptions: {
+        scalarsMap: [],
+      },
       sortSchema: true,
       playground: false,
       introspection: true,

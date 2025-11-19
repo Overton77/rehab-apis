@@ -3,203 +3,109 @@
 # ------------------------------------------------------
 
 type Accreditation {
-  _count: AccreditationCount!
-  acronym: String
-  description: String!
+  description: String
   displayName: String!
   id: ID!
-  rehabs: [RehabAccreditation!]
   slug: String!
-  url: String
 }
 
-type AccreditationCount {
-  rehabs: Int!
-}
-
-input AccreditationCreateNestedOneWithoutRehabsInput {
-  connect: AccreditationWhereUniqueInput
-  connectOrCreate: AccreditationCreateOrConnectWithoutRehabsInput
-  create: AccreditationCreateWithoutRehabsInput
-}
-
-input AccreditationCreateOrConnectWithoutRehabsInput {
-  create: AccreditationCreateWithoutRehabsInput!
-  where: AccreditationWhereUniqueInput!
-}
-
-input AccreditationCreateWithoutRehabsInput {
-  acronym: String
-  description: String!
-  displayName: String!
-  id: String
+input AccreditationConnectOrCreateInput {
+  description: String
+  displayName: String
   slug: String!
-  url: String
-}
-
-input AccreditationScalarRelationFilter {
-  is: AccreditationWhereInput
-  isNot: AccreditationWhereInput
-}
-
-input AccreditationUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: AccreditationWhereUniqueInput
-  connectOrCreate: AccreditationCreateOrConnectWithoutRehabsInput
-  create: AccreditationCreateWithoutRehabsInput
-  update: AccreditationUpdateToOneWithWhereWithoutRehabsInput
-  upsert: AccreditationUpsertWithoutRehabsInput
-}
-
-input AccreditationUpdateToOneWithWhereWithoutRehabsInput {
-  data: AccreditationUpdateWithoutRehabsInput!
-  where: AccreditationWhereInput
-}
-
-input AccreditationUpdateWithoutRehabsInput {
-  acronym: NullableStringFieldUpdateOperationsInput
-  description: StringFieldUpdateOperationsInput
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  slug: StringFieldUpdateOperationsInput
-  url: NullableStringFieldUpdateOperationsInput
-}
-
-input AccreditationUpsertWithoutRehabsInput {
-  create: AccreditationCreateWithoutRehabsInput!
-  update: AccreditationUpdateWithoutRehabsInput!
-  where: AccreditationWhereInput
-}
-
-input AccreditationWhereInput {
-  AND: [AccreditationWhereInput!]
-  NOT: [AccreditationWhereInput!]
-  OR: [AccreditationWhereInput!]
-  acronym: StringNullableFilter
-  description: StringFilter
-  displayName: StringFilter
-  id: StringFilter
-  rehabs: RehabAccreditationListRelationFilter
-  slug: StringFilter
-  url: StringNullableFilter
-}
-
-input AccreditationWhereUniqueInput {
-  AND: [AccreditationWhereInput!]
-  NOT: [AccreditationWhereInput!]
-  OR: [AccreditationWhereInput!]
-  acronym: StringNullableFilter
-  description: StringFilter
-  displayName: StringFilter
-  id: String
-  rehabs: RehabAccreditationListRelationFilter
-  slug: String
-  url: StringNullableFilter
 }
 
 type Amenity {
-  _count: AmenityCount!
-  category: AmenityCategory!
-  description: String!
+  description: String
   displayName: String!
   id: ID!
-  rehabs: [RehabAmenity!]
   slug: String!
 }
 
-enum AmenityCategory {
-  FOOD
-  LODGING
-  OTHER
-  TECH
-  TRANSPORT
-}
-
-type AmenityCount {
-  rehabs: Int!
-}
-
-input AmenityCreateNestedOneWithoutRehabsInput {
-  connect: AmenityWhereUniqueInput
-  connectOrCreate: AmenityCreateOrConnectWithoutRehabsInput
-  create: AmenityCreateWithoutRehabsInput
-}
-
-input AmenityCreateOrConnectWithoutRehabsInput {
-  create: AmenityCreateWithoutRehabsInput!
-  where: AmenityWhereUniqueInput!
-}
-
-input AmenityCreateWithoutRehabsInput {
-  category: AmenityCategory!
-  description: String!
-  displayName: String!
-  id: String
+input AmenityConnectOrCreateInput {
+  description: String
+  displayName: String
   slug: String!
 }
 
-input AmenityScalarRelationFilter {
-  is: AmenityWhereInput
-  isNot: AmenityWhereInput
-}
-
-input AmenityUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: AmenityWhereUniqueInput
-  connectOrCreate: AmenityCreateOrConnectWithoutRehabsInput
-  create: AmenityCreateWithoutRehabsInput
-  update: AmenityUpdateToOneWithWhereWithoutRehabsInput
-  upsert: AmenityUpsertWithoutRehabsInput
-}
-
-input AmenityUpdateToOneWithWhereWithoutRehabsInput {
-  data: AmenityUpdateWithoutRehabsInput!
-  where: AmenityWhereInput
-}
-
-input AmenityUpdateWithoutRehabsInput {
-  category: EnumAmenityCategoryFieldUpdateOperationsInput
-  description: StringFieldUpdateOperationsInput
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  slug: StringFieldUpdateOperationsInput
-}
-
-input AmenityUpsertWithoutRehabsInput {
-  create: AmenityCreateWithoutRehabsInput!
-  update: AmenityUpdateWithoutRehabsInput!
-  where: AmenityWhereInput
-}
-
-input AmenityWhereInput {
-  AND: [AmenityWhereInput!]
-  NOT: [AmenityWhereInput!]
-  OR: [AmenityWhereInput!]
-  category: EnumAmenityCategoryFilter
-  description: StringFilter
-  displayName: StringFilter
-  id: StringFilter
-  rehabs: RehabAmenityListRelationFilter
-  slug: StringFilter
-}
-
-input AmenityWhereUniqueInput {
-  AND: [AmenityWhereInput!]
-  NOT: [AmenityWhereInput!]
-  OR: [AmenityWhereInput!]
-  category: EnumAmenityCategoryFilter
-  description: StringFilter
-  displayName: StringFilter
-  id: String
-  rehabs: RehabAmenityListRelationFilter
-  slug: String
-}
-
-input BoolFieldUpdateOperationsInput {
-  set: Boolean
-}
-
-input BoolFilter {
+input BooleanFilter {
   equals: Boolean
-  not: NestedBoolFilter
+}
+
+type CampusReview {
+  body: String!
+  campusId: String!
+  createdAt: DateTime!
+  externalUrl: String
+  id: ID!
+  isFeatured: Boolean!
+  isVerified: Boolean!
+  rating: Int!
+  reviewerName: String
+  reviewerRole: String
+  reviewerType: ReviewerType!
+  source: ReviewSource!
+  title: String
+  updatedAt: DateTime!
+}
+
+input CampusReviewCreateInput {
+  body: String!
+  externalUrl: String
+  isFeatured: Boolean
+  isVerified: Boolean
+  rating: Int!
+  reviewerName: String
+  reviewerRole: String
+  reviewerType: ReviewerType
+  source: ReviewSource
+  title: String
+}
+
+type CampusStory {
+  body: String!
+  campusId: String!
+  createdAt: DateTime!
+  id: ID!
+  isFeatured: Boolean!
+  isPublic: Boolean!
+  slug: String!
+  storyType: StoryType!
+  summary: String
+  tags: [String!]!
+  title: String!
+  updatedAt: DateTime!
+}
+
+input CampusStoryCreateInput {
+  body: String!
+  isFeatured: Boolean
+  isPublic: Boolean
+  slug: String!
+  storyType: StoryType
+  summary: String
+  tags: [String!]
+  title: String!
+}
+
+type CampusTestimonial {
+  attributionName: String
+  attributionRole: String
+  campusId: String!
+  createdAt: DateTime!
+  id: ID!
+  isFeatured: Boolean!
+  quote: String!
+  source: String
+  updatedAt: DateTime!
+}
+
+input CampusTestimonialCreateInput {
+  attributionName: String
+  attributionRole: String
+  isFeatured: Boolean
+  quote: String!
+  source: String
 }
 
 input CreateInsuranceProviderInput {
@@ -223,354 +129,190 @@ input CreateProspectiveRehabInput {
   taxonomy_desc: String
 }
 
+input CreateRehabCampusInput {
+  acceptsWalkIns: Boolean
+  amenities: [AmenityConnectOrCreateInput!]
+  bedsDetox: Int
+  bedsOutpatientCapacity: Int
+  bedsResidential: Int
+  bedsTotal: Int
+  city: String!
+  country: String!
+  description: String
+  directionsSummary: String
+  displayName: String
+  email: String
+  environments: [EnvironmentConnectOrCreateInput!]
+  hasOnsiteMD: Boolean
+  hasTwentyFourHourNursing: Boolean
+  insurancePayers: [RehabInsurancePayerConnectOrCreateInput!]
+  languages: [LanguageConnectOrCreateInput!]
+  latitude: Float
+  longitude: Float
+  luxuryTiers: [LuxuryTierConnectOrCreateInput!]
+  name: String!
+  paymentOptions: [RehabPaymentOptionConnectOrCreateInput!]
+  phone: String
+  populations: [PopulationConnectOrCreateInput!]
+  postalCode: String!
+  primaryEnvironmentSlug: String
+  primaryLuxuryTierSlug: String
+  primarySettingStyleSlug: String
+  rehabOrgId: String
+  rehabOrgSlug: String
+  reviews: [CampusReviewCreateInput!]
+  settingStyles: [SettingStyleConnectOrCreateInput!]
+  slug: String!
+  socialMediaProfiles: [SocialMediaProfileConnectOrCreateInput!]
+  state: String!
+  stories: [CampusStoryCreateInput!]
+  street: String!
+  testimonials: [CampusTestimonialCreateInput!]
+  timeZone: String
+  visitingHours: String
+}
+
+input CreateRehabOrgInput {
+  accreditations: [AccreditationConnectOrCreateInput!]
+  amenities: [AmenityConnectOrCreateInput!]
+  baseCurrency: String
+  campuses: [RehabCampusConnectOrCreateInput!]
+  city: String
+  country: String
+  defaultTimeZone: String
+  description: String
+  detoxServices: [DetoxServiceConnectOrCreateInput!]
+  environments: [EnvironmentConnectOrCreateInput!]
+  fullPrivatePrice: Int
+  insurancePayers: [RehabInsurancePayerConnectOrCreateInput!]
+  isNonProfit: Boolean
+  languages: [LanguageConnectOrCreateInput!]
+  legalName: String
+  levelsOfCare: [LevelOfCareConnectOrCreateInput!]
+  luxuryTiers: [LuxuryTierConnectOrCreateInput!]
+  mainEmail: String
+  mainPhone: String
+  name: String!
+  npi_number: String
+  otherSourceUrls: [String!]
+  parentCompany: ParentCompanyConnectOrCreateInput
+  paymentOptions: [RehabPaymentOptionConnectOrCreateInput!]
+  populations: [PopulationConnectOrCreateInput!]
+  primarySourceUrl: String
+  programFeaturesGlobal: [ProgramFeatureGlobalConnectOrCreateInput!]
+  reviews: [OrgReviewCreateInput!]
+  services: [ServiceConnectOrCreateInput!]
+  settingStyles: [SettingStyleConnectOrCreateInput!]
+  slug: String!
+  socialMediaProfiles: [SocialMediaProfileConnectOrCreateInput!]
+  state: String
+  stories: [OrgStoryCreateInput!]
+  tagline: String
+  testimonials: [OrgTestimonialCreateInput!]
+  verifiedExists: Boolean
+  websiteUrl: String
+  yearFounded: Int
+  youtubeChannels: [YoutubeChannelConnectOrCreateInput!]
+  zip: String
+}
+
+input CreateRehabProgramInput {
+  acceptsCourtOrdered: Boolean
+  acceptsMedicallyComplex: Boolean
+  acceptsSelfReferral: Boolean
+  amenities: [AmenityConnectOrCreateInput!]
+  campusId: String
+  campusSlug: String
+  checkInDays: [String!]
+  clinicalFocusSummary: String
+  description: String
+  detoxServices: [DetoxServiceConnectOrCreateInput!]
+  features: [ProgramFeatureGlobalConnectOrCreateInput!]
+  hasOnsiteMD: Boolean
+  hasTwentyFourHourNursing: Boolean
+  insurancePayers: [RehabInsurancePayerConnectOrCreateInput!]
+  intakeEmail: String
+  intakePhone: String
+  isDetoxPrimary: Boolean
+  isMATProgram: Boolean
+  languages: [LanguageConnectOrCreateInput!]
+  levelOfCareSlug: String!
+  matTypes: [MATTypeConnectOrCreateInput!]
+  maxLengthOfStayDays: Int
+  minLengthOfStayDays: Int
+  name: String!
+  paymentOptions: [RehabPaymentOptionConnectOrCreateInput!]
+  populations: [PopulationConnectOrCreateInput!]
+  reviews: [ProgramReviewCreateInput!]
+  services: [ServiceConnectOrCreateInput!]
+  sessionScheduleSummary: String
+  shortName: String
+  slug: String!
+  staffToPatientRatio: Float
+  stories: [ProgramStoryCreateInput!]
+  substances: [SubstanceConnectOrCreateInput!]
+  targetPopulationSummary: String
+  testimonials: [ProgramTestimonialCreateInput!]
+  typicalLengthOfStayDays: Int
+  waitlistCategory: WaitlistCategory
+  waitlistDescription: String
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
-input DateTimeFieldUpdateOperationsInput {
-  set: DateTime
-}
-
-input DateTimeFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  not: NestedDateTimeFilter
-  notIn: [DateTime!]
-}
-
-"""An arbitrary-precision Decimal type"""
-scalar Decimal
-
-input DecimalNullableFilter {
-  equals: Decimal
-  gt: Decimal
-  gte: Decimal
-  in: [Decimal!]
-  lt: Decimal
-  lte: Decimal
-  not: NestedDecimalNullableFilter
-  notIn: [Decimal!]
+type DeleteResult {
+  id: ID!
 }
 
 type DetoxService {
-  _count: DetoxServiceCount!
-  description: String!
+  description: String
   displayName: String!
   id: ID!
-  rehabs: [RehabDetoxService!]
   slug: String!
-  substance: String!
 }
 
-type DetoxServiceCount {
-  rehabs: Int!
-}
-
-input DetoxServiceCreateNestedOneWithoutRehabsInput {
-  connect: DetoxServiceWhereUniqueInput
-  connectOrCreate: DetoxServiceCreateOrConnectWithoutRehabsInput
-  create: DetoxServiceCreateWithoutRehabsInput
-}
-
-input DetoxServiceCreateOrConnectWithoutRehabsInput {
-  create: DetoxServiceCreateWithoutRehabsInput!
-  where: DetoxServiceWhereUniqueInput!
-}
-
-input DetoxServiceCreateWithoutRehabsInput {
-  description: String!
-  displayName: String!
-  id: String
+input DetoxServiceConnectOrCreateInput {
+  description: String
+  displayName: String
   slug: String!
-  substance: String!
-}
-
-input DetoxServiceScalarRelationFilter {
-  is: DetoxServiceWhereInput
-  isNot: DetoxServiceWhereInput
-}
-
-input DetoxServiceUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: DetoxServiceWhereUniqueInput
-  connectOrCreate: DetoxServiceCreateOrConnectWithoutRehabsInput
-  create: DetoxServiceCreateWithoutRehabsInput
-  update: DetoxServiceUpdateToOneWithWhereWithoutRehabsInput
-  upsert: DetoxServiceUpsertWithoutRehabsInput
-}
-
-input DetoxServiceUpdateToOneWithWhereWithoutRehabsInput {
-  data: DetoxServiceUpdateWithoutRehabsInput!
-  where: DetoxServiceWhereInput
-}
-
-input DetoxServiceUpdateWithoutRehabsInput {
-  description: StringFieldUpdateOperationsInput
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  slug: StringFieldUpdateOperationsInput
-  substance: StringFieldUpdateOperationsInput
-}
-
-input DetoxServiceUpsertWithoutRehabsInput {
-  create: DetoxServiceCreateWithoutRehabsInput!
-  update: DetoxServiceUpdateWithoutRehabsInput!
-  where: DetoxServiceWhereInput
-}
-
-input DetoxServiceWhereInput {
-  AND: [DetoxServiceWhereInput!]
-  NOT: [DetoxServiceWhereInput!]
-  OR: [DetoxServiceWhereInput!]
-  description: StringFilter
-  displayName: StringFilter
-  id: StringFilter
-  rehabs: RehabDetoxServiceListRelationFilter
-  slug: StringFilter
-  substance: StringFilter
-}
-
-input DetoxServiceWhereUniqueInput {
-  AND: [DetoxServiceWhereInput!]
-  NOT: [DetoxServiceWhereInput!]
-  OR: [DetoxServiceWhereInput!]
-  description: StringFilter
-  displayName: StringFilter
-  id: String
-  rehabs: RehabDetoxServiceListRelationFilter
-  slug: String
-  substance: StringFilter
-}
-
-input EnumAmenityCategoryFieldUpdateOperationsInput {
-  set: AmenityCategory
-}
-
-input EnumAmenityCategoryFilter {
-  equals: AmenityCategory
-  in: [AmenityCategory!]
-  not: NestedEnumAmenityCategoryFilter
-  notIn: [AmenityCategory!]
-}
-
-input EnumPopulationCategoryFieldUpdateOperationsInput {
-  set: PopulationCategory
-}
-
-input EnumPopulationCategoryFilter {
-  equals: PopulationCategory
-  in: [PopulationCategory!]
-  not: NestedEnumPopulationCategoryFilter
-  notIn: [PopulationCategory!]
-}
-
-input EnumProgramFeatureCategoryFieldUpdateOperationsInput {
-  set: ProgramFeatureCategory
-}
-
-input EnumProgramFeatureCategoryFilter {
-  equals: ProgramFeatureCategory
-  in: [ProgramFeatureCategory!]
-  not: NestedEnumProgramFeatureCategoryFilter
-  notIn: [ProgramFeatureCategory!]
-}
-
-input EnumServiceKindFieldUpdateOperationsInput {
-  set: ServiceKind
-}
-
-input EnumServiceKindFilter {
-  equals: ServiceKind
-  in: [ServiceKind!]
-  not: NestedEnumServiceKindFilter
-  notIn: [ServiceKind!]
 }
 
 type Environment {
-  _count: EnvironmentCount!
-  description: String!
+  description: String
   displayName: String!
   id: ID!
-  rehabs: [RehabEnvironment!]
   slug: String!
 }
 
-type EnvironmentCount {
-  rehabs: Int!
-}
-
-input EnvironmentCreateNestedOneWithoutRehabsInput {
-  connect: EnvironmentWhereUniqueInput
-  connectOrCreate: EnvironmentCreateOrConnectWithoutRehabsInput
-  create: EnvironmentCreateWithoutRehabsInput
-}
-
-input EnvironmentCreateOrConnectWithoutRehabsInput {
-  create: EnvironmentCreateWithoutRehabsInput!
-  where: EnvironmentWhereUniqueInput!
-}
-
-input EnvironmentCreateWithoutRehabsInput {
-  description: String!
-  displayName: String!
-  id: String
+input EnvironmentConnectOrCreateInput {
+  description: String
+  displayName: String
   slug: String!
 }
 
-input EnvironmentScalarRelationFilter {
-  is: EnvironmentWhereInput
-  isNot: EnvironmentWhereInput
-}
-
-input EnvironmentUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: EnvironmentWhereUniqueInput
-  connectOrCreate: EnvironmentCreateOrConnectWithoutRehabsInput
-  create: EnvironmentCreateWithoutRehabsInput
-  update: EnvironmentUpdateToOneWithWhereWithoutRehabsInput
-  upsert: EnvironmentUpsertWithoutRehabsInput
-}
-
-input EnvironmentUpdateToOneWithWhereWithoutRehabsInput {
-  data: EnvironmentUpdateWithoutRehabsInput!
-  where: EnvironmentWhereInput
-}
-
-input EnvironmentUpdateWithoutRehabsInput {
-  description: StringFieldUpdateOperationsInput
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  slug: StringFieldUpdateOperationsInput
-}
-
-input EnvironmentUpsertWithoutRehabsInput {
-  create: EnvironmentCreateWithoutRehabsInput!
-  update: EnvironmentUpdateWithoutRehabsInput!
-  where: EnvironmentWhereInput
-}
-
-input EnvironmentWhereInput {
-  AND: [EnvironmentWhereInput!]
-  NOT: [EnvironmentWhereInput!]
-  OR: [EnvironmentWhereInput!]
-  description: StringFilter
-  displayName: StringFilter
-  id: StringFilter
-  rehabs: RehabEnvironmentListRelationFilter
-  slug: StringFilter
-}
-
-input EnvironmentWhereUniqueInput {
-  AND: [EnvironmentWhereInput!]
-  NOT: [EnvironmentWhereInput!]
-  OR: [EnvironmentWhereInput!]
-  description: StringFilter
-  displayName: StringFilter
-  id: String
-  rehabs: RehabEnvironmentListRelationFilter
-  slug: String
-}
-
-input FloatNullableFilter {
-  equals: Float
-  gt: Float
-  gte: Float
-  in: [Float!]
-  lt: Float
-  lte: Float
-  not: NestedFloatNullableFilter
-  notIn: [Float!]
+input FloatRangeFilter {
+  max: Float
+  min: Float
 }
 
 type InsurancePayer {
-  _count: InsurancePayerCount!
+  companyName: String!
+  description: String
   displayName: String!
   id: ID!
-  overview: String
-  popular: Boolean!
-  rehabs: [RehabInsurancePayer!]
+  payerType: String
   slug: String!
 }
 
-type InsurancePayerCount {
-  rehabs: Int!
-}
-
-input InsurancePayerCreateNestedOneWithoutRehabsInput {
-  connect: InsurancePayerWhereUniqueInput
-  connectOrCreate: InsurancePayerCreateOrConnectWithoutRehabsInput
-  create: InsurancePayerCreateWithoutRehabsInput
-}
-
-input InsurancePayerCreateOrConnectWithoutRehabsInput {
-  create: InsurancePayerCreateWithoutRehabsInput!
-  where: InsurancePayerWhereUniqueInput!
-}
-
-input InsurancePayerCreateWithoutRehabsInput {
-  displayName: String!
+input InsurancePayerConnectOrCreateInput {
+  companyName: String
+  description: String
+  displayName: String
   id: String
-  overview: String
-  popular: Boolean
-  slug: String!
-}
-
-input InsurancePayerScalarRelationFilter {
-  is: InsurancePayerWhereInput
-  isNot: InsurancePayerWhereInput
-}
-
-input InsurancePayerUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: InsurancePayerWhereUniqueInput
-  connectOrCreate: InsurancePayerCreateOrConnectWithoutRehabsInput
-  create: InsurancePayerCreateWithoutRehabsInput
-  update: InsurancePayerUpdateToOneWithWhereWithoutRehabsInput
-  upsert: InsurancePayerUpsertWithoutRehabsInput
-}
-
-input InsurancePayerUpdateToOneWithWhereWithoutRehabsInput {
-  data: InsurancePayerUpdateWithoutRehabsInput!
-  where: InsurancePayerWhereInput
-}
-
-input InsurancePayerUpdateWithoutRehabsInput {
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  overview: NullableStringFieldUpdateOperationsInput
-  popular: BoolFieldUpdateOperationsInput
-  slug: StringFieldUpdateOperationsInput
-}
-
-input InsurancePayerUpsertWithoutRehabsInput {
-  create: InsurancePayerCreateWithoutRehabsInput!
-  update: InsurancePayerUpdateWithoutRehabsInput!
-  where: InsurancePayerWhereInput
-}
-
-input InsurancePayerWhereInput {
-  AND: [InsurancePayerWhereInput!]
-  NOT: [InsurancePayerWhereInput!]
-  OR: [InsurancePayerWhereInput!]
-  displayName: StringFilter
-  id: StringFilter
-  overview: StringNullableFilter
-  popular: BoolFilter
-  rehabs: RehabInsurancePayerListRelationFilter
-  slug: StringFilter
-}
-
-input InsurancePayerWhereUniqueInput {
-  AND: [InsurancePayerWhereInput!]
-  NOT: [InsurancePayerWhereInput!]
-  OR: [InsurancePayerWhereInput!]
-  displayName: StringFilter
-  id: String
-  overview: StringNullableFilter
-  popular: BoolFilter
-  rehabs: RehabInsurancePayerListRelationFilter
+  payerType: String
   slug: String
 }
 
@@ -582,725 +324,365 @@ type InsuranceProviderGQL {
   type: String
 }
 
-input IntFieldUpdateOperationsInput {
-  decrement: Int
-  divide: Int
-  increment: Int
-  multiply: Int
-  set: Int
+enum InsuranceScope {
+  CAMPUS
+  ORG
+  PROGRAM
 }
 
-input IntFilter {
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: NestedIntFilter
-  notIn: [Int!]
+input IntRangeFilter {
+  max: Int
+  min: Int
 }
 
 type Language {
-  _count: LanguageCount!
   code: String!
+  description: String
   displayName: String!
   id: ID!
-  rehabs: [RehabLanguage!]
 }
 
-type LanguageCount {
-  rehabs: Int!
-}
-
-input LanguageCreateNestedOneWithoutRehabsInput {
-  connect: LanguageWhereUniqueInput
-  connectOrCreate: LanguageCreateOrConnectWithoutRehabsInput
-  create: LanguageCreateWithoutRehabsInput
-}
-
-input LanguageCreateOrConnectWithoutRehabsInput {
-  create: LanguageCreateWithoutRehabsInput!
-  where: LanguageWhereUniqueInput!
-}
-
-input LanguageCreateWithoutRehabsInput {
+input LanguageConnectOrCreateInput {
   code: String!
-  displayName: String!
-  id: String
-}
-
-input LanguageRelationInput {
-  code: String!
-  displayName: String!
-}
-
-input LanguageScalarRelationFilter {
-  is: LanguageWhereInput
-  isNot: LanguageWhereInput
-}
-
-input LanguageUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: LanguageWhereUniqueInput
-  connectOrCreate: LanguageCreateOrConnectWithoutRehabsInput
-  create: LanguageCreateWithoutRehabsInput
-  update: LanguageUpdateToOneWithWhereWithoutRehabsInput
-  upsert: LanguageUpsertWithoutRehabsInput
-}
-
-input LanguageUpdateToOneWithWhereWithoutRehabsInput {
-  data: LanguageUpdateWithoutRehabsInput!
-  where: LanguageWhereInput
-}
-
-input LanguageUpdateWithoutRehabsInput {
-  code: StringFieldUpdateOperationsInput
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-}
-
-input LanguageUpsertWithoutRehabsInput {
-  create: LanguageCreateWithoutRehabsInput!
-  update: LanguageUpdateWithoutRehabsInput!
-  where: LanguageWhereInput
-}
-
-input LanguageWhereInput {
-  AND: [LanguageWhereInput!]
-  NOT: [LanguageWhereInput!]
-  OR: [LanguageWhereInput!]
-  code: StringFilter
-  displayName: StringFilter
-  id: StringFilter
-  rehabs: RehabLanguageListRelationFilter
-}
-
-input LanguageWhereUniqueInput {
-  AND: [LanguageWhereInput!]
-  NOT: [LanguageWhereInput!]
-  OR: [LanguageWhereInput!]
-  code: String
-  displayName: StringFilter
-  id: String
-  rehabs: RehabLanguageListRelationFilter
+  description: String
+  displayName: String
 }
 
 type LevelOfCare {
-  _count: LevelOfCareCount!
-  description: String!
+  description: String
   displayName: String!
   id: ID!
-  rehabs: [RehabLevelOfCare!]
   slug: String!
+  type: LevelOfCareType!
 }
 
-type LevelOfCareCount {
-  rehabs: Int!
-}
-
-input LevelOfCareCreateNestedOneWithoutRehabsInput {
-  connect: LevelOfCareWhereUniqueInput
-  connectOrCreate: LevelOfCareCreateOrConnectWithoutRehabsInput
-  create: LevelOfCareCreateWithoutRehabsInput
-}
-
-input LevelOfCareCreateOrConnectWithoutRehabsInput {
-  create: LevelOfCareCreateWithoutRehabsInput!
-  where: LevelOfCareWhereUniqueInput!
-}
-
-input LevelOfCareCreateWithoutRehabsInput {
-  description: String!
-  displayName: String!
-  id: String
+input LevelOfCareConnectOrCreateInput {
+  description: String
+  displayName: String
   slug: String!
+  type: LevelOfCareType
 }
 
-input LevelOfCareScalarRelationFilter {
-  is: LevelOfCareWhereInput
-  isNot: LevelOfCareWhereInput
-}
-
-input LevelOfCareUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: LevelOfCareWhereUniqueInput
-  connectOrCreate: LevelOfCareCreateOrConnectWithoutRehabsInput
-  create: LevelOfCareCreateWithoutRehabsInput
-  update: LevelOfCareUpdateToOneWithWhereWithoutRehabsInput
-  upsert: LevelOfCareUpsertWithoutRehabsInput
-}
-
-input LevelOfCareUpdateToOneWithWhereWithoutRehabsInput {
-  data: LevelOfCareUpdateWithoutRehabsInput!
-  where: LevelOfCareWhereInput
-}
-
-input LevelOfCareUpdateWithoutRehabsInput {
-  description: StringFieldUpdateOperationsInput
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  slug: StringFieldUpdateOperationsInput
-}
-
-input LevelOfCareUpsertWithoutRehabsInput {
-  create: LevelOfCareCreateWithoutRehabsInput!
-  update: LevelOfCareUpdateWithoutRehabsInput!
-  where: LevelOfCareWhereInput
-}
-
-input LevelOfCareWhereInput {
-  AND: [LevelOfCareWhereInput!]
-  NOT: [LevelOfCareWhereInput!]
-  OR: [LevelOfCareWhereInput!]
-  description: StringFilter
-  displayName: StringFilter
-  id: StringFilter
-  rehabs: RehabLevelOfCareListRelationFilter
-  slug: StringFilter
-}
-
-input LevelOfCareWhereUniqueInput {
-  AND: [LevelOfCareWhereInput!]
-  NOT: [LevelOfCareWhereInput!]
-  OR: [LevelOfCareWhereInput!]
-  description: StringFilter
-  displayName: StringFilter
-  id: String
-  rehabs: RehabLevelOfCareListRelationFilter
-  slug: String
+enum LevelOfCareType {
+  AFTERCARE
+  DETOX
+  IOP
+  OTHER
+  OUTPATIENT
+  PHP
+  RESIDENTIAL
+  SOBER_LIVING
+  TELEHEALTH
 }
 
 type LuxuryTier {
-  _count: LuxuryTierCount!
-  description: String!
+  description: String
   displayName: String!
   id: ID!
-  rank: Int!
-  rehabs: [RehabLuxuryTier!]
+  rank: Int
   slug: String!
 }
 
-type LuxuryTierCount {
-  rehabs: Int!
+input LuxuryTierConnectOrCreateInput {
+  description: String
+  displayName: String
+  rank: Int
+  slug: String!
 }
 
-input LuxuryTierCreateNestedOneWithoutRehabsInput {
-  connect: LuxuryTierWhereUniqueInput
-  connectOrCreate: LuxuryTierCreateOrConnectWithoutRehabsInput
-  create: LuxuryTierCreateWithoutRehabsInput
-}
-
-input LuxuryTierCreateOrConnectWithoutRehabsInput {
-  create: LuxuryTierCreateWithoutRehabsInput!
-  where: LuxuryTierWhereUniqueInput!
-}
-
-input LuxuryTierCreateWithoutRehabsInput {
-  description: String!
+type MATType {
+  description: String
   displayName: String!
-  id: String
-  rank: Int!
+  id: ID!
+  medicationClass: String
   slug: String!
 }
 
-input LuxuryTierRelationInput {
-  displayName: String!
-  rank: Float!
+input MATTypeConnectOrCreateInput {
+  description: String
+  displayName: String
+  medicationClass: String
   slug: String!
-}
-
-input LuxuryTierScalarRelationFilter {
-  is: LuxuryTierWhereInput
-  isNot: LuxuryTierWhereInput
-}
-
-input LuxuryTierUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: LuxuryTierWhereUniqueInput
-  connectOrCreate: LuxuryTierCreateOrConnectWithoutRehabsInput
-  create: LuxuryTierCreateWithoutRehabsInput
-  update: LuxuryTierUpdateToOneWithWhereWithoutRehabsInput
-  upsert: LuxuryTierUpsertWithoutRehabsInput
-}
-
-input LuxuryTierUpdateToOneWithWhereWithoutRehabsInput {
-  data: LuxuryTierUpdateWithoutRehabsInput!
-  where: LuxuryTierWhereInput
-}
-
-input LuxuryTierUpdateWithoutRehabsInput {
-  description: StringFieldUpdateOperationsInput
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  rank: IntFieldUpdateOperationsInput
-  slug: StringFieldUpdateOperationsInput
-}
-
-input LuxuryTierUpsertWithoutRehabsInput {
-  create: LuxuryTierCreateWithoutRehabsInput!
-  update: LuxuryTierUpdateWithoutRehabsInput!
-  where: LuxuryTierWhereInput
-}
-
-input LuxuryTierWhereInput {
-  AND: [LuxuryTierWhereInput!]
-  NOT: [LuxuryTierWhereInput!]
-  OR: [LuxuryTierWhereInput!]
-  description: StringFilter
-  displayName: StringFilter
-  id: StringFilter
-  rank: IntFilter
-  rehabs: RehabLuxuryTierListRelationFilter
-  slug: StringFilter
-}
-
-input LuxuryTierWhereUniqueInput {
-  AND: [LuxuryTierWhereInput!]
-  NOT: [LuxuryTierWhereInput!]
-  OR: [LuxuryTierWhereInput!]
-  description: StringFilter
-  displayName: StringFilter
-  id: String
-  rank: IntFilter
-  rehabs: RehabLuxuryTierListRelationFilter
-  slug: String
 }
 
 type Mutation {
   createInsuranceProvider(data: CreateInsuranceProviderInput!): InsuranceProviderGQL!
   createManyProspectiveRehabs(data: [CreateProspectiveRehabInput!]!): [ProspectiveRehab!]!
-
-  """Create multiple rehab facilities with nested relationships"""
-  createManyRehabsWithNested(data: [RehabCreateInput!]!): [Rehab!]!
   createProspectiveRehab(data: CreateProspectiveRehabInput!): ProspectiveRehab!
 
-  """
-  Create a new facility which creates new relationships (connectOrCreate)
-  """
-  createRehabWithConnectOrCreate(data: RehabCreateWithLookupsInput!): Rehab!
+  """Create a new Rehab Campus with connect or create"""
+  createRehabCampusWithConnectOrCreate(data: CreateRehabCampusInput!): RehabCampus!
 
   """
   Create a new facility which creates new relationships (NOT connectOrCreate)
   """
-  createRehabWithNested(data: RehabCreateInput!): Rehab!
+  createRehabOrgWithConnectOrCreate(data: CreateRehabOrgInput!): RehabOrg!
+
+  """
+  Create a new rehab program and its nested relationships using connectOrCreate semantics
+  """
+  createRehabProgramWithConnectOrCreate(data: CreateRehabProgramInput!): RehabProgram!
   deleteInsuranceProvider(id: Int!): InsuranceProviderGQL!
   deleteProspectiveRehab(id: Int!): ProspectiveRehab!
+  deleteRehab(id: String!): DeleteResult!
 
-  """Delete a rehab facility"""
-  deleteRehab(id: String!): Rehab
+  """Delete  Rehab Campus"""
+  deleteRehabCampus(id: ID!): DeleteResult!
+
+  """Delete a rehab program by id"""
+  deleteRehabProgram(id: String!): DeleteResult!
   updateInsuranceProvider(data: UpdateInsuranceProviderInput!, id: Int!): InsuranceProviderGQL!
   updateProspectiveRehab(data: UpdateProspectiveRehabInput!, id: Int!): ProspectiveRehab!
 
-  """Update an existing rehab facility"""
-  updateRehab(data: RehabUpdateInput!, id: String!): Rehab!
+  """Upsert a Rehab Campus With Connect or create"""
+  upsertRehabCampusWithConnectOrCreate(data: UpsertRehabCampusInput!): RehabCampus!
+
+  """Upsert a RehabOrg with nested ConnectOrCreate"""
+  upsertRehabOrgWithConnectOrCreate(data: UpsertRehabOrgInput!): RehabOrg!
+
+  """
+  Upsert a rehab program by id, allowing partial updates and nested connectOrCreate for vocab and joins
+  """
+  upsertRehabProgramWithConnectOrCreate(data: UpsertRehabProgramInput!): RehabProgram!
 }
 
-input NestedBoolFilter {
-  equals: Boolean
-  not: NestedBoolFilter
+enum NetworkStatus {
+  CASE_BY_CASE
+  IN_NETWORK
+  OUT_OF_NETWORK
+  UNKNOWN
 }
 
-input NestedDateTimeFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  not: NestedDateTimeFilter
-  notIn: [DateTime!]
+type OrgReview {
+  body: String!
+  createdAt: DateTime!
+  externalUrl: String
+  id: ID!
+  isFeatured: Boolean!
+  isVerified: Boolean!
+  rating: Int!
+  rehabOrgId: String!
+  reviewerName: String
+  reviewerRole: String
+  reviewerType: ReviewerType!
+  source: ReviewSource!
+  title: String
+  updatedAt: DateTime!
 }
 
-input NestedDecimalNullableFilter {
-  equals: Decimal
-  gt: Decimal
-  gte: Decimal
-  in: [Decimal!]
-  lt: Decimal
-  lte: Decimal
-  not: NestedDecimalNullableFilter
-  notIn: [Decimal!]
+input OrgReviewCreateInput {
+  body: String!
+  externalUrl: String
+  isFeatured: Boolean
+  isVerified: Boolean
+  rating: Int!
+  reviewerName: String
+  reviewerRole: String
+  reviewerType: ReviewerType
+  source: ReviewSource
+  title: String
 }
 
-input NestedEnumAmenityCategoryFilter {
-  equals: AmenityCategory
-  in: [AmenityCategory!]
-  not: NestedEnumAmenityCategoryFilter
-  notIn: [AmenityCategory!]
+type OrgStory {
+  body: String!
+  createdAt: DateTime!
+  id: ID!
+  isFeatured: Boolean!
+  isPublic: Boolean!
+  rehabOrgId: String!
+  slug: String!
+  storyType: StoryType!
+  summary: String
+  tags: [String!]!
+  title: String!
+  updatedAt: DateTime!
 }
 
-input NestedEnumPopulationCategoryFilter {
-  equals: PopulationCategory
-  in: [PopulationCategory!]
-  not: NestedEnumPopulationCategoryFilter
-  notIn: [PopulationCategory!]
+input OrgStoryCreateInput {
+  body: String!
+  isFeatured: Boolean
+  isPublic: Boolean
+  slug: String!
+  storyType: StoryType
+  summary: String
+  tags: [String!]
+  title: String!
 }
 
-input NestedEnumProgramFeatureCategoryFilter {
-  equals: ProgramFeatureCategory
-  in: [ProgramFeatureCategory!]
-  not: NestedEnumProgramFeatureCategoryFilter
-  notIn: [ProgramFeatureCategory!]
+type OrgTestimonial {
+  attributionName: String
+  attributionRole: String
+  createdAt: DateTime!
+  id: ID!
+  isFeatured: Boolean!
+  quote: String!
+  rehabOrgId: String!
+  source: String
+  updatedAt: DateTime!
 }
 
-input NestedEnumServiceKindFilter {
-  equals: ServiceKind
-  in: [ServiceKind!]
-  not: NestedEnumServiceKindFilter
-  notIn: [ServiceKind!]
+input OrgTestimonialCreateInput {
+  attributionName: String
+  attributionRole: String
+  isFeatured: Boolean
+  quote: String!
+  source: String
 }
 
-input NestedFloatNullableFilter {
-  equals: Float
-  gt: Float
-  gte: Float
-  in: [Float!]
-  lt: Float
-  lte: Float
-  not: NestedFloatNullableFilter
-  notIn: [Float!]
+type ParentCompany {
+  createdAt: DateTime!
+  description: String
+  headquartersCity: String
+  headquartersCountry: String
+  headquartersPostalCode: String
+  headquartersState: String
+  headquartersStreet: String
+  id: ID!
+  name: String!
+  rehabOrgs: [RehabOrg!]
+  slug: String!
+  socialMediaProfiles: [SocialMediaProfile!]
+  updatedAt: DateTime!
+  verifiedExists: Boolean!
+  websiteUrl: String
+  youtubeChannels: [YoutubeChannel!]
 }
 
-input NestedIntFilter {
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: NestedIntFilter
-  notIn: [Int!]
-}
-
-input NestedStringFilter {
-  contains: String
-  endsWith: String
-  equals: String
-  gt: String
-  gte: String
-  in: [String!]
-  lt: String
-  lte: String
-  not: NestedStringFilter
-  notIn: [String!]
-  startsWith: String
-}
-
-input NestedStringNullableFilter {
-  contains: String
-  endsWith: String
-  equals: String
-  gt: String
-  gte: String
-  in: [String!]
-  lt: String
-  lte: String
-  not: NestedStringNullableFilter
-  notIn: [String!]
-  startsWith: String
-}
-
-input NullableDecimalFieldUpdateOperationsInput {
-  decrement: Decimal
-  divide: Decimal
-  increment: Decimal
-  multiply: Decimal
-  set: Decimal
-}
-
-input NullableFloatFieldUpdateOperationsInput {
-  decrement: Float
-  divide: Float
-  increment: Float
-  multiply: Float
-  set: Float
-}
-
-input NullableStringFieldUpdateOperationsInput {
-  set: String
+input ParentCompanyConnectOrCreateInput {
+  description: String
+  headquartersCity: String
+  headquartersCountry: String
+  headquartersPostalCode: String
+  headquartersState: String
+  headquartersStreet: String
+  id: String
+  name: String
+  slug: String
+  verifiedExists: Boolean
+  websiteUrl: String
 }
 
 type PaymentOption {
-  _count: PaymentOptionCount!
-  category: String!
-  description: String!
+  description: String
   displayName: String!
   id: ID!
-  rehabs: [RehabPaymentOption!]
   slug: String!
 }
 
-type PaymentOptionCount {
-  rehabs: Int!
-}
-
-input PaymentOptionCreateNestedOneWithoutRehabsInput {
-  connect: PaymentOptionWhereUniqueInput
-  connectOrCreate: PaymentOptionCreateOrConnectWithoutRehabsInput
-  create: PaymentOptionCreateWithoutRehabsInput
-}
-
-input PaymentOptionCreateOrConnectWithoutRehabsInput {
-  create: PaymentOptionCreateWithoutRehabsInput!
-  where: PaymentOptionWhereUniqueInput!
-}
-
-input PaymentOptionCreateWithoutRehabsInput {
-  category: String!
-  description: String!
-  displayName: String!
+input PaymentOptionConnectOrCreateInput {
+  description: String
+  displayName: String
   id: String
-  slug: String!
-}
-
-input PaymentOptionScalarRelationFilter {
-  is: PaymentOptionWhereInput
-  isNot: PaymentOptionWhereInput
-}
-
-input PaymentOptionUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: PaymentOptionWhereUniqueInput
-  connectOrCreate: PaymentOptionCreateOrConnectWithoutRehabsInput
-  create: PaymentOptionCreateWithoutRehabsInput
-  update: PaymentOptionUpdateToOneWithWhereWithoutRehabsInput
-  upsert: PaymentOptionUpsertWithoutRehabsInput
-}
-
-input PaymentOptionUpdateToOneWithWhereWithoutRehabsInput {
-  data: PaymentOptionUpdateWithoutRehabsInput!
-  where: PaymentOptionWhereInput
-}
-
-input PaymentOptionUpdateWithoutRehabsInput {
-  category: StringFieldUpdateOperationsInput
-  description: StringFieldUpdateOperationsInput
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  slug: StringFieldUpdateOperationsInput
-}
-
-input PaymentOptionUpsertWithoutRehabsInput {
-  create: PaymentOptionCreateWithoutRehabsInput!
-  update: PaymentOptionUpdateWithoutRehabsInput!
-  where: PaymentOptionWhereInput
-}
-
-input PaymentOptionWhereInput {
-  AND: [PaymentOptionWhereInput!]
-  NOT: [PaymentOptionWhereInput!]
-  OR: [PaymentOptionWhereInput!]
-  category: StringFilter
-  description: StringFilter
-  displayName: StringFilter
-  id: StringFilter
-  rehabs: RehabPaymentOptionListRelationFilter
-  slug: StringFilter
-}
-
-input PaymentOptionWhereUniqueInput {
-  AND: [PaymentOptionWhereInput!]
-  NOT: [PaymentOptionWhereInput!]
-  OR: [PaymentOptionWhereInput!]
-  category: StringFilter
-  description: StringFilter
-  displayName: StringFilter
-  id: String
-  rehabs: RehabPaymentOptionListRelationFilter
   slug: String
 }
 
 type Population {
-  _count: PopulationCount!
-  category: PopulationCategory!
-  description: String!
+  description: String
   displayName: String!
   id: ID!
-  rehabs: [RehabPopulation!]
   slug: String!
 }
 
-enum PopulationCategory {
-  AGE_GROUP
-  FAMILY
-  IDENTITY
-  LIFE_STAGE
-  MILITARY
-  SPECIALTY_PROGRAM
-}
-
-type PopulationCount {
-  rehabs: Int!
-}
-
-input PopulationCreateNestedOneWithoutRehabsInput {
-  connect: PopulationWhereUniqueInput
-  connectOrCreate: PopulationCreateOrConnectWithoutRehabsInput
-  create: PopulationCreateWithoutRehabsInput
-}
-
-input PopulationCreateOrConnectWithoutRehabsInput {
-  create: PopulationCreateWithoutRehabsInput!
-  where: PopulationWhereUniqueInput!
-}
-
-input PopulationCreateWithoutRehabsInput {
-  category: PopulationCategory!
-  description: String!
-  displayName: String!
-  id: String
+input PopulationConnectOrCreateInput {
+  description: String
+  displayName: String
   slug: String!
-}
-
-input PopulationScalarRelationFilter {
-  is: PopulationWhereInput
-  isNot: PopulationWhereInput
-}
-
-input PopulationUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: PopulationWhereUniqueInput
-  connectOrCreate: PopulationCreateOrConnectWithoutRehabsInput
-  create: PopulationCreateWithoutRehabsInput
-  update: PopulationUpdateToOneWithWhereWithoutRehabsInput
-  upsert: PopulationUpsertWithoutRehabsInput
-}
-
-input PopulationUpdateToOneWithWhereWithoutRehabsInput {
-  data: PopulationUpdateWithoutRehabsInput!
-  where: PopulationWhereInput
-}
-
-input PopulationUpdateWithoutRehabsInput {
-  category: EnumPopulationCategoryFieldUpdateOperationsInput
-  description: StringFieldUpdateOperationsInput
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  slug: StringFieldUpdateOperationsInput
-}
-
-input PopulationUpsertWithoutRehabsInput {
-  create: PopulationCreateWithoutRehabsInput!
-  update: PopulationUpdateWithoutRehabsInput!
-  where: PopulationWhereInput
-}
-
-input PopulationWhereInput {
-  AND: [PopulationWhereInput!]
-  NOT: [PopulationWhereInput!]
-  OR: [PopulationWhereInput!]
-  category: EnumPopulationCategoryFilter
-  description: StringFilter
-  displayName: StringFilter
-  id: StringFilter
-  rehabs: RehabPopulationListRelationFilter
-  slug: StringFilter
-}
-
-input PopulationWhereUniqueInput {
-  AND: [PopulationWhereInput!]
-  NOT: [PopulationWhereInput!]
-  OR: [PopulationWhereInput!]
-  category: EnumPopulationCategoryFilter
-  description: StringFilter
-  displayName: StringFilter
-  id: String
-  rehabs: RehabPopulationListRelationFilter
-  slug: String
 }
 
 type ProgramFeature {
-  _count: ProgramFeatureCount!
-  category: ProgramFeatureCategory!
-  description: String!
+  description: String
   displayName: String!
   id: ID!
-  rehabs: [RehabProgramFeature!]
   slug: String!
 }
 
-enum ProgramFeatureCategory {
-  ACCESS
-  ADMISSION
-  OTHER
-  STAFFING
-  VA
-  WORK_LIFE
-}
-
-type ProgramFeatureCount {
-  rehabs: Int!
-}
-
-input ProgramFeatureCreateNestedOneWithoutRehabsInput {
-  connect: ProgramFeatureWhereUniqueInput
-  connectOrCreate: ProgramFeatureCreateOrConnectWithoutRehabsInput
-  create: ProgramFeatureCreateWithoutRehabsInput
-}
-
-input ProgramFeatureCreateOrConnectWithoutRehabsInput {
-  create: ProgramFeatureCreateWithoutRehabsInput!
-  where: ProgramFeatureWhereUniqueInput!
-}
-
-input ProgramFeatureCreateWithoutRehabsInput {
-  category: ProgramFeatureCategory!
-  description: String!
-  displayName: String!
+input ProgramFeatureConnectOrCreateInput {
+  description: String
+  displayName: String
   id: String
-  slug: String!
-}
-
-input ProgramFeatureScalarRelationFilter {
-  is: ProgramFeatureWhereInput
-  isNot: ProgramFeatureWhereInput
-}
-
-input ProgramFeatureUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: ProgramFeatureWhereUniqueInput
-  connectOrCreate: ProgramFeatureCreateOrConnectWithoutRehabsInput
-  create: ProgramFeatureCreateWithoutRehabsInput
-  update: ProgramFeatureUpdateToOneWithWhereWithoutRehabsInput
-  upsert: ProgramFeatureUpsertWithoutRehabsInput
-}
-
-input ProgramFeatureUpdateToOneWithWhereWithoutRehabsInput {
-  data: ProgramFeatureUpdateWithoutRehabsInput!
-  where: ProgramFeatureWhereInput
-}
-
-input ProgramFeatureUpdateWithoutRehabsInput {
-  category: EnumProgramFeatureCategoryFieldUpdateOperationsInput
-  description: StringFieldUpdateOperationsInput
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  slug: StringFieldUpdateOperationsInput
-}
-
-input ProgramFeatureUpsertWithoutRehabsInput {
-  create: ProgramFeatureCreateWithoutRehabsInput!
-  update: ProgramFeatureUpdateWithoutRehabsInput!
-  where: ProgramFeatureWhereInput
-}
-
-input ProgramFeatureWhereInput {
-  AND: [ProgramFeatureWhereInput!]
-  NOT: [ProgramFeatureWhereInput!]
-  OR: [ProgramFeatureWhereInput!]
-  category: EnumProgramFeatureCategoryFilter
-  description: StringFilter
-  displayName: StringFilter
-  id: StringFilter
-  rehabs: RehabProgramFeatureListRelationFilter
-  slug: StringFilter
-}
-
-input ProgramFeatureWhereUniqueInput {
-  AND: [ProgramFeatureWhereInput!]
-  NOT: [ProgramFeatureWhereInput!]
-  OR: [ProgramFeatureWhereInput!]
-  category: EnumProgramFeatureCategoryFilter
-  description: StringFilter
-  displayName: StringFilter
-  id: String
-  rehabs: RehabProgramFeatureListRelationFilter
   slug: String
+}
+
+input ProgramFeatureGlobalConnectOrCreateInput {
+  description: String
+  displayName: String
+  slug: String!
+}
+
+type ProgramReview {
+  body: String!
+  createdAt: DateTime!
+  externalUrl: String
+  id: ID!
+  isFeatured: Boolean!
+  isVerified: Boolean!
+  programId: String!
+  rating: Int!
+  reviewerName: String
+  reviewerRole: String
+  reviewerType: ReviewerType!
+  source: ReviewSource!
+  title: String
+  updatedAt: DateTime!
+}
+
+input ProgramReviewCreateInput {
+  body: String!
+  externalUrl: String
+  isFeatured: Boolean
+  isVerified: Boolean
+  rating: Int!
+  reviewerName: String
+  reviewerRole: String
+  reviewerType: ReviewerType
+  source: ReviewSource
+  title: String
+}
+
+type ProgramStory {
+  body: String!
+  createdAt: DateTime!
+  id: ID!
+  isFeatured: Boolean!
+  isPublic: Boolean!
+  programId: String!
+  slug: String!
+  storyType: StoryType!
+  summary: String
+  tags: [String!]!
+  title: String!
+  updatedAt: DateTime!
+}
+
+input ProgramStoryCreateInput {
+  body: String!
+  isFeatured: Boolean
+  isPublic: Boolean
+  slug: String!
+  storyType: StoryType
+  summary: String
+  tags: [String!]
+  title: String!
+}
+
+type ProgramTestimonial {
+  attributionName: String
+  attributionRole: String
+  createdAt: DateTime!
+  id: ID!
+  isFeatured: Boolean!
+  programId: String!
+  quote: String!
+  source: String
+  updatedAt: DateTime!
+}
+
+input ProgramTestimonialCreateInput {
+  attributionName: String
+  attributionRole: String
+  isFeatured: Boolean
+  quote: String!
+  source: String
 }
 
 type ProspectiveRehab {
@@ -1319,1959 +701,639 @@ type ProspectiveRehab {
 }
 
 type Query {
+  """Find many rehab campus with extensive filters"""
+  findManyRehabCampuses(data: RehabCampusFilterInput!): [RehabCampus!]!
+  findManyRehabOrgs(data: RehabOrgFilterInput!): [RehabOrg!]!
+
+  """Find many rehab programs using complex filters"""
+  findManyRehabPrograms(data: RehabProgramFilterInput): [RehabProgram!]!
+
+  """Find Rehab Campus By ID"""
+  findRehabCampusById(id: String!): RehabCampus!
+  findRehabOrgById(id: String!): RehabOrg!
+
+  """Find a single rehab program by id"""
+  findRehabProgramById(id: String!): RehabProgram!
+
   """Simple health check"""
   health: String!
   insuranceProvider(id: Int!): InsuranceProviderGQL
   insuranceProviders(search: String, skip: Int, take: Int): [InsuranceProviderGQL!]!
   prospectiveRehab(id: Int!): ProspectiveRehab
   prospectiveRehabs(cursorId: Int, search: String, skip: Int, take: Int): [ProspectiveRehab!]!
-
-  """Find a single rehab by filters"""
-  rehab(filters: RehabFindOneInput): Rehab
-
-  """Get a single rehab by ID"""
-  rehabById(id: String!): Rehab
-
-  """Get a single rehab by slug"""
-  rehabBySlug(slug: String!): Rehab
-
-  """Get a paginated list of rehabs with optional filters"""
-  rehabs(filters: RehabFiltersInput, skip: Int = 0, take: Int = 20): [Rehab!]!
-
-  """Get total count of rehabs matching the filters"""
-  rehabsCount(filters: RehabFiltersInput): Int!
 }
 
-enum QueryMode {
-  default
-  insensitive
+type RehabAccreditation {
+  accreditation: Accreditation
+  accreditationId: String!
+  rehabId: String!
 }
 
-type Rehab {
-  _count: RehabCount!
-  accreditations: [RehabAccreditation!]
-  amenities: [RehabAmenity!]
+type RehabAmenity {
+  amenity: Amenity
+  amenityId: String!
+  rehabId: String!
+}
+
+type RehabCampus {
+  acceptsWalkIns: Boolean
+
+  """Accreditations held by this rehab"""
+  accreditations: [RehabCampusPopulation!]
+  bedsDetox: Int
+  bedsOutpatientCapacity: Int
+  bedsResidential: Int
+  bedsTotal: Int
+  campusAmenities: [RehabCampusAmenity!]
+  campusEnvironments: [RehabCampusEnvironment!]
+  campusLanguages: [RehabCampusLanguage!]
+  campusLuxuryTiers: [RehabCampusLuxuryTier!]
+  campusPopulations: [RehabCampusPopulation!]
+  campusReviews: [CampusReview!]
+  campusSettingStyles: [RehabCampusSettingStyle!]
+  campusStories: [CampusStory!]
+  campusTestimonials: [CampusTestimonial!]
   city: String!
   country: String!
   createdAt: DateTime!
   description: String
-  detoxServices: [RehabDetoxService!]
+
+  """Detoxification services available"""
+  detoxServices: LuxuryTier
+  directionsSummary: String
+  displayName: String
   email: String
-  environments: [RehabEnvironment!]
-  fullPrivatePrice: Decimal
+  hasOnsiteMD: Boolean
+  hasTwentyFourHourNursing: Boolean
   id: ID!
   insurancePayers: [RehabInsurancePayer!]
-  languages: [RehabLanguage!]
+
+  """Languages spoken at this facility"""
+  languages: [RehabCampusLanguage!]
   latitude: Float
-  levelsOfCare: [RehabLevelOfCare!]
   longitude: Float
-  luxuryTiers: [RehabLuxuryTier!]
+
+  """Luxury tier classification"""
+  luxuryTiers: [RehabCampusLuxuryTier!]
   name: String!
-  npi_number: String
-  otherSourceUrls: [String!]
-  patientStory: String
   paymentOptions: [RehabPaymentOption!]
   phone: String
-  populations: [RehabPopulation!]
+
+  """Populations and specialty groups served"""
+  populations: [RehabCampusAmenity!]
   postalCode: String!
-  primarySourceUrl: String
-  programFeatures: [RehabProgramFeature!]
-  services: [RehabService!]
-  settingStyles: [RehabSettingStyle!]
+  primaryEnvironment: Environment
+  primaryEnvironmentId: String
+  primaryLuxuryTier: LuxuryTier
+  primaryLuxuryTierId: String
+  primarySettingStyle: SettingStyle
+  primarySettingStyleId: String
+
+  """Program features and operational characteristics"""
+  programFeatures: [SocialMediaProfile!]
+  programs: [RehabProgram!]
+  rehabOrg: RehabOrg
+  rehabOrgId: String!
+
+  """Services and therapies offered at this rehab"""
+  services: SettingStyle
+
+  """Setting style of the facility"""
+  settingStyles: [RehabCampusSettingStyle!]
   slug: String!
+  socialMediaProfiles: [SocialMediaProfile!]
   state: String!
   street: String!
+  timeZone: String
   updatedAt: DateTime!
-  verifiedExists: Boolean!
-  websiteUrl: String
+  visitingHours: String
 }
 
-type RehabAccreditation {
-  accreditation: Accreditation!
-  accreditationId: String!
-  rehab: Rehab!
-  rehabId: String!
-}
-
-input RehabAccreditationCreateManyRehabInput {
-  accreditationId: String!
-}
-
-input RehabAccreditationCreateManyRehabInputEnvelope {
-  data: [RehabAccreditationCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabAccreditationCreateNestedManyWithoutRehabInput {
-  connect: [RehabAccreditationWhereUniqueInput!]
-  connectOrCreate: [RehabAccreditationCreateOrConnectWithoutRehabInput!]
-  create: [RehabAccreditationCreateWithoutRehabInput!]
-  createMany: RehabAccreditationCreateManyRehabInputEnvelope
-}
-
-input RehabAccreditationCreateOrConnectWithoutRehabInput {
-  create: RehabAccreditationCreateWithoutRehabInput!
-  where: RehabAccreditationWhereUniqueInput!
-}
-
-input RehabAccreditationCreateWithoutRehabInput {
-  accreditation: AccreditationCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabAccreditationListRelationFilter {
-  every: RehabAccreditationWhereInput
-  none: RehabAccreditationWhereInput
-  some: RehabAccreditationWhereInput
-}
-
-input RehabAccreditationRehabIdAccreditationIdCompoundUniqueInput {
-  accreditationId: String!
-  rehabId: String!
-}
-
-input RehabAccreditationScalarWhereInput {
-  AND: [RehabAccreditationScalarWhereInput!]
-  NOT: [RehabAccreditationScalarWhereInput!]
-  OR: [RehabAccreditationScalarWhereInput!]
-  accreditationId: StringFilter
-  rehabId: StringFilter
-}
-
-input RehabAccreditationUncheckedUpdateManyWithoutRehabInput {
-  accreditationId: StringFieldUpdateOperationsInput
-}
-
-input RehabAccreditationUpdateManyWithWhereWithoutRehabInput {
-  data: RehabAccreditationUncheckedUpdateManyWithoutRehabInput!
-  where: RehabAccreditationScalarWhereInput!
-}
-
-input RehabAccreditationUpdateManyWithoutRehabNestedInput {
-  connect: [RehabAccreditationWhereUniqueInput!]
-  connectOrCreate: [RehabAccreditationCreateOrConnectWithoutRehabInput!]
-  create: [RehabAccreditationCreateWithoutRehabInput!]
-  createMany: RehabAccreditationCreateManyRehabInputEnvelope
-  delete: [RehabAccreditationWhereUniqueInput!]
-  deleteMany: [RehabAccreditationScalarWhereInput!]
-  disconnect: [RehabAccreditationWhereUniqueInput!]
-  set: [RehabAccreditationWhereUniqueInput!]
-  update: [RehabAccreditationUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabAccreditationUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabAccreditationUpsertWithWhereUniqueWithoutRehabInput!]
-}
-
-input RehabAccreditationUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabAccreditationUpdateWithoutRehabInput!
-  where: RehabAccreditationWhereUniqueInput!
-}
-
-input RehabAccreditationUpdateWithoutRehabInput {
-  accreditation: AccreditationUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabAccreditationUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabAccreditationCreateWithoutRehabInput!
-  update: RehabAccreditationUpdateWithoutRehabInput!
-  where: RehabAccreditationWhereUniqueInput!
-}
-
-input RehabAccreditationWhereInput {
-  AND: [RehabAccreditationWhereInput!]
-  NOT: [RehabAccreditationWhereInput!]
-  OR: [RehabAccreditationWhereInput!]
-  accreditation: AccreditationScalarRelationFilter
-  accreditationId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-}
-
-input RehabAccreditationWhereUniqueInput {
-  AND: [RehabAccreditationWhereInput!]
-  NOT: [RehabAccreditationWhereInput!]
-  OR: [RehabAccreditationWhereInput!]
-  accreditation: AccreditationScalarRelationFilter
-  accreditationId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_accreditationId: RehabAccreditationRehabIdAccreditationIdCompoundUniqueInput
-}
-
-type RehabAmenity {
-  amenity: Amenity!
+type RehabCampusAmenity {
+  amenity: Amenity
   amenityId: String!
-  rehab: Rehab!
-  rehabId: String!
+  campusId: String!
 }
 
-input RehabAmenityCreateManyRehabInput {
-  amenityId: String!
+input RehabCampusConnectOrCreateInput {
+  create: RehabCampusCreateForOrgInput
+  id: String
+  slug: String
 }
 
-input RehabAmenityCreateManyRehabInputEnvelope {
-  data: [RehabAmenityCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabAmenityCreateNestedManyWithoutRehabInput {
-  connect: [RehabAmenityWhereUniqueInput!]
-  connectOrCreate: [RehabAmenityCreateOrConnectWithoutRehabInput!]
-  create: [RehabAmenityCreateWithoutRehabInput!]
-  createMany: RehabAmenityCreateManyRehabInputEnvelope
-}
-
-input RehabAmenityCreateOrConnectWithoutRehabInput {
-  create: RehabAmenityCreateWithoutRehabInput!
-  where: RehabAmenityWhereUniqueInput!
-}
-
-input RehabAmenityCreateWithoutRehabInput {
-  amenity: AmenityCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabAmenityListRelationFilter {
-  every: RehabAmenityWhereInput
-  none: RehabAmenityWhereInput
-  some: RehabAmenityWhereInput
-}
-
-input RehabAmenityRehabIdAmenityIdCompoundUniqueInput {
-  amenityId: String!
-  rehabId: String!
-}
-
-input RehabAmenityScalarWhereInput {
-  AND: [RehabAmenityScalarWhereInput!]
-  NOT: [RehabAmenityScalarWhereInput!]
-  OR: [RehabAmenityScalarWhereInput!]
-  amenityId: StringFilter
-  rehabId: StringFilter
-}
-
-input RehabAmenityUncheckedUpdateManyWithoutRehabInput {
-  amenityId: StringFieldUpdateOperationsInput
-}
-
-input RehabAmenityUpdateManyWithWhereWithoutRehabInput {
-  data: RehabAmenityUncheckedUpdateManyWithoutRehabInput!
-  where: RehabAmenityScalarWhereInput!
-}
-
-input RehabAmenityUpdateManyWithoutRehabNestedInput {
-  connect: [RehabAmenityWhereUniqueInput!]
-  connectOrCreate: [RehabAmenityCreateOrConnectWithoutRehabInput!]
-  create: [RehabAmenityCreateWithoutRehabInput!]
-  createMany: RehabAmenityCreateManyRehabInputEnvelope
-  delete: [RehabAmenityWhereUniqueInput!]
-  deleteMany: [RehabAmenityScalarWhereInput!]
-  disconnect: [RehabAmenityWhereUniqueInput!]
-  set: [RehabAmenityWhereUniqueInput!]
-  update: [RehabAmenityUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabAmenityUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabAmenityUpsertWithWhereUniqueWithoutRehabInput!]
-}
-
-input RehabAmenityUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabAmenityUpdateWithoutRehabInput!
-  where: RehabAmenityWhereUniqueInput!
-}
-
-input RehabAmenityUpdateWithoutRehabInput {
-  amenity: AmenityUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabAmenityUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabAmenityCreateWithoutRehabInput!
-  update: RehabAmenityUpdateWithoutRehabInput!
-  where: RehabAmenityWhereUniqueInput!
-}
-
-input RehabAmenityWhereInput {
-  AND: [RehabAmenityWhereInput!]
-  NOT: [RehabAmenityWhereInput!]
-  OR: [RehabAmenityWhereInput!]
-  amenity: AmenityScalarRelationFilter
-  amenityId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-}
-
-input RehabAmenityWhereUniqueInput {
-  AND: [RehabAmenityWhereInput!]
-  NOT: [RehabAmenityWhereInput!]
-  OR: [RehabAmenityWhereInput!]
-  amenity: AmenityScalarRelationFilter
-  amenityId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_amenityId: RehabAmenityRehabIdAmenityIdCompoundUniqueInput
-}
-
-type RehabCount {
-  accreditations: Int!
-  amenities: Int!
-  detoxServices: Int!
-  environments: Int!
-  insurancePayers: Int!
-  languages: Int!
-  levelsOfCare: Int!
-  luxuryTiers: Int!
-  paymentOptions: Int!
-  populations: Int!
-  programFeatures: Int!
-  services: Int!
-  settingStyles: Int!
-}
-
-input RehabCreateInput {
-  accreditations: RehabAccreditationCreateNestedManyWithoutRehabInput
-  amenities: RehabAmenityCreateNestedManyWithoutRehabInput
+input RehabCampusCreateForOrgInput {
+  acceptsWalkIns: Boolean
+  bedsDetox: Int
+  bedsOutpatientCapacity: Int
+  bedsResidential: Int
+  bedsTotal: Int
   city: String!
   country: String!
-  createdAt: DateTime
   description: String
-  detoxServices: RehabDetoxServiceCreateNestedManyWithoutRehabInput
+  directionsSummary: String
+  displayName: String
   email: String
-  environments: RehabEnvironmentCreateNestedManyWithoutRehabInput
-  fullPrivatePrice: Decimal
-  id: String
-  insurancePayers: RehabInsurancePayerCreateNestedManyWithoutRehabInput
-  languages: RehabLanguageCreateNestedManyWithoutRehabInput
+  hasOnsiteMD: Boolean
+  hasTwentyFourHourNursing: Boolean
   latitude: Float
-  levelsOfCare: RehabLevelOfCareCreateNestedManyWithoutRehabInput
   longitude: Float
-  luxuryTiers: RehabLuxuryTierCreateNestedManyWithoutRehabInput
   name: String!
-  npi_number: String
-  otherSourceUrls: RehabCreateotherSourceUrlsInput
-  patientStory: String
-  paymentOptions: RehabPaymentOptionCreateNestedManyWithoutRehabInput
   phone: String
-  populations: RehabPopulationCreateNestedManyWithoutRehabInput
   postalCode: String!
-  primarySourceUrl: String
-  programFeatures: RehabProgramFeatureCreateNestedManyWithoutRehabInput
-  services: RehabServiceCreateNestedManyWithoutRehabInput
-  settingStyles: RehabSettingStyleCreateNestedManyWithoutRehabInput
+  primaryEnvironmentSlug: String
+  primaryLuxuryTierSlug: String
+  primarySettingStyleSlug: String
   slug: String!
   state: String!
   street: String!
-  updatedAt: DateTime
-  verifiedExists: Boolean
-  websiteUrl: String
+  timeZone: String
+  visitingHours: String
 }
 
-input RehabCreateWithLookupsInput {
-  accreditations: [SlugRelationInput!]
-  amenities: [SlugRelationInput!]
-  city: String!
-  country: String!
-  createdAt: DateTime
-  description: String
-  detoxServices: [SlugRelationInput!]
-  email: String
-  environments: [SlugRelationInput!]
-  fullPrivatePrice: Decimal
-  id: String
-  insurancePayers: [SlugRelationInput!]
-  languages: [LanguageRelationInput!]
-  latitude: Float
-  levelsOfCare: [SlugRelationInput!]
-  longitude: Float
-  luxuryTiers: [LuxuryTierRelationInput!]
-  name: String!
-  npi_number: String
-  otherSourceUrls: RehabCreateotherSourceUrlsInput
-  patientStory: String
-  paymentOptions: [SlugRelationInput!]
-  phone: String
-  populations: [SlugRelationInput!]
-  postalCode: String!
-  primarySourceUrl: String
-  programFeatures: [SlugRelationInput!]
-  services: [SlugRelationInput!]
-  settingStyles: [SlugRelationInput!]
-  slug: String!
-  state: String!
-  street: String!
-  updatedAt: DateTime
-  verifiedExists: Boolean
-  websiteUrl: String
+type RehabCampusEnvironment {
+  campusId: String!
+  environment: Environment
+  environmentId: String!
 }
 
-input RehabCreateotherSourceUrlsInput {
-  set: [String!]!
+input RehabCampusFilterInput {
+  acceptsWalkIns: BooleanFilter
+  bedsDetox: IntRangeFilter
+  bedsOutpatientCapacity: IntRangeFilter
+  bedsResidential: IntRangeFilter
+  bedsTotal: IntRangeFilter
+  campusAmenityIds: [String!]
+  campusEnvironmentIds: [String!]
+  campusLanguageIds: [String!]
+  campusLuxuryTierIds: [String!]
+  campusPopulationIds: [String!]
+  campusSettingStyleIds: [String!]
+  cities: [String!]
+  countries: [String!]
+  hasOnsiteMD: BooleanFilter
+  hasTwentyFourHourNursing: BooleanFilter
+  ids: [ID!]
+  insurancePayerIds: [String!]
+  nearLat: Float
+  nearLng: Float
+  paymentOptionIds: [String!]
+  postalCodes: [String!]
+  primaryEnvironmentIds: [String!]
+  primaryLuxuryTierIds: [String!]
+  primarySettingStyleIds: [String!]
+  programAmenityIds: [String!]
+  programDetoxServiceIds: [String!]
+  programFeatureIds: [String!]
+  programLanguageIds: [String!]
+  programLevelOfCareIds: [String!]
+  programMATTypeIds: [String!]
+  programPopulationIds: [String!]
+  programServiceIds: [String!]
+  programSubstanceIds: [String!]
+  radiusKm: Float
+  rehabOrgIds: [String!]
+  search: String
+  slugs: [String!]
+  states: [String!]
+}
+
+type RehabCampusLanguage {
+  campusId: String!
+  language: Language
+  languageId: String!
+}
+
+type RehabCampusLuxuryTier {
+  campusId: String!
+  luxuryTier: LuxuryTier
+  luxuryTierId: String!
+}
+
+type RehabCampusPopulation {
+  campusId: String!
+  population: Population
+  populationId: String!
+}
+
+type RehabCampusSettingStyle {
+  campusId: String!
+  settingStyle: SettingStyle
+  settingStyleId: String!
 }
 
 type RehabDetoxService {
-  detoxService: DetoxService!
-  detoxServiceId: String!
-  rehab: Rehab!
-  rehabId: String!
-}
-
-input RehabDetoxServiceCreateManyRehabInput {
-  detoxServiceId: String!
-}
-
-input RehabDetoxServiceCreateManyRehabInputEnvelope {
-  data: [RehabDetoxServiceCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabDetoxServiceCreateNestedManyWithoutRehabInput {
-  connect: [RehabDetoxServiceWhereUniqueInput!]
-  connectOrCreate: [RehabDetoxServiceCreateOrConnectWithoutRehabInput!]
-  create: [RehabDetoxServiceCreateWithoutRehabInput!]
-  createMany: RehabDetoxServiceCreateManyRehabInputEnvelope
-}
-
-input RehabDetoxServiceCreateOrConnectWithoutRehabInput {
-  create: RehabDetoxServiceCreateWithoutRehabInput!
-  where: RehabDetoxServiceWhereUniqueInput!
-}
-
-input RehabDetoxServiceCreateWithoutRehabInput {
-  detoxService: DetoxServiceCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabDetoxServiceListRelationFilter {
-  every: RehabDetoxServiceWhereInput
-  none: RehabDetoxServiceWhereInput
-  some: RehabDetoxServiceWhereInput
-}
-
-input RehabDetoxServiceRehabIdDetoxServiceIdCompoundUniqueInput {
+  detoxService: DetoxService
   detoxServiceId: String!
   rehabId: String!
-}
-
-input RehabDetoxServiceScalarWhereInput {
-  AND: [RehabDetoxServiceScalarWhereInput!]
-  NOT: [RehabDetoxServiceScalarWhereInput!]
-  OR: [RehabDetoxServiceScalarWhereInput!]
-  detoxServiceId: StringFilter
-  rehabId: StringFilter
-}
-
-input RehabDetoxServiceUncheckedUpdateManyWithoutRehabInput {
-  detoxServiceId: StringFieldUpdateOperationsInput
-}
-
-input RehabDetoxServiceUpdateManyWithWhereWithoutRehabInput {
-  data: RehabDetoxServiceUncheckedUpdateManyWithoutRehabInput!
-  where: RehabDetoxServiceScalarWhereInput!
-}
-
-input RehabDetoxServiceUpdateManyWithoutRehabNestedInput {
-  connect: [RehabDetoxServiceWhereUniqueInput!]
-  connectOrCreate: [RehabDetoxServiceCreateOrConnectWithoutRehabInput!]
-  create: [RehabDetoxServiceCreateWithoutRehabInput!]
-  createMany: RehabDetoxServiceCreateManyRehabInputEnvelope
-  delete: [RehabDetoxServiceWhereUniqueInput!]
-  deleteMany: [RehabDetoxServiceScalarWhereInput!]
-  disconnect: [RehabDetoxServiceWhereUniqueInput!]
-  set: [RehabDetoxServiceWhereUniqueInput!]
-  update: [RehabDetoxServiceUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabDetoxServiceUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabDetoxServiceUpsertWithWhereUniqueWithoutRehabInput!]
-}
-
-input RehabDetoxServiceUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabDetoxServiceUpdateWithoutRehabInput!
-  where: RehabDetoxServiceWhereUniqueInput!
-}
-
-input RehabDetoxServiceUpdateWithoutRehabInput {
-  detoxService: DetoxServiceUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabDetoxServiceUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabDetoxServiceCreateWithoutRehabInput!
-  update: RehabDetoxServiceUpdateWithoutRehabInput!
-  where: RehabDetoxServiceWhereUniqueInput!
-}
-
-input RehabDetoxServiceWhereInput {
-  AND: [RehabDetoxServiceWhereInput!]
-  NOT: [RehabDetoxServiceWhereInput!]
-  OR: [RehabDetoxServiceWhereInput!]
-  detoxService: DetoxServiceScalarRelationFilter
-  detoxServiceId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-}
-
-input RehabDetoxServiceWhereUniqueInput {
-  AND: [RehabDetoxServiceWhereInput!]
-  NOT: [RehabDetoxServiceWhereInput!]
-  OR: [RehabDetoxServiceWhereInput!]
-  detoxService: DetoxServiceScalarRelationFilter
-  detoxServiceId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_detoxServiceId: RehabDetoxServiceRehabIdDetoxServiceIdCompoundUniqueInput
 }
 
 type RehabEnvironment {
-  environment: Environment!
-  environmentId: String!
-  rehab: Rehab!
-  rehabId: String!
-}
-
-input RehabEnvironmentCreateManyRehabInput {
-  environmentId: String!
-}
-
-input RehabEnvironmentCreateManyRehabInputEnvelope {
-  data: [RehabEnvironmentCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabEnvironmentCreateNestedManyWithoutRehabInput {
-  connect: [RehabEnvironmentWhereUniqueInput!]
-  connectOrCreate: [RehabEnvironmentCreateOrConnectWithoutRehabInput!]
-  create: [RehabEnvironmentCreateWithoutRehabInput!]
-  createMany: RehabEnvironmentCreateManyRehabInputEnvelope
-}
-
-input RehabEnvironmentCreateOrConnectWithoutRehabInput {
-  create: RehabEnvironmentCreateWithoutRehabInput!
-  where: RehabEnvironmentWhereUniqueInput!
-}
-
-input RehabEnvironmentCreateWithoutRehabInput {
-  environment: EnvironmentCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabEnvironmentListRelationFilter {
-  every: RehabEnvironmentWhereInput
-  none: RehabEnvironmentWhereInput
-  some: RehabEnvironmentWhereInput
-}
-
-input RehabEnvironmentRehabIdEnvironmentIdCompoundUniqueInput {
+  environment: Environment
   environmentId: String!
   rehabId: String!
-}
-
-input RehabEnvironmentScalarWhereInput {
-  AND: [RehabEnvironmentScalarWhereInput!]
-  NOT: [RehabEnvironmentScalarWhereInput!]
-  OR: [RehabEnvironmentScalarWhereInput!]
-  environmentId: StringFilter
-  rehabId: StringFilter
-}
-
-input RehabEnvironmentUncheckedUpdateManyWithoutRehabInput {
-  environmentId: StringFieldUpdateOperationsInput
-}
-
-input RehabEnvironmentUpdateManyWithWhereWithoutRehabInput {
-  data: RehabEnvironmentUncheckedUpdateManyWithoutRehabInput!
-  where: RehabEnvironmentScalarWhereInput!
-}
-
-input RehabEnvironmentUpdateManyWithoutRehabNestedInput {
-  connect: [RehabEnvironmentWhereUniqueInput!]
-  connectOrCreate: [RehabEnvironmentCreateOrConnectWithoutRehabInput!]
-  create: [RehabEnvironmentCreateWithoutRehabInput!]
-  createMany: RehabEnvironmentCreateManyRehabInputEnvelope
-  delete: [RehabEnvironmentWhereUniqueInput!]
-  deleteMany: [RehabEnvironmentScalarWhereInput!]
-  disconnect: [RehabEnvironmentWhereUniqueInput!]
-  set: [RehabEnvironmentWhereUniqueInput!]
-  update: [RehabEnvironmentUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabEnvironmentUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabEnvironmentUpsertWithWhereUniqueWithoutRehabInput!]
-}
-
-input RehabEnvironmentUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabEnvironmentUpdateWithoutRehabInput!
-  where: RehabEnvironmentWhereUniqueInput!
-}
-
-input RehabEnvironmentUpdateWithoutRehabInput {
-  environment: EnvironmentUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabEnvironmentUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabEnvironmentCreateWithoutRehabInput!
-  update: RehabEnvironmentUpdateWithoutRehabInput!
-  where: RehabEnvironmentWhereUniqueInput!
-}
-
-input RehabEnvironmentWhereInput {
-  AND: [RehabEnvironmentWhereInput!]
-  NOT: [RehabEnvironmentWhereInput!]
-  OR: [RehabEnvironmentWhereInput!]
-  environment: EnvironmentScalarRelationFilter
-  environmentId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-}
-
-input RehabEnvironmentWhereUniqueInput {
-  AND: [RehabEnvironmentWhereInput!]
-  NOT: [RehabEnvironmentWhereInput!]
-  OR: [RehabEnvironmentWhereInput!]
-  environment: EnvironmentScalarRelationFilter
-  environmentId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_environmentId: RehabEnvironmentRehabIdEnvironmentIdCompoundUniqueInput
-}
-
-input RehabFiltersInput {
-  accreditationIds: [ID!]
-  amenityIds: [ID!]
-  cities: [String!]
-  detoxServiceIds: [ID!]
-  environmentIds: [ID!]
-  insurancePayerIds: [ID!]
-  languageIds: [ID!]
-  levelOfCareIds: [ID!]
-  luxuryTierIds: [ID!]
-  paymentOptionIds: [ID!]
-  populationIds: [ID!]
-  programFeatureIds: [ID!]
-  search: String
-  serviceIds: [ID!]
-  settingStyleIds: [ID!]
-  states: [String!]
-  verifiedExists: Boolean
-}
-
-input RehabFindOneInput {
-  accreditationId: ID
-  amenityId: ID
-  city: String
-  detoxServiceId: ID
-  environmentId: ID
-  insurancePayerId: ID
-  languageId: ID
-  levelOfCareId: ID
-  luxuryTierId: ID
-  paymentOptionId: ID
-  populationId: ID
-  programFeatureId: ID
-  search: String
-  serviceId: ID
-  settingStyleId: ID
-  state: String
-  verifiedExists: Boolean
 }
 
 type RehabInsurancePayer {
-  averageAdmissionPrice: Decimal
-  insurancePayer: InsurancePayer!
+  acceptsOutOfNetworkWithOopCap: Boolean
+  averageAdmissionPrice: Int
+  campus: RehabCampus
+  campusId: String
+  createdAt: DateTime!
+  estimatedPatientOopMax: Int
+  estimatedPatientOopMin: Int
+  id: ID!
+  insurancePayer: InsurancePayer
   insurancePayerId: String!
-  rehab: Rehab!
+  networkStatus: NetworkStatus!
+  notes: String
+  overview: String
+  program: RehabProgram
+  programId: String
+  rehab: RehabOrg
   rehabId: String!
+  requiresPreauth: Boolean
+  scope: InsuranceScope!
+  updatedAt: DateTime!
 }
 
-input RehabInsurancePayerCreateManyRehabInput {
-  averageAdmissionPrice: Decimal
-  insurancePayerId: String!
-}
-
-input RehabInsurancePayerCreateManyRehabInputEnvelope {
-  data: [RehabInsurancePayerCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabInsurancePayerCreateNestedManyWithoutRehabInput {
-  connect: [RehabInsurancePayerWhereUniqueInput!]
-  connectOrCreate: [RehabInsurancePayerCreateOrConnectWithoutRehabInput!]
-  create: [RehabInsurancePayerCreateWithoutRehabInput!]
-  createMany: RehabInsurancePayerCreateManyRehabInputEnvelope
-}
-
-input RehabInsurancePayerCreateOrConnectWithoutRehabInput {
-  create: RehabInsurancePayerCreateWithoutRehabInput!
-  where: RehabInsurancePayerWhereUniqueInput!
-}
-
-input RehabInsurancePayerCreateWithoutRehabInput {
-  averageAdmissionPrice: Decimal
-  insurancePayer: InsurancePayerCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabInsurancePayerListRelationFilter {
-  every: RehabInsurancePayerWhereInput
-  none: RehabInsurancePayerWhereInput
-  some: RehabInsurancePayerWhereInput
-}
-
-input RehabInsurancePayerRehabIdInsurancePayerIdCompoundUniqueInput {
-  insurancePayerId: String!
-  rehabId: String!
-}
-
-input RehabInsurancePayerScalarWhereInput {
-  AND: [RehabInsurancePayerScalarWhereInput!]
-  NOT: [RehabInsurancePayerScalarWhereInput!]
-  OR: [RehabInsurancePayerScalarWhereInput!]
-  averageAdmissionPrice: DecimalNullableFilter
-  insurancePayerId: StringFilter
-  rehabId: StringFilter
-}
-
-input RehabInsurancePayerUpdateManyMutationInput {
-  averageAdmissionPrice: NullableDecimalFieldUpdateOperationsInput
-}
-
-input RehabInsurancePayerUpdateManyWithWhereWithoutRehabInput {
-  data: RehabInsurancePayerUpdateManyMutationInput!
-  where: RehabInsurancePayerScalarWhereInput!
-}
-
-input RehabInsurancePayerUpdateManyWithoutRehabNestedInput {
-  connect: [RehabInsurancePayerWhereUniqueInput!]
-  connectOrCreate: [RehabInsurancePayerCreateOrConnectWithoutRehabInput!]
-  create: [RehabInsurancePayerCreateWithoutRehabInput!]
-  createMany: RehabInsurancePayerCreateManyRehabInputEnvelope
-  delete: [RehabInsurancePayerWhereUniqueInput!]
-  deleteMany: [RehabInsurancePayerScalarWhereInput!]
-  disconnect: [RehabInsurancePayerWhereUniqueInput!]
-  set: [RehabInsurancePayerWhereUniqueInput!]
-  update: [RehabInsurancePayerUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabInsurancePayerUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabInsurancePayerUpsertWithWhereUniqueWithoutRehabInput!]
-}
-
-input RehabInsurancePayerUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabInsurancePayerUpdateWithoutRehabInput!
-  where: RehabInsurancePayerWhereUniqueInput!
-}
-
-input RehabInsurancePayerUpdateWithoutRehabInput {
-  averageAdmissionPrice: NullableDecimalFieldUpdateOperationsInput
-  insurancePayer: InsurancePayerUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabInsurancePayerUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabInsurancePayerCreateWithoutRehabInput!
-  update: RehabInsurancePayerUpdateWithoutRehabInput!
-  where: RehabInsurancePayerWhereUniqueInput!
-}
-
-input RehabInsurancePayerWhereInput {
-  AND: [RehabInsurancePayerWhereInput!]
-  NOT: [RehabInsurancePayerWhereInput!]
-  OR: [RehabInsurancePayerWhereInput!]
-  averageAdmissionPrice: DecimalNullableFilter
-  insurancePayer: InsurancePayerScalarRelationFilter
-  insurancePayerId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-}
-
-input RehabInsurancePayerWhereUniqueInput {
-  AND: [RehabInsurancePayerWhereInput!]
-  NOT: [RehabInsurancePayerWhereInput!]
-  OR: [RehabInsurancePayerWhereInput!]
-  averageAdmissionPrice: DecimalNullableFilter
-  insurancePayer: InsurancePayerScalarRelationFilter
-  insurancePayerId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_insurancePayerId: RehabInsurancePayerRehabIdInsurancePayerIdCompoundUniqueInput
+input RehabInsurancePayerConnectOrCreateInput {
+  acceptsOutOfNetworkWithOopCap: Boolean
+  averageAdmissionPrice: Int
+  estimatedPatientOopMax: Int
+  estimatedPatientOopMin: Int
+  insurancePayer: InsurancePayerConnectOrCreateInput!
+  networkStatus: NetworkStatus
+  notes: String
+  overview: String
+  requiresPreauth: Boolean
+  scope: InsuranceScope
 }
 
 type RehabLanguage {
-  language: Language!
-  languageId: String!
-  rehab: Rehab!
-  rehabId: String!
-}
-
-input RehabLanguageCreateManyRehabInput {
-  languageId: String!
-}
-
-input RehabLanguageCreateManyRehabInputEnvelope {
-  data: [RehabLanguageCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabLanguageCreateNestedManyWithoutRehabInput {
-  connect: [RehabLanguageWhereUniqueInput!]
-  connectOrCreate: [RehabLanguageCreateOrConnectWithoutRehabInput!]
-  create: [RehabLanguageCreateWithoutRehabInput!]
-  createMany: RehabLanguageCreateManyRehabInputEnvelope
-}
-
-input RehabLanguageCreateOrConnectWithoutRehabInput {
-  create: RehabLanguageCreateWithoutRehabInput!
-  where: RehabLanguageWhereUniqueInput!
-}
-
-input RehabLanguageCreateWithoutRehabInput {
-  language: LanguageCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabLanguageListRelationFilter {
-  every: RehabLanguageWhereInput
-  none: RehabLanguageWhereInput
-  some: RehabLanguageWhereInput
-}
-
-input RehabLanguageRehabIdLanguageIdCompoundUniqueInput {
+  language: Language
   languageId: String!
   rehabId: String!
-}
-
-input RehabLanguageScalarWhereInput {
-  AND: [RehabLanguageScalarWhereInput!]
-  NOT: [RehabLanguageScalarWhereInput!]
-  OR: [RehabLanguageScalarWhereInput!]
-  languageId: StringFilter
-  rehabId: StringFilter
-}
-
-input RehabLanguageUncheckedUpdateManyWithoutRehabInput {
-  languageId: StringFieldUpdateOperationsInput
-}
-
-input RehabLanguageUpdateManyWithWhereWithoutRehabInput {
-  data: RehabLanguageUncheckedUpdateManyWithoutRehabInput!
-  where: RehabLanguageScalarWhereInput!
-}
-
-input RehabLanguageUpdateManyWithoutRehabNestedInput {
-  connect: [RehabLanguageWhereUniqueInput!]
-  connectOrCreate: [RehabLanguageCreateOrConnectWithoutRehabInput!]
-  create: [RehabLanguageCreateWithoutRehabInput!]
-  createMany: RehabLanguageCreateManyRehabInputEnvelope
-  delete: [RehabLanguageWhereUniqueInput!]
-  deleteMany: [RehabLanguageScalarWhereInput!]
-  disconnect: [RehabLanguageWhereUniqueInput!]
-  set: [RehabLanguageWhereUniqueInput!]
-  update: [RehabLanguageUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabLanguageUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabLanguageUpsertWithWhereUniqueWithoutRehabInput!]
-}
-
-input RehabLanguageUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabLanguageUpdateWithoutRehabInput!
-  where: RehabLanguageWhereUniqueInput!
-}
-
-input RehabLanguageUpdateWithoutRehabInput {
-  language: LanguageUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabLanguageUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabLanguageCreateWithoutRehabInput!
-  update: RehabLanguageUpdateWithoutRehabInput!
-  where: RehabLanguageWhereUniqueInput!
-}
-
-input RehabLanguageWhereInput {
-  AND: [RehabLanguageWhereInput!]
-  NOT: [RehabLanguageWhereInput!]
-  OR: [RehabLanguageWhereInput!]
-  language: LanguageScalarRelationFilter
-  languageId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-}
-
-input RehabLanguageWhereUniqueInput {
-  AND: [RehabLanguageWhereInput!]
-  NOT: [RehabLanguageWhereInput!]
-  OR: [RehabLanguageWhereInput!]
-  language: LanguageScalarRelationFilter
-  languageId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_languageId: RehabLanguageRehabIdLanguageIdCompoundUniqueInput
 }
 
 type RehabLevelOfCare {
-  levelOfCare: LevelOfCare!
-  levelOfCareId: String!
-  rehab: Rehab!
-  rehabId: String!
-}
-
-input RehabLevelOfCareCreateManyRehabInput {
-  levelOfCareId: String!
-}
-
-input RehabLevelOfCareCreateManyRehabInputEnvelope {
-  data: [RehabLevelOfCareCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabLevelOfCareCreateNestedManyWithoutRehabInput {
-  connect: [RehabLevelOfCareWhereUniqueInput!]
-  connectOrCreate: [RehabLevelOfCareCreateOrConnectWithoutRehabInput!]
-  create: [RehabLevelOfCareCreateWithoutRehabInput!]
-  createMany: RehabLevelOfCareCreateManyRehabInputEnvelope
-}
-
-input RehabLevelOfCareCreateOrConnectWithoutRehabInput {
-  create: RehabLevelOfCareCreateWithoutRehabInput!
-  where: RehabLevelOfCareWhereUniqueInput!
-}
-
-input RehabLevelOfCareCreateWithoutRehabInput {
-  levelOfCare: LevelOfCareCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabLevelOfCareListRelationFilter {
-  every: RehabLevelOfCareWhereInput
-  none: RehabLevelOfCareWhereInput
-  some: RehabLevelOfCareWhereInput
-}
-
-input RehabLevelOfCareRehabIdLevelOfCareIdCompoundUniqueInput {
+  levelOfCare: LevelOfCare
   levelOfCareId: String!
   rehabId: String!
-}
-
-input RehabLevelOfCareScalarWhereInput {
-  AND: [RehabLevelOfCareScalarWhereInput!]
-  NOT: [RehabLevelOfCareScalarWhereInput!]
-  OR: [RehabLevelOfCareScalarWhereInput!]
-  levelOfCareId: StringFilter
-  rehabId: StringFilter
-}
-
-input RehabLevelOfCareUncheckedUpdateManyWithoutRehabInput {
-  levelOfCareId: StringFieldUpdateOperationsInput
-}
-
-input RehabLevelOfCareUpdateManyWithWhereWithoutRehabInput {
-  data: RehabLevelOfCareUncheckedUpdateManyWithoutRehabInput!
-  where: RehabLevelOfCareScalarWhereInput!
-}
-
-input RehabLevelOfCareUpdateManyWithoutRehabNestedInput {
-  connect: [RehabLevelOfCareWhereUniqueInput!]
-  connectOrCreate: [RehabLevelOfCareCreateOrConnectWithoutRehabInput!]
-  create: [RehabLevelOfCareCreateWithoutRehabInput!]
-  createMany: RehabLevelOfCareCreateManyRehabInputEnvelope
-  delete: [RehabLevelOfCareWhereUniqueInput!]
-  deleteMany: [RehabLevelOfCareScalarWhereInput!]
-  disconnect: [RehabLevelOfCareWhereUniqueInput!]
-  set: [RehabLevelOfCareWhereUniqueInput!]
-  update: [RehabLevelOfCareUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabLevelOfCareUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabLevelOfCareUpsertWithWhereUniqueWithoutRehabInput!]
-}
-
-input RehabLevelOfCareUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabLevelOfCareUpdateWithoutRehabInput!
-  where: RehabLevelOfCareWhereUniqueInput!
-}
-
-input RehabLevelOfCareUpdateWithoutRehabInput {
-  levelOfCare: LevelOfCareUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabLevelOfCareUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabLevelOfCareCreateWithoutRehabInput!
-  update: RehabLevelOfCareUpdateWithoutRehabInput!
-  where: RehabLevelOfCareWhereUniqueInput!
-}
-
-input RehabLevelOfCareWhereInput {
-  AND: [RehabLevelOfCareWhereInput!]
-  NOT: [RehabLevelOfCareWhereInput!]
-  OR: [RehabLevelOfCareWhereInput!]
-  levelOfCare: LevelOfCareScalarRelationFilter
-  levelOfCareId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-}
-
-input RehabLevelOfCareWhereUniqueInput {
-  AND: [RehabLevelOfCareWhereInput!]
-  NOT: [RehabLevelOfCareWhereInput!]
-  OR: [RehabLevelOfCareWhereInput!]
-  levelOfCare: LevelOfCareScalarRelationFilter
-  levelOfCareId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_levelOfCareId: RehabLevelOfCareRehabIdLevelOfCareIdCompoundUniqueInput
 }
 
 type RehabLuxuryTier {
-  luxuryTier: LuxuryTier!
-  luxuryTierId: String!
-  rehab: Rehab!
-  rehabId: String!
-}
-
-input RehabLuxuryTierCreateManyRehabInput {
-  luxuryTierId: String!
-}
-
-input RehabLuxuryTierCreateManyRehabInputEnvelope {
-  data: [RehabLuxuryTierCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabLuxuryTierCreateNestedManyWithoutRehabInput {
-  connect: [RehabLuxuryTierWhereUniqueInput!]
-  connectOrCreate: [RehabLuxuryTierCreateOrConnectWithoutRehabInput!]
-  create: [RehabLuxuryTierCreateWithoutRehabInput!]
-  createMany: RehabLuxuryTierCreateManyRehabInputEnvelope
-}
-
-input RehabLuxuryTierCreateOrConnectWithoutRehabInput {
-  create: RehabLuxuryTierCreateWithoutRehabInput!
-  where: RehabLuxuryTierWhereUniqueInput!
-}
-
-input RehabLuxuryTierCreateWithoutRehabInput {
-  luxuryTier: LuxuryTierCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabLuxuryTierListRelationFilter {
-  every: RehabLuxuryTierWhereInput
-  none: RehabLuxuryTierWhereInput
-  some: RehabLuxuryTierWhereInput
-}
-
-input RehabLuxuryTierRehabIdLuxuryTierIdCompoundUniqueInput {
+  luxuryTier: LuxuryTier
   luxuryTierId: String!
   rehabId: String!
 }
 
-input RehabLuxuryTierScalarWhereInput {
-  AND: [RehabLuxuryTierScalarWhereInput!]
-  NOT: [RehabLuxuryTierScalarWhereInput!]
-  OR: [RehabLuxuryTierScalarWhereInput!]
-  luxuryTierId: StringFilter
-  rehabId: StringFilter
+type RehabOrg {
+  """Accreditations held by this rehab"""
+  accreditations: [RehabAccreditation!]
+  amenities: [RehabAmenity!]
+  baseCurrency: String
+  campuses: [RehabCampus!]
+  city: String
+  country: String
+  createdAt: DateTime!
+  defaultTimeZone: String
+  description: String
+  detoxServices: [RehabDetoxService!]
+  environments: [RehabEnvironment!]
+  fullPrivatePrice: Int
+  id: ID!
+  insurancePayers: [RehabInsurancePayer!]
+  isNonProfit: Boolean
+  languages: [RehabLanguage!]
+  legalName: String
+  levelsOfCare: [RehabLevelOfCare!]
+  luxuryTiers: [RehabLuxuryTier!]
+  mainEmail: String
+  mainPhone: String
+  name: String!
+  npi_number: String
+  orgAccreditations: [RehabAccreditation!]
+  orgReviews: [OrgReview!]
+  orgStories: [OrgStory!]
+  orgTestimonials: [OrgTestimonial!]
+  otherSourceUrls: [String!]!
+  parentCompany: ParentCompany
+  parentCompanyId: String
+  paymentOptions: [RehabPaymentOption!]
+  populations: [RehabPopulation!]
+  primarySourceUrl: String
+
+  """Program features and operational characteristics"""
+  programFeatures: [RehabProgramFeatureGlobal!]
+  programFeaturesGlobal: [RehabProgramFeatureGlobal!]
+  services: [RehabService!]
+  settingStyles: [RehabSettingStyle!]
+  slug: String!
+  socialMediaProfiles: [SocialMediaProfile!]
+  state: String
+  tagline: String
+  updatedAt: DateTime!
+  verifiedExists: Boolean!
+  websiteUrl: String
+  yearFounded: Int
+  youtubeChannels: [YoutubeChannel!]
+  zip: String
 }
 
-input RehabLuxuryTierUncheckedUpdateManyWithoutRehabInput {
-  luxuryTierId: StringFieldUpdateOperationsInput
-}
-
-input RehabLuxuryTierUpdateManyWithWhereWithoutRehabInput {
-  data: RehabLuxuryTierUncheckedUpdateManyWithoutRehabInput!
-  where: RehabLuxuryTierScalarWhereInput!
-}
-
-input RehabLuxuryTierUpdateManyWithoutRehabNestedInput {
-  connect: [RehabLuxuryTierWhereUniqueInput!]
-  connectOrCreate: [RehabLuxuryTierCreateOrConnectWithoutRehabInput!]
-  create: [RehabLuxuryTierCreateWithoutRehabInput!]
-  createMany: RehabLuxuryTierCreateManyRehabInputEnvelope
-  delete: [RehabLuxuryTierWhereUniqueInput!]
-  deleteMany: [RehabLuxuryTierScalarWhereInput!]
-  disconnect: [RehabLuxuryTierWhereUniqueInput!]
-  set: [RehabLuxuryTierWhereUniqueInput!]
-  update: [RehabLuxuryTierUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabLuxuryTierUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabLuxuryTierUpsertWithWhereUniqueWithoutRehabInput!]
-}
-
-input RehabLuxuryTierUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabLuxuryTierUpdateWithoutRehabInput!
-  where: RehabLuxuryTierWhereUniqueInput!
-}
-
-input RehabLuxuryTierUpdateWithoutRehabInput {
-  luxuryTier: LuxuryTierUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabLuxuryTierUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabLuxuryTierCreateWithoutRehabInput!
-  update: RehabLuxuryTierUpdateWithoutRehabInput!
-  where: RehabLuxuryTierWhereUniqueInput!
-}
-
-input RehabLuxuryTierWhereInput {
-  AND: [RehabLuxuryTierWhereInput!]
-  NOT: [RehabLuxuryTierWhereInput!]
-  OR: [RehabLuxuryTierWhereInput!]
-  luxuryTier: LuxuryTierScalarRelationFilter
-  luxuryTierId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-}
-
-input RehabLuxuryTierWhereUniqueInput {
-  AND: [RehabLuxuryTierWhereInput!]
-  NOT: [RehabLuxuryTierWhereInput!]
-  OR: [RehabLuxuryTierWhereInput!]
-  luxuryTier: LuxuryTierScalarRelationFilter
-  luxuryTierId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_luxuryTierId: RehabLuxuryTierRehabIdLuxuryTierIdCompoundUniqueInput
+input RehabOrgFilterInput {
+  accreditationIds: [String!]
+  amenityIds: [String!]
+  campusStates: [String!]
+  cities: [String!]
+  countries: [String!]
+  detoxServiceIds: [String!]
+  environmentIds: [String!]
+  fullPrivatePrice: IntRangeFilter
+  ids: [ID!]
+  insurancePayerIds: [String!]
+  isNonProfit: BooleanFilter
+  languageIds: [String!]
+  legalName: StringFilter
+  levelOfCareIds: [String!]
+  luxuryTierIds: [String!]
+  name: StringFilter
+  npiNumber: StringFilter
+  paymentOptionIds: [String!]
+  populationIds: [String!]
+  programFeatureGlobalIds: [String!]
+  programLevelOfCareIds: [String!]
+  programMATTypeIds: [String!]
+  programSubstanceIds: [String!]
+  search: String
+  serviceIds: [String!]
+  settingStyleIds: [String!]
+  slugs: [String!]
+  states: [String!]
+  verifiedExists: BooleanFilter
+  yearFounded: IntRangeFilter
+  zips: [String!]
 }
 
 type RehabPaymentOption {
-  paymentOption: PaymentOption!
+  campus: RehabCampus
+  campusId: String
+  createdAt: DateTime!
+  descriptionOverride: String
+  id: ID!
+  paymentOption: PaymentOption
   paymentOptionId: String!
-  rehab: Rehab!
+  program: RehabProgram
+  programId: String
+  rehab: RehabOrg
   rehabId: String!
+  updatedAt: DateTime!
 }
 
-input RehabPaymentOptionCreateManyRehabInput {
-  paymentOptionId: String!
-}
-
-input RehabPaymentOptionCreateManyRehabInputEnvelope {
-  data: [RehabPaymentOptionCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabPaymentOptionCreateNestedManyWithoutRehabInput {
-  connect: [RehabPaymentOptionWhereUniqueInput!]
-  connectOrCreate: [RehabPaymentOptionCreateOrConnectWithoutRehabInput!]
-  create: [RehabPaymentOptionCreateWithoutRehabInput!]
-  createMany: RehabPaymentOptionCreateManyRehabInputEnvelope
-}
-
-input RehabPaymentOptionCreateOrConnectWithoutRehabInput {
-  create: RehabPaymentOptionCreateWithoutRehabInput!
-  where: RehabPaymentOptionWhereUniqueInput!
-}
-
-input RehabPaymentOptionCreateWithoutRehabInput {
-  paymentOption: PaymentOptionCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabPaymentOptionListRelationFilter {
-  every: RehabPaymentOptionWhereInput
-  none: RehabPaymentOptionWhereInput
-  some: RehabPaymentOptionWhereInput
-}
-
-input RehabPaymentOptionRehabIdPaymentOptionIdCompoundUniqueInput {
-  paymentOptionId: String!
-  rehabId: String!
-}
-
-input RehabPaymentOptionScalarWhereInput {
-  AND: [RehabPaymentOptionScalarWhereInput!]
-  NOT: [RehabPaymentOptionScalarWhereInput!]
-  OR: [RehabPaymentOptionScalarWhereInput!]
-  paymentOptionId: StringFilter
-  rehabId: StringFilter
-}
-
-input RehabPaymentOptionUncheckedUpdateManyWithoutRehabInput {
-  paymentOptionId: StringFieldUpdateOperationsInput
-}
-
-input RehabPaymentOptionUpdateManyWithWhereWithoutRehabInput {
-  data: RehabPaymentOptionUncheckedUpdateManyWithoutRehabInput!
-  where: RehabPaymentOptionScalarWhereInput!
-}
-
-input RehabPaymentOptionUpdateManyWithoutRehabNestedInput {
-  connect: [RehabPaymentOptionWhereUniqueInput!]
-  connectOrCreate: [RehabPaymentOptionCreateOrConnectWithoutRehabInput!]
-  create: [RehabPaymentOptionCreateWithoutRehabInput!]
-  createMany: RehabPaymentOptionCreateManyRehabInputEnvelope
-  delete: [RehabPaymentOptionWhereUniqueInput!]
-  deleteMany: [RehabPaymentOptionScalarWhereInput!]
-  disconnect: [RehabPaymentOptionWhereUniqueInput!]
-  set: [RehabPaymentOptionWhereUniqueInput!]
-  update: [RehabPaymentOptionUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabPaymentOptionUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabPaymentOptionUpsertWithWhereUniqueWithoutRehabInput!]
-}
-
-input RehabPaymentOptionUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabPaymentOptionUpdateWithoutRehabInput!
-  where: RehabPaymentOptionWhereUniqueInput!
-}
-
-input RehabPaymentOptionUpdateWithoutRehabInput {
-  paymentOption: PaymentOptionUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabPaymentOptionUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabPaymentOptionCreateWithoutRehabInput!
-  update: RehabPaymentOptionUpdateWithoutRehabInput!
-  where: RehabPaymentOptionWhereUniqueInput!
-}
-
-input RehabPaymentOptionWhereInput {
-  AND: [RehabPaymentOptionWhereInput!]
-  NOT: [RehabPaymentOptionWhereInput!]
-  OR: [RehabPaymentOptionWhereInput!]
-  paymentOption: PaymentOptionScalarRelationFilter
-  paymentOptionId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-}
-
-input RehabPaymentOptionWhereUniqueInput {
-  AND: [RehabPaymentOptionWhereInput!]
-  NOT: [RehabPaymentOptionWhereInput!]
-  OR: [RehabPaymentOptionWhereInput!]
-  paymentOption: PaymentOptionScalarRelationFilter
-  paymentOptionId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_paymentOptionId: RehabPaymentOptionRehabIdPaymentOptionIdCompoundUniqueInput
+input RehabPaymentOptionConnectOrCreateInput {
+  descriptionOverride: String
+  paymentOption: PaymentOptionConnectOrCreateInput!
 }
 
 type RehabPopulation {
-  population: Population!
-  populationId: String!
-  rehab: Rehab!
-  rehabId: String!
-}
-
-input RehabPopulationCreateManyRehabInput {
-  populationId: String!
-}
-
-input RehabPopulationCreateManyRehabInputEnvelope {
-  data: [RehabPopulationCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabPopulationCreateNestedManyWithoutRehabInput {
-  connect: [RehabPopulationWhereUniqueInput!]
-  connectOrCreate: [RehabPopulationCreateOrConnectWithoutRehabInput!]
-  create: [RehabPopulationCreateWithoutRehabInput!]
-  createMany: RehabPopulationCreateManyRehabInputEnvelope
-}
-
-input RehabPopulationCreateOrConnectWithoutRehabInput {
-  create: RehabPopulationCreateWithoutRehabInput!
-  where: RehabPopulationWhereUniqueInput!
-}
-
-input RehabPopulationCreateWithoutRehabInput {
-  population: PopulationCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabPopulationListRelationFilter {
-  every: RehabPopulationWhereInput
-  none: RehabPopulationWhereInput
-  some: RehabPopulationWhereInput
-}
-
-input RehabPopulationRehabIdPopulationIdCompoundUniqueInput {
+  population: Population
   populationId: String!
   rehabId: String!
 }
 
-input RehabPopulationScalarWhereInput {
-  AND: [RehabPopulationScalarWhereInput!]
-  NOT: [RehabPopulationScalarWhereInput!]
-  OR: [RehabPopulationScalarWhereInput!]
-  populationId: StringFilter
-  rehabId: StringFilter
+type RehabProgram {
+  acceptsCourtOrdered: Boolean
+  acceptsMedicallyComplex: Boolean
+  acceptsSelfReferral: Boolean
+  campus: RehabCampus!
+  campusId: String!
+  checkInDays: [String]
+  clinicalFocusSummary: String
+  createdAt: DateTime!
+  description: String
+  hasOnsiteMD: Boolean
+  hasTwentyFourHourNursing: Boolean
+  id: ID!
+  insurancePayers: [RehabInsurancePayer!]
+  intakeEmail: String
+  intakePhone: String
+  isDetoxPrimary: Boolean
+  isMATProgram: Boolean
+  levelOfCare: LevelOfCare!
+  levelOfCareId: String!
+  maxLengthOfStayDays: Int
+  minLengthOfStayDays: Int
+  name: String!
+  paymentOptions: [RehabPaymentOption!]
+  programAmenities: [RehabProgramAmenity!]
+  programDetoxServices: [RehabProgramDetoxService!]
+  programFeatures: [RehabProgramFeature!]
+  programLanguages: [RehabProgramLanguage!]
+  programMATTypes: [RehabProgramMATType!]
+  programPopulations: [RehabProgramPopulation!]
+  programReviews: [ProgramReview!]
+  programServices: [RehabProgramService!]
+  programStories: [ProgramStory!]
+  programSubstances: [RehabProgramSubstance!]
+  programTestimonials: [ProgramTestimonial!]
+  sessionScheduleSummary: String
+  shortName: String
+  slug: String!
+  staffToPatientRatio: Float
+  targetPopulationSummary: String
+  typicalLengthOfStayDays: Int
+  updatedAt: DateTime!
+  waitlistCategory: WaitlistCategory!
+  waitlistDescription: String
 }
 
-input RehabPopulationUncheckedUpdateManyWithoutRehabInput {
-  populationId: StringFieldUpdateOperationsInput
+type RehabProgramAmenity {
+  amenity: Amenity
+  amenityId: String!
+  programId: String!
 }
 
-input RehabPopulationUpdateManyWithWhereWithoutRehabInput {
-  data: RehabPopulationUncheckedUpdateManyWithoutRehabInput!
-  where: RehabPopulationScalarWhereInput!
-}
-
-input RehabPopulationUpdateManyWithoutRehabNestedInput {
-  connect: [RehabPopulationWhereUniqueInput!]
-  connectOrCreate: [RehabPopulationCreateOrConnectWithoutRehabInput!]
-  create: [RehabPopulationCreateWithoutRehabInput!]
-  createMany: RehabPopulationCreateManyRehabInputEnvelope
-  delete: [RehabPopulationWhereUniqueInput!]
-  deleteMany: [RehabPopulationScalarWhereInput!]
-  disconnect: [RehabPopulationWhereUniqueInput!]
-  set: [RehabPopulationWhereUniqueInput!]
-  update: [RehabPopulationUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabPopulationUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabPopulationUpsertWithWhereUniqueWithoutRehabInput!]
-}
-
-input RehabPopulationUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabPopulationUpdateWithoutRehabInput!
-  where: RehabPopulationWhereUniqueInput!
-}
-
-input RehabPopulationUpdateWithoutRehabInput {
-  population: PopulationUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabPopulationUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabPopulationCreateWithoutRehabInput!
-  update: RehabPopulationUpdateWithoutRehabInput!
-  where: RehabPopulationWhereUniqueInput!
-}
-
-input RehabPopulationWhereInput {
-  AND: [RehabPopulationWhereInput!]
-  NOT: [RehabPopulationWhereInput!]
-  OR: [RehabPopulationWhereInput!]
-  population: PopulationScalarRelationFilter
-  populationId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-}
-
-input RehabPopulationWhereUniqueInput {
-  AND: [RehabPopulationWhereInput!]
-  NOT: [RehabPopulationWhereInput!]
-  OR: [RehabPopulationWhereInput!]
-  population: PopulationScalarRelationFilter
-  populationId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_populationId: RehabPopulationRehabIdPopulationIdCompoundUniqueInput
+type RehabProgramDetoxService {
+  detoxService: DetoxService
+  detoxServiceId: String!
+  programId: String!
 }
 
 type RehabProgramFeature {
-  programFeature: ProgramFeature!
+  programFeature: ProgramFeature
   programFeatureId: String!
-  rehab: Rehab!
-  rehabId: String!
+  programId: String!
 }
 
-input RehabProgramFeatureCreateManyRehabInput {
-  programFeatureId: String!
-}
-
-input RehabProgramFeatureCreateManyRehabInputEnvelope {
-  data: [RehabProgramFeatureCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabProgramFeatureCreateNestedManyWithoutRehabInput {
-  connect: [RehabProgramFeatureWhereUniqueInput!]
-  connectOrCreate: [RehabProgramFeatureCreateOrConnectWithoutRehabInput!]
-  create: [RehabProgramFeatureCreateWithoutRehabInput!]
-  createMany: RehabProgramFeatureCreateManyRehabInputEnvelope
-}
-
-input RehabProgramFeatureCreateOrConnectWithoutRehabInput {
-  create: RehabProgramFeatureCreateWithoutRehabInput!
-  where: RehabProgramFeatureWhereUniqueInput!
-}
-
-input RehabProgramFeatureCreateWithoutRehabInput {
-  programFeature: ProgramFeatureCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabProgramFeatureListRelationFilter {
-  every: RehabProgramFeatureWhereInput
-  none: RehabProgramFeatureWhereInput
-  some: RehabProgramFeatureWhereInput
-}
-
-input RehabProgramFeatureRehabIdProgramFeatureIdCompoundUniqueInput {
+type RehabProgramFeatureGlobal {
+  programFeature: ProgramFeature
   programFeatureId: String!
   rehabId: String!
 }
 
-input RehabProgramFeatureScalarWhereInput {
-  AND: [RehabProgramFeatureScalarWhereInput!]
-  NOT: [RehabProgramFeatureScalarWhereInput!]
-  OR: [RehabProgramFeatureScalarWhereInput!]
-  programFeatureId: StringFilter
-  rehabId: StringFilter
+input RehabProgramFilterInput {
+  acceptsCourtOrdered: BooleanFilter
+  acceptsMedicallyComplex: BooleanFilter
+  acceptsSelfReferral: BooleanFilter
+  amenityIds: [String!]
+  campusIds: [String!]
+  detoxServiceIds: [String!]
+  featureIds: [String!]
+  hasOnsiteMD: BooleanFilter
+  hasTwentyFourHourNursing: BooleanFilter
+  ids: [ID!]
+  insurancePayerIds: [String!]
+  isDetoxPrimary: BooleanFilter
+  isMATProgram: BooleanFilter
+  languageIds: [String!]
+  levelOfCareIds: [String!]
+  matTypeIds: [String!]
+  maxLengthOfStayDays: IntRangeFilter
+  minLengthOfStayDays: IntRangeFilter
+  name: StringFilter
+  paymentOptionIds: [String!]
+  populationIds: [String!]
+  rehabOrgIds: [String!]
+  search: String
+  serviceIds: [String!]
+  sessionScheduleContains: String
+  slugs: [String!]
+  staffToPatientRatio: FloatRangeFilter
+  substanceIds: [String!]
+  typicalLengthOfStayDays: IntRangeFilter
+  waitlistCategories: [WaitlistCategory!]
 }
 
-input RehabProgramFeatureUncheckedUpdateManyWithoutRehabInput {
-  programFeatureId: StringFieldUpdateOperationsInput
+type RehabProgramLanguage {
+  language: Language
+  languageId: String!
+  programId: String!
 }
 
-input RehabProgramFeatureUpdateManyWithWhereWithoutRehabInput {
-  data: RehabProgramFeatureUncheckedUpdateManyWithoutRehabInput!
-  where: RehabProgramFeatureScalarWhereInput!
+type RehabProgramMATType {
+  matType: MATType
+  matTypeId: String!
+  programId: String!
 }
 
-input RehabProgramFeatureUpdateManyWithoutRehabNestedInput {
-  connect: [RehabProgramFeatureWhereUniqueInput!]
-  connectOrCreate: [RehabProgramFeatureCreateOrConnectWithoutRehabInput!]
-  create: [RehabProgramFeatureCreateWithoutRehabInput!]
-  createMany: RehabProgramFeatureCreateManyRehabInputEnvelope
-  delete: [RehabProgramFeatureWhereUniqueInput!]
-  deleteMany: [RehabProgramFeatureScalarWhereInput!]
-  disconnect: [RehabProgramFeatureWhereUniqueInput!]
-  set: [RehabProgramFeatureWhereUniqueInput!]
-  update: [RehabProgramFeatureUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabProgramFeatureUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabProgramFeatureUpsertWithWhereUniqueWithoutRehabInput!]
+type RehabProgramPopulation {
+  population: Population
+  populationId: String!
+  programId: String!
 }
 
-input RehabProgramFeatureUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabProgramFeatureUpdateWithoutRehabInput!
-  where: RehabProgramFeatureWhereUniqueInput!
+type RehabProgramService {
+  programId: String!
+  service: Service
+  serviceId: String!
 }
 
-input RehabProgramFeatureUpdateWithoutRehabInput {
-  programFeature: ProgramFeatureUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabProgramFeatureUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabProgramFeatureCreateWithoutRehabInput!
-  update: RehabProgramFeatureUpdateWithoutRehabInput!
-  where: RehabProgramFeatureWhereUniqueInput!
-}
-
-input RehabProgramFeatureWhereInput {
-  AND: [RehabProgramFeatureWhereInput!]
-  NOT: [RehabProgramFeatureWhereInput!]
-  OR: [RehabProgramFeatureWhereInput!]
-  programFeature: ProgramFeatureScalarRelationFilter
-  programFeatureId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-}
-
-input RehabProgramFeatureWhereUniqueInput {
-  AND: [RehabProgramFeatureWhereInput!]
-  NOT: [RehabProgramFeatureWhereInput!]
-  OR: [RehabProgramFeatureWhereInput!]
-  programFeature: ProgramFeatureScalarRelationFilter
-  programFeatureId: StringFilter
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_programFeatureId: RehabProgramFeatureRehabIdProgramFeatureIdCompoundUniqueInput
-}
-
-input RehabScalarRelationFilter {
-  is: RehabWhereInput
-  isNot: RehabWhereInput
+type RehabProgramSubstance {
+  programId: String!
+  substance: Substance
+  substanceId: String!
 }
 
 type RehabService {
-  rehab: Rehab!
   rehabId: String!
-  service: Service!
+  service: Service
   serviceId: String!
-}
-
-input RehabServiceCreateManyRehabInput {
-  serviceId: String!
-}
-
-input RehabServiceCreateManyRehabInputEnvelope {
-  data: [RehabServiceCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabServiceCreateNestedManyWithoutRehabInput {
-  connect: [RehabServiceWhereUniqueInput!]
-  connectOrCreate: [RehabServiceCreateOrConnectWithoutRehabInput!]
-  create: [RehabServiceCreateWithoutRehabInput!]
-  createMany: RehabServiceCreateManyRehabInputEnvelope
-}
-
-input RehabServiceCreateOrConnectWithoutRehabInput {
-  create: RehabServiceCreateWithoutRehabInput!
-  where: RehabServiceWhereUniqueInput!
-}
-
-input RehabServiceCreateWithoutRehabInput {
-  service: ServiceCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabServiceListRelationFilter {
-  every: RehabServiceWhereInput
-  none: RehabServiceWhereInput
-  some: RehabServiceWhereInput
-}
-
-input RehabServiceRehabIdServiceIdCompoundUniqueInput {
-  rehabId: String!
-  serviceId: String!
-}
-
-input RehabServiceScalarWhereInput {
-  AND: [RehabServiceScalarWhereInput!]
-  NOT: [RehabServiceScalarWhereInput!]
-  OR: [RehabServiceScalarWhereInput!]
-  rehabId: StringFilter
-  serviceId: StringFilter
-}
-
-input RehabServiceUncheckedUpdateManyWithoutRehabInput {
-  serviceId: StringFieldUpdateOperationsInput
-}
-
-input RehabServiceUpdateManyWithWhereWithoutRehabInput {
-  data: RehabServiceUncheckedUpdateManyWithoutRehabInput!
-  where: RehabServiceScalarWhereInput!
-}
-
-input RehabServiceUpdateManyWithoutRehabNestedInput {
-  connect: [RehabServiceWhereUniqueInput!]
-  connectOrCreate: [RehabServiceCreateOrConnectWithoutRehabInput!]
-  create: [RehabServiceCreateWithoutRehabInput!]
-  createMany: RehabServiceCreateManyRehabInputEnvelope
-  delete: [RehabServiceWhereUniqueInput!]
-  deleteMany: [RehabServiceScalarWhereInput!]
-  disconnect: [RehabServiceWhereUniqueInput!]
-  set: [RehabServiceWhereUniqueInput!]
-  update: [RehabServiceUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabServiceUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabServiceUpsertWithWhereUniqueWithoutRehabInput!]
-}
-
-input RehabServiceUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabServiceUpdateWithoutRehabInput!
-  where: RehabServiceWhereUniqueInput!
-}
-
-input RehabServiceUpdateWithoutRehabInput {
-  service: ServiceUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabServiceUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabServiceCreateWithoutRehabInput!
-  update: RehabServiceUpdateWithoutRehabInput!
-  where: RehabServiceWhereUniqueInput!
-}
-
-input RehabServiceWhereInput {
-  AND: [RehabServiceWhereInput!]
-  NOT: [RehabServiceWhereInput!]
-  OR: [RehabServiceWhereInput!]
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  service: ServiceScalarRelationFilter
-  serviceId: StringFilter
-}
-
-input RehabServiceWhereUniqueInput {
-  AND: [RehabServiceWhereInput!]
-  NOT: [RehabServiceWhereInput!]
-  OR: [RehabServiceWhereInput!]
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_serviceId: RehabServiceRehabIdServiceIdCompoundUniqueInput
-  service: ServiceScalarRelationFilter
-  serviceId: StringFilter
 }
 
 type RehabSettingStyle {
-  rehab: Rehab!
   rehabId: String!
-  settingStyle: SettingStyle!
+  settingStyle: SettingStyle
   settingStyleId: String!
 }
 
-input RehabSettingStyleCreateManyRehabInput {
-  settingStyleId: String!
+enum ReviewSource {
+  FACEBOOK
+  GOOGLE
+  HEALTHGRADES
+  INTERNAL
+  OTHER
 }
 
-input RehabSettingStyleCreateManyRehabInputEnvelope {
-  data: [RehabSettingStyleCreateManyRehabInput!]!
-  skipDuplicates: Boolean
-}
-
-input RehabSettingStyleCreateNestedManyWithoutRehabInput {
-  connect: [RehabSettingStyleWhereUniqueInput!]
-  connectOrCreate: [RehabSettingStyleCreateOrConnectWithoutRehabInput!]
-  create: [RehabSettingStyleCreateWithoutRehabInput!]
-  createMany: RehabSettingStyleCreateManyRehabInputEnvelope
-}
-
-input RehabSettingStyleCreateOrConnectWithoutRehabInput {
-  create: RehabSettingStyleCreateWithoutRehabInput!
-  where: RehabSettingStyleWhereUniqueInput!
-}
-
-input RehabSettingStyleCreateWithoutRehabInput {
-  settingStyle: SettingStyleCreateNestedOneWithoutRehabsInput!
-}
-
-input RehabSettingStyleListRelationFilter {
-  every: RehabSettingStyleWhereInput
-  none: RehabSettingStyleWhereInput
-  some: RehabSettingStyleWhereInput
-}
-
-input RehabSettingStyleRehabIdSettingStyleIdCompoundUniqueInput {
-  rehabId: String!
-  settingStyleId: String!
-}
-
-input RehabSettingStyleScalarWhereInput {
-  AND: [RehabSettingStyleScalarWhereInput!]
-  NOT: [RehabSettingStyleScalarWhereInput!]
-  OR: [RehabSettingStyleScalarWhereInput!]
-  rehabId: StringFilter
-  settingStyleId: StringFilter
-}
-
-input RehabSettingStyleUncheckedUpdateManyWithoutRehabInput {
-  settingStyleId: StringFieldUpdateOperationsInput
-}
-
-input RehabSettingStyleUpdateManyWithWhereWithoutRehabInput {
-  data: RehabSettingStyleUncheckedUpdateManyWithoutRehabInput!
-  where: RehabSettingStyleScalarWhereInput!
-}
-
-input RehabSettingStyleUpdateManyWithoutRehabNestedInput {
-  connect: [RehabSettingStyleWhereUniqueInput!]
-  connectOrCreate: [RehabSettingStyleCreateOrConnectWithoutRehabInput!]
-  create: [RehabSettingStyleCreateWithoutRehabInput!]
-  createMany: RehabSettingStyleCreateManyRehabInputEnvelope
-  delete: [RehabSettingStyleWhereUniqueInput!]
-  deleteMany: [RehabSettingStyleScalarWhereInput!]
-  disconnect: [RehabSettingStyleWhereUniqueInput!]
-  set: [RehabSettingStyleWhereUniqueInput!]
-  update: [RehabSettingStyleUpdateWithWhereUniqueWithoutRehabInput!]
-  updateMany: [RehabSettingStyleUpdateManyWithWhereWithoutRehabInput!]
-  upsert: [RehabSettingStyleUpsertWithWhereUniqueWithoutRehabInput!]
-}
-
-input RehabSettingStyleUpdateWithWhereUniqueWithoutRehabInput {
-  data: RehabSettingStyleUpdateWithoutRehabInput!
-  where: RehabSettingStyleWhereUniqueInput!
-}
-
-input RehabSettingStyleUpdateWithoutRehabInput {
-  settingStyle: SettingStyleUpdateOneRequiredWithoutRehabsNestedInput
-}
-
-input RehabSettingStyleUpsertWithWhereUniqueWithoutRehabInput {
-  create: RehabSettingStyleCreateWithoutRehabInput!
-  update: RehabSettingStyleUpdateWithoutRehabInput!
-  where: RehabSettingStyleWhereUniqueInput!
-}
-
-input RehabSettingStyleWhereInput {
-  AND: [RehabSettingStyleWhereInput!]
-  NOT: [RehabSettingStyleWhereInput!]
-  OR: [RehabSettingStyleWhereInput!]
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  settingStyle: SettingStyleScalarRelationFilter
-  settingStyleId: StringFilter
-}
-
-input RehabSettingStyleWhereUniqueInput {
-  AND: [RehabSettingStyleWhereInput!]
-  NOT: [RehabSettingStyleWhereInput!]
-  OR: [RehabSettingStyleWhereInput!]
-  rehab: RehabScalarRelationFilter
-  rehabId: StringFilter
-  rehabId_settingStyleId: RehabSettingStyleRehabIdSettingStyleIdCompoundUniqueInput
-  settingStyle: SettingStyleScalarRelationFilter
-  settingStyleId: StringFilter
-}
-
-input RehabUpdateInput {
-  accreditations: RehabAccreditationUpdateManyWithoutRehabNestedInput
-  amenities: RehabAmenityUpdateManyWithoutRehabNestedInput
-  city: StringFieldUpdateOperationsInput
-  country: StringFieldUpdateOperationsInput
-  createdAt: DateTimeFieldUpdateOperationsInput
-  description: NullableStringFieldUpdateOperationsInput
-  detoxServices: RehabDetoxServiceUpdateManyWithoutRehabNestedInput
-  email: NullableStringFieldUpdateOperationsInput
-  environments: RehabEnvironmentUpdateManyWithoutRehabNestedInput
-  fullPrivatePrice: NullableDecimalFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  insurancePayers: RehabInsurancePayerUpdateManyWithoutRehabNestedInput
-  languages: RehabLanguageUpdateManyWithoutRehabNestedInput
-  latitude: NullableFloatFieldUpdateOperationsInput
-  levelsOfCare: RehabLevelOfCareUpdateManyWithoutRehabNestedInput
-  longitude: NullableFloatFieldUpdateOperationsInput
-  luxuryTiers: RehabLuxuryTierUpdateManyWithoutRehabNestedInput
-  name: StringFieldUpdateOperationsInput
-  npi_number: NullableStringFieldUpdateOperationsInput
-  otherSourceUrls: RehabUpdateotherSourceUrlsInput
-  patientStory: NullableStringFieldUpdateOperationsInput
-  paymentOptions: RehabPaymentOptionUpdateManyWithoutRehabNestedInput
-  phone: NullableStringFieldUpdateOperationsInput
-  populations: RehabPopulationUpdateManyWithoutRehabNestedInput
-  postalCode: StringFieldUpdateOperationsInput
-  primarySourceUrl: NullableStringFieldUpdateOperationsInput
-  programFeatures: RehabProgramFeatureUpdateManyWithoutRehabNestedInput
-  services: RehabServiceUpdateManyWithoutRehabNestedInput
-  settingStyles: RehabSettingStyleUpdateManyWithoutRehabNestedInput
-  slug: StringFieldUpdateOperationsInput
-  state: StringFieldUpdateOperationsInput
-  street: StringFieldUpdateOperationsInput
-  updatedAt: DateTimeFieldUpdateOperationsInput
-  verifiedExists: BoolFieldUpdateOperationsInput
-  websiteUrl: NullableStringFieldUpdateOperationsInput
-}
-
-input RehabUpdateotherSourceUrlsInput {
-  push: [String!]
-  set: [String!]
-}
-
-input RehabWhereInput {
-  AND: [RehabWhereInput!]
-  NOT: [RehabWhereInput!]
-  OR: [RehabWhereInput!]
-  accreditations: RehabAccreditationListRelationFilter
-  amenities: RehabAmenityListRelationFilter
-  city: StringFilter
-  country: StringFilter
-  createdAt: DateTimeFilter
-  description: StringNullableFilter
-  detoxServices: RehabDetoxServiceListRelationFilter
-  email: StringNullableFilter
-  environments: RehabEnvironmentListRelationFilter
-  fullPrivatePrice: DecimalNullableFilter
-  id: StringFilter
-  insurancePayers: RehabInsurancePayerListRelationFilter
-  languages: RehabLanguageListRelationFilter
-  latitude: FloatNullableFilter
-  levelsOfCare: RehabLevelOfCareListRelationFilter
-  longitude: FloatNullableFilter
-  luxuryTiers: RehabLuxuryTierListRelationFilter
-  name: StringFilter
-  npi_number: StringNullableFilter
-  otherSourceUrls: StringNullableListFilter
-  patientStory: StringNullableFilter
-  paymentOptions: RehabPaymentOptionListRelationFilter
-  phone: StringNullableFilter
-  populations: RehabPopulationListRelationFilter
-  postalCode: StringFilter
-  primarySourceUrl: StringNullableFilter
-  programFeatures: RehabProgramFeatureListRelationFilter
-  services: RehabServiceListRelationFilter
-  settingStyles: RehabSettingStyleListRelationFilter
-  slug: StringFilter
-  state: StringFilter
-  street: StringFilter
-  updatedAt: DateTimeFilter
-  verifiedExists: BoolFilter
-  websiteUrl: StringNullableFilter
+enum ReviewerType {
+  CLINICIAN
+  LOVED_ONE
+  OTHER
+  PATIENT
 }
 
 type Service {
-  _count: ServiceCount!
-  description: String!
+  description: String
   displayName: String!
   id: ID!
-  kind: ServiceKind!
-  rehabs: [RehabService!]
   slug: String!
 }
 
-type ServiceCount {
-  rehabs: Int!
-}
-
-input ServiceCreateNestedOneWithoutRehabsInput {
-  connect: ServiceWhereUniqueInput
-  connectOrCreate: ServiceCreateOrConnectWithoutRehabsInput
-  create: ServiceCreateWithoutRehabsInput
-}
-
-input ServiceCreateOrConnectWithoutRehabsInput {
-  create: ServiceCreateWithoutRehabsInput!
-  where: ServiceWhereUniqueInput!
-}
-
-input ServiceCreateWithoutRehabsInput {
-  description: String!
-  displayName: String!
-  id: String
-  kind: ServiceKind!
-  slug: String!
-}
-
-enum ServiceKind {
-  COUNSELING_TYPE
-  OTHER
-  THERAPY_MODEL
-}
-
-input ServiceScalarRelationFilter {
-  is: ServiceWhereInput
-  isNot: ServiceWhereInput
-}
-
-input ServiceUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: ServiceWhereUniqueInput
-  connectOrCreate: ServiceCreateOrConnectWithoutRehabsInput
-  create: ServiceCreateWithoutRehabsInput
-  update: ServiceUpdateToOneWithWhereWithoutRehabsInput
-  upsert: ServiceUpsertWithoutRehabsInput
-}
-
-input ServiceUpdateToOneWithWhereWithoutRehabsInput {
-  data: ServiceUpdateWithoutRehabsInput!
-  where: ServiceWhereInput
-}
-
-input ServiceUpdateWithoutRehabsInput {
-  description: StringFieldUpdateOperationsInput
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  kind: EnumServiceKindFieldUpdateOperationsInput
-  slug: StringFieldUpdateOperationsInput
-}
-
-input ServiceUpsertWithoutRehabsInput {
-  create: ServiceCreateWithoutRehabsInput!
-  update: ServiceUpdateWithoutRehabsInput!
-  where: ServiceWhereInput
-}
-
-input ServiceWhereInput {
-  AND: [ServiceWhereInput!]
-  NOT: [ServiceWhereInput!]
-  OR: [ServiceWhereInput!]
-  description: StringFilter
-  displayName: StringFilter
-  id: StringFilter
-  kind: EnumServiceKindFilter
-  rehabs: RehabServiceListRelationFilter
-  slug: StringFilter
-}
-
-input ServiceWhereUniqueInput {
-  AND: [ServiceWhereInput!]
-  NOT: [ServiceWhereInput!]
-  OR: [ServiceWhereInput!]
-  description: StringFilter
-  displayName: StringFilter
-  id: String
-  kind: EnumServiceKindFilter
-  rehabs: RehabServiceListRelationFilter
-  slug: String
-}
-
-type SettingStyle {
-  _count: SettingStyleCount!
-  description: String!
-  displayName: String!
-  id: ID!
-  rehabs: [RehabSettingStyle!]
-  slug: String!
-}
-
-type SettingStyleCount {
-  rehabs: Int!
-}
-
-input SettingStyleCreateNestedOneWithoutRehabsInput {
-  connect: SettingStyleWhereUniqueInput
-  connectOrCreate: SettingStyleCreateOrConnectWithoutRehabsInput
-  create: SettingStyleCreateWithoutRehabsInput
-}
-
-input SettingStyleCreateOrConnectWithoutRehabsInput {
-  create: SettingStyleCreateWithoutRehabsInput!
-  where: SettingStyleWhereUniqueInput!
-}
-
-input SettingStyleCreateWithoutRehabsInput {
-  description: String!
-  displayName: String!
-  id: String
-  slug: String!
-}
-
-input SettingStyleScalarRelationFilter {
-  is: SettingStyleWhereInput
-  isNot: SettingStyleWhereInput
-}
-
-input SettingStyleUpdateOneRequiredWithoutRehabsNestedInput {
-  connect: SettingStyleWhereUniqueInput
-  connectOrCreate: SettingStyleCreateOrConnectWithoutRehabsInput
-  create: SettingStyleCreateWithoutRehabsInput
-  update: SettingStyleUpdateToOneWithWhereWithoutRehabsInput
-  upsert: SettingStyleUpsertWithoutRehabsInput
-}
-
-input SettingStyleUpdateToOneWithWhereWithoutRehabsInput {
-  data: SettingStyleUpdateWithoutRehabsInput!
-  where: SettingStyleWhereInput
-}
-
-input SettingStyleUpdateWithoutRehabsInput {
-  description: StringFieldUpdateOperationsInput
-  displayName: StringFieldUpdateOperationsInput
-  id: StringFieldUpdateOperationsInput
-  slug: StringFieldUpdateOperationsInput
-}
-
-input SettingStyleUpsertWithoutRehabsInput {
-  create: SettingStyleCreateWithoutRehabsInput!
-  update: SettingStyleUpdateWithoutRehabsInput!
-  where: SettingStyleWhereInput
-}
-
-input SettingStyleWhereInput {
-  AND: [SettingStyleWhereInput!]
-  NOT: [SettingStyleWhereInput!]
-  OR: [SettingStyleWhereInput!]
-  description: StringFilter
-  displayName: StringFilter
-  id: StringFilter
-  rehabs: RehabSettingStyleListRelationFilter
-  slug: StringFilter
-}
-
-input SettingStyleWhereUniqueInput {
-  AND: [SettingStyleWhereInput!]
-  NOT: [SettingStyleWhereInput!]
-  OR: [SettingStyleWhereInput!]
-  description: StringFilter
-  displayName: StringFilter
-  id: String
-  rehabs: RehabSettingStyleListRelationFilter
-  slug: String
-}
-
-input SlugRelationInput {
+input ServiceConnectOrCreateInput {
+  description: String
   displayName: String
   slug: String!
 }
 
-input StringFieldUpdateOperationsInput {
-  set: String
+type SettingStyle {
+  description: String
+  displayName: String!
+  id: ID!
+  slug: String!
+}
+
+input SettingStyleConnectOrCreateInput {
+  description: String
+  displayName: String
+  slug: String!
+}
+
+type SocialMediaProfile {
+  createdAt: DateTime!
+  id: ID!
+  parentCompanyId: String
+  platform: String!
+  rehabCampusId: String
+  rehabOrgId: String
+  updatedAt: DateTime!
+  url: String!
+}
+
+input SocialMediaProfileConnectOrCreateInput {
+  id: String
+  platform: String!
+  url: String!
+}
+
+enum StoryType {
+  FAMILY_STORY
+  ORIGIN_STORY
+  OTHER
+  OUTCOME_CASE
+  PATIENT_STORY
+  PROGRAM_OVERVIEW
 }
 
 input StringFilter {
   contains: String
   endsWith: String
   equals: String
-  gt: String
-  gte: String
   in: [String!]
-  lt: String
-  lte: String
-  mode: QueryMode
-  not: NestedStringFilter
-  notIn: [String!]
+  insensitive: Boolean
   startsWith: String
 }
 
-input StringNullableFilter {
-  contains: String
-  endsWith: String
-  equals: String
-  gt: String
-  gte: String
-  in: [String!]
-  lt: String
-  lte: String
-  mode: QueryMode
-  not: NestedStringNullableFilter
-  notIn: [String!]
-  startsWith: String
+type Substance {
+  category: String
+  description: String
+  displayName: String!
+  id: ID!
+  slug: String!
 }
 
-input StringNullableListFilter {
-  equals: [String!]
-  has: String
-  hasEvery: [String!]
-  hasSome: [String!]
-  isEmpty: Boolean
+input SubstanceConnectOrCreateInput {
+  category: String
+  description: String
+  displayName: String
+  slug: String!
 }
 
 input UpdateInsuranceProviderInput {
@@ -3291,4 +1353,167 @@ input UpdateProspectiveRehabInput {
   state: String
   taxonomy_code: String
   taxonomy_desc: String
+}
+
+input UpsertRehabCampusInput {
+  acceptsWalkIns: Boolean
+  amenities: [AmenityConnectOrCreateInput!]
+  bedsDetox: Int
+  bedsOutpatientCapacity: Int
+  bedsResidential: Int
+  bedsTotal: Int
+  city: String
+  country: String
+  description: String
+  directionsSummary: String
+  displayName: String
+  email: String
+  environments: [EnvironmentConnectOrCreateInput!]
+  hasOnsiteMD: Boolean
+  hasTwentyFourHourNursing: Boolean
+  id: String!
+  insurancePayers: [RehabInsurancePayerConnectOrCreateInput!]
+  languages: [LanguageConnectOrCreateInput!]
+  latitude: Float
+  longitude: Float
+  luxuryTiers: [LuxuryTierConnectOrCreateInput!]
+  name: String
+  paymentOptions: [RehabPaymentOptionConnectOrCreateInput!]
+  phone: String
+  populations: [PopulationConnectOrCreateInput!]
+  postalCode: String
+  primaryEnvironmentSlug: String
+  primaryLuxuryTierSlug: String
+  primarySettingStyleSlug: String
+  rehabOrgId: String
+  rehabOrgSlug: String
+  reviews: [CampusReviewCreateInput!]
+  settingStyles: [SettingStyleConnectOrCreateInput!]
+  slug: String
+  socialMediaProfiles: [SocialMediaProfileConnectOrCreateInput!]
+  state: String
+  stories: [CampusStoryCreateInput!]
+  street: String
+  testimonials: [CampusTestimonialCreateInput!]
+  timeZone: String
+  visitingHours: String
+}
+
+input UpsertRehabOrgInput {
+  accreditations: [AccreditationConnectOrCreateInput!]
+  amenities: [AmenityConnectOrCreateInput!]
+  baseCurrency: String
+  campuses: [RehabCampusConnectOrCreateInput!]
+  city: String
+  country: String
+  defaultTimeZone: String
+  description: String
+  detoxServices: [DetoxServiceConnectOrCreateInput!]
+  environments: [EnvironmentConnectOrCreateInput!]
+  fullPrivatePrice: Int
+  id: String!
+  insurancePayers: [RehabInsurancePayerConnectOrCreateInput!]
+  isNonProfit: Boolean
+  languages: [LanguageConnectOrCreateInput!]
+  legalName: String
+  levelsOfCare: [LevelOfCareConnectOrCreateInput!]
+  luxuryTiers: [LuxuryTierConnectOrCreateInput!]
+  mainEmail: String
+  mainPhone: String
+  name: String
+  npi_number: String
+  otherSourceUrls: [String!]
+  parentCompany: ParentCompanyConnectOrCreateInput
+  paymentOptions: [RehabPaymentOptionConnectOrCreateInput!]
+  populations: [PopulationConnectOrCreateInput!]
+  primarySourceUrl: String
+  programFeaturesGlobal: [ProgramFeatureGlobalConnectOrCreateInput!]
+  reviews: [OrgReviewCreateInput!]
+  services: [ServiceConnectOrCreateInput!]
+  settingStyles: [SettingStyleConnectOrCreateInput!]
+  slug: String
+  socialMediaProfiles: [SocialMediaProfileConnectOrCreateInput!]
+  state: String
+  stories: [OrgStoryCreateInput!]
+  tagline: String
+  testimonials: [OrgTestimonialCreateInput!]
+  verifiedExists: Boolean
+  websiteUrl: String
+  yearFounded: Int
+  youtubeChannels: [YoutubeChannelConnectOrCreateInput!]
+  zip: String
+}
+
+input UpsertRehabProgramInput {
+  acceptsCourtOrdered: Boolean
+  acceptsMedicallyComplex: Boolean
+  acceptsSelfReferral: Boolean
+  amenities: [AmenityConnectOrCreateInput!]
+  campusId: String
+  campusSlug: String
+  checkInDays: [String!]
+  clinicalFocusSummary: String
+  description: String
+  detoxServices: [DetoxServiceConnectOrCreateInput!]
+  features: [ProgramFeatureConnectOrCreateInput!]
+  hasOnsiteMD: Boolean
+  hasTwentyFourHourNursing: Boolean
+  id: String!
+  insurancePayers: [RehabInsurancePayerConnectOrCreateInput!]
+  intakeEmail: String
+  intakePhone: String
+  isDetoxPrimary: Boolean
+  isMATProgram: Boolean
+  languages: [LanguageConnectOrCreateInput!]
+  levelOfCareSlug: String
+  matTypes: [MATTypeConnectOrCreateInput!]
+  maxLengthOfStayDays: Int
+  minLengthOfStayDays: Int
+  name: String
+  paymentOptions: [RehabPaymentOptionConnectOrCreateInput!]
+  populations: [PopulationConnectOrCreateInput!]
+  reviews: [ProgramReviewCreateInput!]
+  services: [ServiceConnectOrCreateInput!]
+  sessionScheduleSummary: String
+  shortName: String
+  slug: String
+  staffToPatientRatio: Float
+  stories: [ProgramStoryCreateInput!]
+  substances: [SubstanceConnectOrCreateInput!]
+  targetPopulationSummary: String
+  testimonials: [ProgramTestimonialCreateInput!]
+  typicalLengthOfStayDays: Int
+  waitlistCategory: WaitlistCategory
+  waitlistDescription: String
+}
+
+enum WaitlistCategory {
+  LONG
+  MEDIUM
+  NONE
+  SHORT
+}
+
+type YoutubeChannel {
+  createdAt: DateTime!
+  id: ID!
+  parentCompanyId: String
+  rehabOrgId: String
+  updatedAt: DateTime!
+  url: String!
+  videos: [YoutubeVideo!]
+}
+
+input YoutubeChannelConnectOrCreateInput {
+  id: String
+  url: String!
+}
+
+type YoutubeVideo {
+  channelId: String
+  createdAt: DateTime!
+  id: ID!
+  title: String
+  updatedAt: DateTime!
+  url: String!
 }
