@@ -1,5 +1,5 @@
 // src/rehabs/models/rehab-joins.model.ts
-import { Field, ObjectType, ID } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import {
   LevelOfCare,
   DetoxService,

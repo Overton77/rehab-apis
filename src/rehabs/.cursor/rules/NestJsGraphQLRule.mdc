@@ -1,0 +1,221 @@
+---
+description: NestJS GraphQL resolver architecture and structure rules for the Rehab module.
+globs: rehab.service.ts,rehab.module.ts,**/*.inputs.ts,**/*.model.ts, **/*.resolver.ts, **/utils/*Utils.ts, **/*-results.ts, **/*.enums.ts
+alwaysApply: false
+---
+
+# NestJS GraphQL Resolver Architecture — Rehab Module
+
+Use these rules whenever adding or modifying **GraphQL resolvers, input types, models, services, or utils** inside the `rehabs` module.  
+This file enforces the architectural structure used throughout `src/rehabs`.
+
+---
+
+## 1. Required Layering (Strict Pattern)
+
+All GraphQL functionality must follow this chain:
+
+**Resolver → Service → Utils → Prisma / Cache**
+
+1. **Utils (`@../../utils/*`)**
+   - Contain complex, reusable logic.
+   - No NestJS dependency injection.
+   - Accept all needed dependencies (Prisma, Cache, helpers) as arguments.
+
+2. **Service (`@../../rehab.service.ts`)**
+   - Injects Prisma and Cache.
+   - Delegates heavy work to utils.
+   - Accepts validated GraphQL inputs and returns GraphQL models.
+
+3. **Resolver (`*.resolver.ts`)**
+   - Only deals with GraphQL input/output types.
+   - Delegates all business logic to `RehabService`.
+
+4. **Module (`@../../rehab.module.ts`)**
+   - Registers resolvers and services.
+   - Is imported by `src/app.module.ts`.
+
+This pattern is required for consistency across the entire backend.
+
+---
+
+## 2. Utils Rules (`@../../utils/*`)
+
+Complex operations belong in utils. For example:
+
+`@../../utils/findManyRehabOrgs.ts`
+
+A utils function should follow this signature pattern:
+
+```ts
+export async function findManyRehabOrgsWithFilter(
+  prisma: PrismaClient,
+  filters: RehabOrgFilterInput | undefined,
+  cacheManager?: Cache,
+  getCacheKey?: GetCacheKeyFn,
+  ttlSeconds = 60,
+): Promise<RehabOrgModel[]> {
+  // ...
+}
+```
+
+Rules:
+
+Must not use Nest DI directly.
+
+Must accept Prisma, Cache, and helper dependencies via parameters.
+
+Must be reusable and domain-focused.
+
+Must not rely on global state or instantiate Prisma manually.
+
+3. Service Rules (@../../rehab.service.ts)
+
+The service is the orchestration layer.
+
+Injection Example
+constructor(
+private prisma: PrismaService,
+@Inject(CACHE_MANAGER) private cacheManager: Cache,
+) {}
+
+Responsibilities
+
+Call utils with correct dependencies:
+
+return findManyRehabOrgsWithFilter(
+this.prisma,
+filters,
+this.cacheManager,
+this.getCacheKey,
+60,
+);
+
+Accept only GraphQL input types, DTOs, or primitives.
+
+Return GraphQL model types, not raw Prisma responses.
+
+Never call resolvers or import resolver files.
+
+Never create new Prisma clients.
+
+4. GraphQL Input Types & Models
+
+Use the officially defined GraphQL types:
+
+Input types live in:
+@../../rehab-filters.inputs.ts
+
+Models / object types live in:
+@../../core.model.ts
+
+Rules:
+
+Always use these shared types instead of inline objects.
+
+Creating new resolvers requires adding/updating the corresponding inputs/models.
+
+Maintain type consistency across utils, service, and resolver layers.
+
+5. Resolver Rules (\*.resolver.ts)
+
+Resolvers define the GraphQL schema entrypoints.
+Example files:
+
+@../../rehab-org.resolver.ts
+
+@../../rehab-campus.resolver.ts
+
+@../../rehab-program.resolver.ts
+
+Responsibilities
+
+Define GraphQL queries/mutations.
+
+Accept only GraphQL input types.
+
+Return GraphQL object types.
+
+Delegate all computation to RehabService.
+
+DO NOT:
+
+Import or use Prisma directly.
+
+Import or use the cache manager directly.
+
+Perform complex operations inline.
+
+Duplicate logic found in utils.
+
+Return raw Prisma models.
+
+Resolvers must remain thin and declarative.
+
+6. Module Wiring (@../../rehab.module.ts)
+
+RehabModule must:
+
+Provide:
+
+RehabService
+
+All resolvers (e.g. org, campus, program)
+
+Import any needed shared modules.
+
+Export RehabModule for use in app.module.ts.
+
+When creating a new resolver:
+
+Create a \*.resolver.ts file.
+
+Add it to the providers array in rehab.module.ts.
+
+Ensure it injects and uses RehabService.
+
+7. When Creating New Functionality
+
+If adding a new GraphQL feature:
+
+Define GraphQL input types → in rehab-filters.inputs.ts or related inputs file.
+
+Define GraphQL model types → in core.model.ts or a related model file.
+
+Add/modify a service method → in rehab.service.ts.
+
+Move complex logic to utils → under @../../utils/\*.
+
+Add resolver → referencing the input types and service method.
+
+Register resolver in module → rehab.module.ts.
+
+This ensures correctness, consistency, and reusability.
+
+8. Summary
+
+All GraphQL features in the Rehab module must follow:
+
+GraphQL Types → Resolver → Service → Utils → Prisma/Cache
+
+Maintain strict separation of concerns:
+
+Resolvers = GraphQL interface
+
+Services = orchestration + DI dependencies
+
+Utils = complex logic
+
+PrismaService = only inside services
+
+Cache = only inside services
+
+Reference files correctly using Cursor-style imports such as:
+
+@../../utils/findManyRehabOrgsUtils.ts
+
+@../../rehab.service.ts
+
+@../../rehab-org.resolver.ts
+
+Follow these rules to maintain structural consistency across the entire backend.

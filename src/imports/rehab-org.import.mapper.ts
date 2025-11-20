@@ -35,7 +35,7 @@ import {
   RehabPaymentOptionConnectOrCreateJSON,
   InsurancePayerConnectOrCreateJSON,
   PaymentOptionConnectOrCreateJSON,
-} from './rehab-org-import.interface';
+} from './rehab-org.import.interface';
 
 // ------------------------------------------------------
 // Utility Helpers

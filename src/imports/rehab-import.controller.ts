@@ -10,8 +10,8 @@ import type { FastifyRequest } from 'fastify';
 import { GraphqlClientService } from '../graphql-client/graphql-client.service';
 import type { CreateRehabOrgInput } from 'src/graphql_sdk/graphql';
 
-import { RehabOrgEnrichmentJSON } from './rehab-org-import.interface';
-import { mapRehabOrgEnrichmentJsonToCreateRehabOrgInput } from './rehab-org-import.mapper';
+import { RehabOrgEnrichmentJSON } from './rehab-org.import.interface';
+import { mapRehabOrgEnrichmentJsonToCreateRehabOrgInput } from './rehab-org.import.mapper';
 
 @Controller('rehabs')
 export class RehabImportController {

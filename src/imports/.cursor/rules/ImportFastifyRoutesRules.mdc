@@ -1,0 +1,270 @@
+---
+description: Fastify REST API rehab import module rules for batch ingestion via GraphQL SDK.
+globs: **/rehab-import.controller.ts, **/rehab-import.module.ts, **/rehab-org.import.interface.ts, **/rehab-org.import.mapper.ts
+alwaysApply: false
+---
+
+## The Graphql Client sdk methods will almost definitely be given to you in the prompt instructing you to modify this module of the codebase.
+
+# Fastify REST API — Rehab Import Rules
+
+Use these rules when working on the **Rehab import Fastify REST API** for batch ingestion of rehab-related models.
+
+This applies specifically to:
+
+- `rehab-import.controller.ts`
+- `rehab-import.module.ts`
+- `rehab-org.import.interface.ts`
+- `rehab-org.import.mapper.ts`
+- Any file whose name ends with these suffixes.
+
+The import module is a **REST façade** over the GraphQL API, using the **generated GraphQL SDK** to perform actual writes.
+
+---
+
+## 1. High-Level Data Flow
+
+All new ingestion routes must follow this pipeline:
+
+1. **Client uploads JSON file** to a Fastify POST route in `rehab-import.controller.ts`.
+2. JSON is parsed and typed using a **TypeScript interface** in `rehab-org.import.interface.ts` (or similar `*.import.interface.ts` for other models).
+3. A **mapper function** in `rehab-org.import.mapper.ts` (or other `*.import.mapper.ts`) converts that parsed JSON into the exact **GraphQL mutation input shape** expected by the **GraphQL SDK**.
+4. The **GraphQL SDK**, provided via `graphql-client/graphql-client.module`, is used to call a mutation such as `createRehabOrgWithConnectOrCreate`.
+5. The REST route returns an appropriate HTTP response based on success/failure.
+
+There is **no direct Prisma usage** in this REST import module; all DB writes go through the GraphQL API.
+
+---
+
+## 2. Interface Rules — `*.import.interface.ts`
+
+Example: `rehab-org.import.interface.ts`
+
+- Defines the **TypeScript interface** that describes the **shape of the parsed JSON file** uploaded to the route.
+- This interface should **mirror** the GraphQL input types used to create models such as:
+  - `RehabOrg`
+  - `RehabProgram`
+  - `RehabCampus`
+  - `ParentCompany`
+  - Lookup/join tables (e.g. amenities, accreditations, insurance payers, etc.)
+- The interface is **JSON-centric**:
+  - Design it to represent the structure content editors or external systems will provide.
+  - Avoid leaking GraphQL-specific naming where possible; keep it intuitive and stable for importers.
+- The interface type is the **input** for the mapper, and **not** used directly by the GraphQL SDK.
+
+**Rules:**
+
+- Keep the interface **strict** and well-typed; use optional fields only when they are genuinely optional.
+- Prefer nested structures that align with how the JSON is authored, even if the mapper needs to do non-trivial transformation later.
+- For complex nested data (programs, campuses, descriptor tables), clearly model arrays and relationships so the mapper has enough context.
+
+---
+
+## 3. Mapper Rules — `*.import.mapper.ts`
+
+Example: `rehab-org.import.mapper.ts`
+
+- Contains functions that convert the parsed JSON (from the `*.import.interface.ts` type) into the **exact GraphQL mutation input type** used by the SDK.
+
+**Core responsibility:**
+
+> **Take `RehabOrgImportJson` (or similar) and return the input for GraphQL SDK methods like `createRehabOrgWithConnectOrCreate`.**
+
+Typical pattern:
+
+```ts
+// Pseudocode / pattern
+import { RehabOrgImportJson } from './rehab-org.import.interface';
+import { CreateRehabOrgWithConnectOrCreateInput } from '@../../../graphql_sdk/graphql'; // path may vary
+
+export function mapRehabOrgImportToCreateInput(
+  json: RehabOrgImportJson,
+): CreateRehabOrgWithConnectOrCreateInput {
+  // Transform JSON into the GraphQL mutation input shape:
+  // - Handle ParentCompany
+  // - Handle RehabOrg core fields
+  // - Map campuses, programs, amenities, accreditations, insurance payers, etc.
+  // - Use connect/create/connectOrCreate structures as needed
+  return {
+    /* ... */
+  };
+}
+```
+
+Rules:
+
+Mapper functions should be pure or as close to pure as possible:
+
+No network calls.
+
+No SDK or Prisma usage.
+
+No direct file I/O.
+
+They are allowed to:
+
+Validate required fields.
+
+Normalize data (e.g., string trimming, casing).
+
+Throw meaningful errors if JSON is structurally invalid.
+
+Mapper output type should be:
+
+The GraphQL input type expected by the SDK mutation.
+
+Imported from the generated GraphQL SDK in @../../../graphql_sdk/graphql.ts (path may vary based on project).
+
+This file is very large you can go to @../../../codegen_operations/\*.graphql files to see the mutation, query or subscrition names
+
+The mapper is the only place where JSON structure and GraphQL input structure are tightly coupled.
+
+4. Controller Rules — rehab-import.controller.ts
+
+This is a Fastify REST controller that orchestrates the ingestion.
+
+Responsibilities:
+
+Define POST routes for importing specific models.
+
+Route naming should reflect the primary model being ingested (e.g., /rehabs/rehab-org-upload-json).
+
+Use NestJS Fastify decorators: @Controller, @Post, etc.
+
+Handle file upload & parsing
+
+Accept the uploaded JSON file.
+
+Parse it into the corresponding interface type from \*.import.interface.ts.
+
+Call mapper & SDK
+
+Use the mapper from \*.import.mapper.ts to build the GraphQL input:
+
+Example: mapRehabOrgImportToCreateInput(parsedJson).
+
+Use the GraphQL client from graphql-client/graphql-client.module:
+
+The module wraps the SDK produced by codegen (@../../../graphql_sdk/graphql.ts) which itself is generated from:
+
+The app-wide schema.graphql.
+
+Operations defined in src/codegen*operations/\**/\_.graphql.
+
+Return appropriate HTTP responses
+
+On success: return a 2xx status with details about what was created/linked.
+
+On failure:
+
+Catch errors from mapping or SDK calls.
+
+Log details as appropriate.
+
+Return a clear error message and suitable status code (e.g., 400 for bad JSON shape, 500 for internal errors).
+
+Rules:
+
+Do not:
+
+Call Prisma directly.
+
+Bypass the GraphQL client.
+
+Implement GraphQL-level business logic in the controller.
+
+Controllers are thin:
+
+Validate + parse input.
+
+Call mapper + SDK.
+
+Format HTTP response.
+
+5. Module Rules — rehab-import.module.ts
+
+This file defines a self-contained NestJS module for the Rehab import REST API.
+
+Responsibilities:
+
+Declare and provide:
+
+rehab-import.controller.ts (and any related controllers).
+
+Any supporting import services if they exist (but keep them thin; most mapping logic lives in \*.import.mapper.ts).
+
+Import the GraphQL client module:
+
+graphql-client/graphql-client.module (or similar) which provides the generated SDK to the controllers.
+
+Do not import or expose Prisma services directly in this module; all writes must go through the GraphQL client.
+
+Rules:
+
+Keep this module focused purely on ingestion via REST → GraphQL.
+
+If additional import routes for other models are added, their controllers/interfaces/mappers should also be wired here.
+
+6. Standard Operating Procedure for New Ingestion Routes
+
+When adding a new ingestion route for a model (or set of models), follow this exact order:
+
+Create the TypeScript interface
+
+File: X.import.interface.ts (e.g., rehab-org.import.interface.ts).
+
+Purpose: describe the shape of the uploaded/parsed JSON file.
+
+Create the mapper function
+
+File: X.import.mapper.ts (e.g., rehab-org.import.mapper.ts).
+
+Purpose: coerce the parsed JSON into the exact input required for the GraphQL SDK method, usually something like:
+
+createRehabOrgWithConnectOrCreate
+
+Or another relevant create*/upsert* mutation.
+
+Create or extend the POST route
+
+File: rehab-import.controller.ts.
+
+Add a Fastify POST endpoint named after the primary model being ingested:
+
+Example: @Post("rehab-org-upload-json").
+
+Steps inside the handler:
+
+Accept uploaded JSON.
+
+Parse & validate it against the \*.import.interface.ts interface.
+
+Use the mapper (\*.import.mapper.ts) to build SDK input.
+
+Call the appropriate GraphQL SDK method from the injected GraphQL client.
+
+Handle errors gracefully and return structured responses.
+
+7. Summary
+
+For the Rehab import Fastify REST module:
+
+Interfaces (\*.import.interface.ts)
+
+Define the JSON file structure.
+
+Mappers (\*.import.mapper.ts)
+
+Convert JSON → GraphQL mutation input for the generated SDK.
+
+Controller (rehab-import.controller.ts)
+
+Expose POST routes, parse uploads, call mapper + GraphQL SDK, return HTTP responses.
+
+Module (rehab-import.module.ts)
+
+Wire controllers with the GraphQL client module; no direct Prisma usage.
+
+Always preserve this separation:
+
+JSON file → Interface → Mapper → GraphQL SDK (via graphql-client.module) → Underlying GraphQL API
