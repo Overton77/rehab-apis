@@ -1,62 +1,14 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { PrismaService } from '../../prisma.service';
-import { UpsertRehabProgramInput } from '../rehab-program.upsert.inputs';
-import { UpsertRehabCampusInput } from '../rehab-campus.upsert.inputs';
-import { UpsertRehabOrgInput } from '../rehab-org.upsert.inputs';
-import {
-  NetworkStatus,
-  InsuranceScope,
-  LevelOfCareType,
-  RehabOrg as RehabOrgModel,
-  RehabCampus as RehabCampusModel,
-  RehabProgram as RehabProgramModel,
-  ParentCompany as ParentCompanyModel,
-  InsurancePayer as InsurancePayerModel,
-  LevelOfCare as LevelOfCareModel,
-  DetoxService as DetoxServiceModel,
-  MATType as MATTypeModel,
-  Service as ServiceModel,
-  Population as PopulationModel,
-  Accreditation as AccreditationModel,
-  Language as LanguageModel,
-  Amenity as AmenityModel,
-  Environment as EnvironmentModel,
-  SettingStyle as SettingStyleModel,
-  LuxuryTier as LuxuryTierModel,
-  ProgramFeature as ProgramFeatureModel,
-  PaymentOption as PaymentOptionModel,
-  Substance as SubstanceModel,
-} from 'prisma/generated/client';
+
+import { RehabCampus as RehabCampusModel } from 'prisma/generated/client';
 import type { GetCacheKeyFn } from './cacheTypeFn';
 
 import type { Prisma } from 'prisma/generated/client';
 import { PrismaClient } from 'prisma/generated/internal/class';
 
-import {
-  RehabProgramFilterInput,
-  RehabCampusFilterInput,
-  RehabOrgFilterInput,
-  StringFilter,
-  IntRangeFilter,
-  FloatRangeFilter,
-} from '../rehab-filters.input';
+import { RehabCampusFilterInput } from '../rehab-filters.input';
 
-import { CreateRehabOrgInput } from '../rehab-org-create.input';
-import {
-  CreateRehabCampusInput,
-  CreateRehabProgramInput,
-} from '../rehab-program-create.input';
-
-import {
-  buildIntRangeFilter,
-  buildFloatRangeFilter,
-  buildStringFilter,
-} from './findFiltersUtils';
-function humanizeSlug(s: string) {
-  return s.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-}
+import { buildIntRangeFilter } from './findFiltersUtils';
 
 const INCLUDE_RELATIONS_REHAB_CAMPUS = {
   primaryEnvironment: true,
@@ -84,244 +36,245 @@ export async function findManyRehabCampusesWithFilter(
   getCacheKey?: GetCacheKeyFn,
   ttlSeconds = 60,
 ): Promise<RehabCampusModel[]> {
+  // Destructure out pagination – you'll handle this in the service layer
+  const { skip, take, ...filtersWithoutPagination } = filters ?? {};
+
   const where: Prisma.RehabCampusWhereInput = {};
+  const f = filtersWithoutPagination; // alias for brevity
 
   // -------- identity / basic search --------
-  if (filters?.ids?.length) {
-    where.id = { in: filters.ids };
+  if (f?.ids?.length) {
+    where.id = { in: f.ids };
   }
 
-  if (filters?.slugs?.length) {
-    where.slug = { in: filters.slugs };
+  if (f?.slugs?.length) {
+    where.slug = { in: f.slugs };
   }
 
-  if (filters?.rehabOrgIds?.length) {
-    where.rehabOrgId = { in: filters.rehabOrgIds };
+  if (f?.rehabOrgIds?.length) {
+    where.rehabOrgId = { in: f.rehabOrgIds };
   }
 
-  if (filters?.search) {
+  if (f?.search) {
     where.OR = [
-      { name: { contains: filters.search, mode: 'insensitive' } },
-      { displayName: { contains: filters.search, mode: 'insensitive' } },
-      { description: { contains: filters.search, mode: 'insensitive' } },
+      { name: { contains: f.search, mode: 'insensitive' } },
+      { displayName: { contains: f.search, mode: 'insensitive' } },
+      { description: { contains: f.search, mode: 'insensitive' } },
     ];
   }
 
   // -------- location fields --------
-  if (filters?.states?.length) {
-    where.state = { in: filters.states };
+  if (f?.states?.length) {
+    where.state = { in: f.states };
   }
 
-  if (filters?.cities?.length) {
-    where.city = { in: filters.cities };
+  if (f?.cities?.length) {
+    where.city = { in: f.cities };
   }
 
-  if (filters?.postalCodes?.length) {
-    where.postalCode = { in: filters.postalCodes };
+  if (f?.postalCodes?.length) {
+    where.postalCode = { in: f.postalCodes };
   }
 
-  if (filters?.countries?.length) {
-    where.country = { in: filters.countries };
+  if (f?.countries?.length) {
+    where.country = { in: f.countries };
   }
 
   // -------- operational / clinical-ish flags --------
-  if (filters?.bedsTotal) {
-    where.bedsTotal = buildIntRangeFilter(filters.bedsTotal);
+  if (f?.bedsTotal) {
+    where.bedsTotal = buildIntRangeFilter(f.bedsTotal);
   }
 
-  if (filters?.bedsDetox) {
-    where.bedsDetox = buildIntRangeFilter(filters.bedsDetox);
+  if (f?.bedsDetox) {
+    where.bedsDetox = buildIntRangeFilter(f.bedsDetox);
   }
 
-  if (filters?.bedsResidential) {
-    where.bedsResidential = buildIntRangeFilter(filters.bedsResidential);
+  if (f?.bedsResidential) {
+    where.bedsResidential = buildIntRangeFilter(f.bedsResidential);
   }
 
-  if (filters?.bedsOutpatientCapacity) {
+  if (f?.bedsOutpatientCapacity) {
     where.bedsOutpatientCapacity = buildIntRangeFilter(
-      filters.bedsOutpatientCapacity,
+      f.bedsOutpatientCapacity,
     );
   }
 
-  if (filters?.acceptsWalkIns?.equals !== undefined) {
-    where.acceptsWalkIns = filters.acceptsWalkIns.equals;
+  if (f?.acceptsWalkIns?.equals !== undefined) {
+    where.acceptsWalkIns = f.acceptsWalkIns.equals;
   }
 
-  if (filters?.hasOnsiteMD?.equals !== undefined) {
-    where.hasOnsiteMD = filters.hasOnsiteMD.equals;
+  if (f?.hasOnsiteMD?.equals !== undefined) {
+    where.hasOnsiteMD = f.hasOnsiteMD.equals;
   }
 
-  if (filters?.hasTwentyFourHourNursing?.equals !== undefined) {
-    where.hasTwentyFourHourNursing = filters.hasTwentyFourHourNursing.equals;
+  if (f?.hasTwentyFourHourNursing?.equals !== undefined) {
+    where.hasTwentyFourHourNursing = f.hasTwentyFourHourNursing.equals;
   }
 
   // -------- primary aesthetic descriptors --------
-  if (filters?.primaryEnvironmentIds?.length) {
-    where.primaryEnvironmentId = { in: filters.primaryEnvironmentIds };
+  if (f?.primaryEnvironmentIds?.length) {
+    where.primaryEnvironmentId = { in: f.primaryEnvironmentIds };
   }
 
-  if (filters?.primarySettingStyleIds?.length) {
-    where.primarySettingStyleId = { in: filters.primarySettingStyleIds };
+  if (f?.primarySettingStyleIds?.length) {
+    where.primarySettingStyleId = { in: f.primarySettingStyleIds };
   }
 
-  if (filters?.primaryLuxuryTierIds?.length) {
-    where.primaryLuxuryTierId = { in: filters.primaryLuxuryTierIds };
+  if (f?.primaryLuxuryTierIds?.length) {
+    where.primaryLuxuryTierId = { in: f.primaryLuxuryTierIds };
   }
 
   // -------- campus-level join-table filters --------
-  if (filters?.campusAmenityIds?.length) {
+  if (f?.campusAmenityIds?.length) {
     where.campusAmenities = {
-      some: { amenityId: { in: filters.campusAmenityIds } },
+      some: { amenityId: { in: f.campusAmenityIds } },
     };
   }
 
-  if (filters?.campusLanguageIds?.length) {
+  if (f?.campusLanguageIds?.length) {
     where.campusLanguages = {
-      some: { languageId: { in: filters.campusLanguageIds } },
+      some: { languageId: { in: f.campusLanguageIds } },
     };
   }
 
-  if (filters?.campusPopulationIds?.length) {
+  if (f?.campusPopulationIds?.length) {
     where.campusPopulations = {
-      some: { populationId: { in: filters.campusPopulationIds } },
+      some: { populationId: { in: f.campusPopulationIds } },
     };
   }
 
-  if (filters?.campusEnvironmentIds?.length) {
+  if (f?.campusEnvironmentIds?.length) {
     where.campusEnvironments = {
-      some: { environmentId: { in: filters.campusEnvironmentIds } },
+      some: { environmentId: { in: f.campusEnvironmentIds } },
     };
   }
 
-  if (filters?.campusSettingStyleIds?.length) {
+  if (f?.campusSettingStyleIds?.length) {
     where.campusSettingStyles = {
-      some: { settingStyleId: { in: filters.campusSettingStyleIds } },
+      some: { settingStyleId: { in: f.campusSettingStyleIds } },
     };
   }
 
-  if (filters?.campusLuxuryTierIds?.length) {
+  if (f?.campusLuxuryTierIds?.length) {
     where.campusLuxuryTiers = {
-      some: { luxuryTierId: { in: filters.campusLuxuryTierIds } },
+      some: { luxuryTierId: { in: f.campusLuxuryTierIds } },
     };
   }
 
-  if (filters?.insurancePayerIds?.length) {
+  if (f?.insurancePayerIds?.length) {
     where.insurancePayers = {
-      some: { insurancePayerId: { in: filters.insurancePayerIds } },
+      some: { insurancePayerId: { in: f.insurancePayerIds } },
     };
   }
 
-  if (filters?.paymentOptionIds?.length) {
+  if (f?.paymentOptionIds?.length) {
     where.paymentOptions = {
-      some: { paymentOptionId: { in: filters.paymentOptionIds } },
+      some: { paymentOptionId: { in: f.paymentOptionIds } },
     };
   }
 
-  // -------- program-derived filters --------
-  if (filters?.programLevelOfCareIds?.length) {
-    where.programs = {
-      some: { levelOfCareId: { in: filters.programLevelOfCareIds } },
-    };
+  // -------- program-derived filters (AND on the same relation) --------
+  const programAndFilters: Prisma.RehabProgramWhereInput[] = [];
+
+  if (f?.programLevelOfCareIds?.length) {
+    programAndFilters.push({
+      levelOfCareId: { in: f.programLevelOfCareIds },
+    });
   }
 
-  if (filters?.programDetoxServiceIds?.length) {
+  if (f?.programDetoxServiceIds?.length) {
+    programAndFilters.push({
+      programDetoxServices: {
+        some: { detoxServiceId: { in: f.programDetoxServiceIds } },
+      },
+    });
+  }
+
+  if (f?.programServiceIds?.length) {
+    programAndFilters.push({
+      programServices: {
+        some: { serviceId: { in: f.programServiceIds } },
+      },
+    });
+  }
+
+  if (f?.programPopulationIds?.length) {
+    programAndFilters.push({
+      programPopulations: {
+        some: { populationId: { in: f.programPopulationIds } },
+      },
+    });
+  }
+
+  if (f?.programLanguageIds?.length) {
+    programAndFilters.push({
+      programLanguages: {
+        some: { languageId: { in: f.programLanguageIds } },
+      },
+    });
+  }
+
+  if (f?.programAmenityIds?.length) {
+    programAndFilters.push({
+      programAmenities: {
+        some: { amenityId: { in: f.programAmenityIds } },
+      },
+    });
+  }
+
+  if (f?.programFeatureIds?.length) {
+    programAndFilters.push({
+      programFeatures: {
+        some: { programFeatureId: { in: f.programFeatureIds } },
+      },
+    });
+  }
+
+  if (f?.programMATTypeIds?.length) {
+    programAndFilters.push({
+      programMATTypes: {
+        some: { matTypeId: { in: f.programMATTypeIds } },
+      },
+    });
+  }
+
+  if (f?.programSubstanceIds?.length) {
+    programAndFilters.push({
+      programSubstances: {
+        some: { substanceId: { in: f.programSubstanceIds } },
+      },
+    });
+  }
+
+  if (programAndFilters.length) {
     where.programs = {
       some: {
-        programDetoxServices: {
-          some: { detoxServiceId: { in: filters.programDetoxServiceIds } },
-        },
+        AND: programAndFilters,
       },
     };
   }
 
-  if (filters?.programServiceIds?.length) {
-    where.programs = {
-      some: {
-        programServices: {
-          some: { serviceId: { in: filters.programServiceIds } },
-        },
-      },
-    };
-  }
-
-  if (filters?.programPopulationIds?.length) {
-    where.programs = {
-      some: {
-        programPopulations: {
-          some: { populationId: { in: filters.programPopulationIds } },
-        },
-      },
-    };
-  }
-
-  if (filters?.programLanguageIds?.length) {
-    where.programs = {
-      some: {
-        programLanguages: {
-          some: { languageId: { in: filters.programLanguageIds } },
-        },
-      },
-    };
-  }
-
-  if (filters?.programAmenityIds?.length) {
-    where.programs = {
-      some: {
-        programAmenities: {
-          some: { amenityId: { in: filters.programAmenityIds } },
-        },
-      },
-    };
-  }
-
-  if (filters?.programFeatureIds?.length) {
-    where.programs = {
-      some: {
-        programFeatures: {
-          some: { programFeatureId: { in: filters.programFeatureIds } },
-        },
-      },
-    };
-  }
-
-  if (filters?.programMATTypeIds?.length) {
-    where.programs = {
-      some: {
-        programMATTypes: {
-          some: { matTypeId: { in: filters.programMATTypeIds } },
-        },
-      },
-    };
-  }
-
-  if (filters?.programSubstanceIds?.length) {
-    where.programs = {
-      some: {
-        programSubstances: {
-          some: { substanceId: { in: filters.programSubstanceIds } },
-        },
-      },
-    };
-  }
-
-  // -------- caching wrapper --------
+  // -------- caching wrapper (key ignores skip/take) --------
   let cacheKey: string | undefined;
+
   if (cacheManager && getCacheKey) {
-    cacheKey = getCacheKey('rehabCampuses:findMany', filters ?? {});
+    cacheKey = getCacheKey('rehabCampuses:findMany', filtersWithoutPagination);
+
     const cached = await cacheManager.get<RehabCampusModel[]>(cacheKey);
     if (cached) {
       return cached;
     }
   }
 
-  const rehabCampus = await prisma.rehabCampus.findMany({
+  // Always fetch full result set; pagination is done in the service layer
+  const rehabCampuses = await prisma.rehabCampus.findMany({
     where,
     include: INCLUDE_RELATIONS_REHAB_CAMPUS,
   });
 
   if (cacheManager && cacheKey) {
-    await cacheManager.set(cacheKey, rehabCampus, ttlSeconds);
+    await cacheManager.set(cacheKey, rehabCampuses, ttlSeconds);
   }
 
-  return rehabCampus;
+  return rehabCampuses;
 }

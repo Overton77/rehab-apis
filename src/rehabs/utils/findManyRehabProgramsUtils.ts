@@ -1,44 +1,9 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { PrismaService } from '../../prisma.service';
-import { UpsertRehabProgramInput } from '../rehab-program.upsert.inputs';
-import { UpsertRehabCampusInput } from '../rehab-campus.upsert.inputs';
-import { UpsertRehabOrgInput } from '../rehab-org.upsert.inputs';
-import {
-  NetworkStatus,
-  InsuranceScope,
-  LevelOfCareType,
-  RehabOrg as RehabOrgModel,
-  RehabCampus as RehabCampusModel,
-  RehabProgram as RehabProgramModel,
-  ParentCompany as ParentCompanyModel,
-  InsurancePayer as InsurancePayerModel,
-  LevelOfCare as LevelOfCareModel,
-  DetoxService as DetoxServiceModel,
-  MATType as MATTypeModel,
-  Service as ServiceModel,
-  Population as PopulationModel,
-  Accreditation as AccreditationModel,
-  Language as LanguageModel,
-  Amenity as AmenityModel,
-  Environment as EnvironmentModel,
-  SettingStyle as SettingStyleModel,
-  LuxuryTier as LuxuryTierModel,
-  ProgramFeature as ProgramFeatureModel,
-  PaymentOption as PaymentOptionModel,
-  Substance as SubstanceModel,
-} from 'prisma/generated/client';
+
+import { RehabProgram as RehabProgramModel } from 'prisma/generated/client';
 import type { Prisma } from 'prisma/generated/client';
 import { PrismaClient } from 'prisma/generated/internal/class';
-import {
-  RehabProgramFilterInput,
-  RehabCampusFilterInput,
-  RehabOrgFilterInput,
-  StringFilter,
-  IntRangeFilter,
-  FloatRangeFilter,
-} from '../rehab-filters.input';
+import { RehabProgramFilterInput } from '../rehab-filters.input';
 
 import {
   buildIntRangeFilter,
@@ -47,14 +12,6 @@ import {
 } from './findFiltersUtils';
 
 import type { GetCacheKeyFn } from './cacheTypeFn';
-
-import { CreateRehabOrgInput } from '../rehab-org-create.input';
-import {
-  CreateRehabCampusInput,
-  CreateRehabProgramInput,
-} from '../rehab-program-create.input';
-
-import { humanizeSlug } from './general';
 
 const INCLUDE_RELATIONS_REHAB_PROGRAM = {
   levelOfCare: true,
@@ -80,185 +37,183 @@ export async function findManyRehabProgramsWithFilter(
   getCacheKey?: GetCacheKeyFn,
   ttlSeconds = 60,
 ): Promise<RehabProgramModel[]> {
+  // Strip pagination; handled in service layer
+  const { skip, take, ...filtersWithoutPagination } = filters ?? {};
+  const f = filtersWithoutPagination;
+
   const where: Prisma.RehabProgramWhereInput = {};
 
   // -------- identity / basic search --------
-  if (filters?.ids?.length) {
-    where.id = { in: filters.ids };
+  if (f?.ids?.length) {
+    where.id = { in: f.ids };
   }
 
-  if (filters?.slugs?.length) {
-    where.slug = { in: filters.slugs };
+  if (f?.slugs?.length) {
+    where.slug = { in: f.slugs };
   }
 
-  if (filters?.campusIds?.length) {
-    where.campusId = { in: filters.campusIds };
+  if (f?.campusIds?.length) {
+    where.campusId = { in: f.campusIds };
   }
 
-  if (filters?.rehabOrgIds?.length) {
+  if (f?.rehabOrgIds?.length) {
     where.campus = {
-      rehabOrgId: { in: filters.rehabOrgIds },
+      rehabOrgId: { in: f.rehabOrgIds },
     };
   }
 
-  if (filters?.levelOfCareIds?.length) {
-    where.levelOfCareId = { in: filters.levelOfCareIds };
+  if (f?.levelOfCareIds?.length) {
+    where.levelOfCareId = { in: f.levelOfCareIds };
   }
 
-  if (filters?.search) {
+  if (f?.search) {
     where.OR = [
-      { name: { contains: filters.search, mode: 'insensitive' } },
-      { shortName: { contains: filters.search, mode: 'insensitive' } },
-      { description: { contains: filters.search, mode: 'insensitive' } },
+      { name: { contains: f.search, mode: 'insensitive' } },
+      { shortName: { contains: f.search, mode: 'insensitive' } },
+      { description: { contains: f.search, mode: 'insensitive' } },
       {
         targetPopulationSummary: {
-          contains: filters.search,
+          contains: f.search,
           mode: 'insensitive',
         },
       },
       {
         clinicalFocusSummary: {
-          contains: filters.search,
+          contains: f.search,
           mode: 'insensitive',
         },
       },
     ];
   }
 
-  if (filters?.name) {
-    where.name = buildStringFilter(filters.name);
+  if (f?.name) {
+    where.name = buildStringFilter(f.name);
   }
 
   // -------- structure & schedule --------
-  if (filters?.minLengthOfStayDays) {
-    where.minLengthOfStayDays = buildIntRangeFilter(
-      filters.minLengthOfStayDays,
-    );
+  if (f?.minLengthOfStayDays) {
+    where.minLengthOfStayDays = buildIntRangeFilter(f.minLengthOfStayDays);
   }
 
-  if (filters?.maxLengthOfStayDays) {
-    where.maxLengthOfStayDays = buildIntRangeFilter(
-      filters.maxLengthOfStayDays,
-    );
+  if (f?.maxLengthOfStayDays) {
+    where.maxLengthOfStayDays = buildIntRangeFilter(f.maxLengthOfStayDays);
   }
 
-  if (filters?.typicalLengthOfStayDays) {
+  if (f?.typicalLengthOfStayDays) {
     where.typicalLengthOfStayDays = buildIntRangeFilter(
-      filters.typicalLengthOfStayDays,
+      f.typicalLengthOfStayDays,
     );
   }
 
-  if (filters?.sessionScheduleContains) {
+  if (f?.sessionScheduleContains) {
     where.sessionScheduleSummary = {
-      contains: filters.sessionScheduleContains,
+      contains: f.sessionScheduleContains,
       mode: 'insensitive',
     };
   }
 
   // -------- clinical flags --------
-  if (filters?.isDetoxPrimary?.equals !== undefined) {
-    where.isDetoxPrimary = filters.isDetoxPrimary.equals;
+  if (f?.isDetoxPrimary?.equals !== undefined) {
+    where.isDetoxPrimary = f.isDetoxPrimary.equals;
   }
 
-  if (filters?.isMATProgram?.equals !== undefined) {
-    where.isMATProgram = filters.isMATProgram.equals;
+  if (f?.isMATProgram?.equals !== undefined) {
+    where.isMATProgram = f.isMATProgram.equals;
   }
 
-  if (filters?.hasOnsiteMD?.equals !== undefined) {
-    where.hasOnsiteMD = filters.hasOnsiteMD.equals;
+  if (f?.hasOnsiteMD?.equals !== undefined) {
+    where.hasOnsiteMD = f.hasOnsiteMD.equals;
   }
 
-  if (filters?.hasTwentyFourHourNursing?.equals !== undefined) {
-    where.hasTwentyFourHourNursing = filters.hasTwentyFourHourNursing.equals;
+  if (f?.hasTwentyFourHourNursing?.equals !== undefined) {
+    where.hasTwentyFourHourNursing = f.hasTwentyFourHourNursing.equals;
   }
 
-  if (filters?.staffToPatientRatio) {
-    where.staffToPatientRatio = buildFloatRangeFilter(
-      filters.staffToPatientRatio,
-    );
+  if (f?.staffToPatientRatio) {
+    where.staffToPatientRatio = buildFloatRangeFilter(f.staffToPatientRatio);
   }
 
-  if (filters?.acceptsSelfReferral?.equals !== undefined) {
-    where.acceptsSelfReferral = filters.acceptsSelfReferral.equals;
+  if (f?.acceptsSelfReferral?.equals !== undefined) {
+    where.acceptsSelfReferral = f.acceptsSelfReferral.equals;
   }
 
-  if (filters?.acceptsCourtOrdered?.equals !== undefined) {
-    where.acceptsCourtOrdered = filters.acceptsCourtOrdered.equals;
+  if (f?.acceptsCourtOrdered?.equals !== undefined) {
+    where.acceptsCourtOrdered = f.acceptsCourtOrdered.equals;
   }
 
-  if (filters?.acceptsMedicallyComplex?.equals !== undefined) {
-    where.acceptsMedicallyComplex = filters.acceptsMedicallyComplex.equals;
+  if (f?.acceptsMedicallyComplex?.equals !== undefined) {
+    where.acceptsMedicallyComplex = f.acceptsMedicallyComplex.equals;
   }
 
-  if (filters?.waitlistCategories?.length) {
-    where.waitlistCategory = { in: filters.waitlistCategories };
+  if (f?.waitlistCategories?.length) {
+    where.waitlistCategory = { in: f.waitlistCategories };
   }
 
   // -------- join-table filters --------
-  if (filters?.detoxServiceIds?.length) {
+  if (f?.detoxServiceIds?.length) {
     where.programDetoxServices = {
-      some: { detoxServiceId: { in: filters.detoxServiceIds } },
+      some: { detoxServiceId: { in: f.detoxServiceIds } },
     };
   }
 
-  if (filters?.serviceIds?.length) {
+  if (f?.serviceIds?.length) {
     where.programServices = {
-      some: { serviceId: { in: filters.serviceIds } },
+      some: { serviceId: { in: f.serviceIds } },
     };
   }
 
-  if (filters?.populationIds?.length) {
+  if (f?.populationIds?.length) {
     where.programPopulations = {
-      some: { populationId: { in: filters.populationIds } },
+      some: { populationId: { in: f.populationIds } },
     };
   }
 
-  if (filters?.languageIds?.length) {
+  if (f?.languageIds?.length) {
     where.programLanguages = {
-      some: { languageId: { in: filters.languageIds } },
+      some: { languageId: { in: f.languageIds } },
     };
   }
 
-  if (filters?.amenityIds?.length) {
+  if (f?.amenityIds?.length) {
     where.programAmenities = {
-      some: { amenityId: { in: filters.amenityIds } },
+      some: { amenityId: { in: f.amenityIds } },
     };
   }
 
-  if (filters?.featureIds?.length) {
+  if (f?.featureIds?.length) {
     where.programFeatures = {
-      some: { programFeatureId: { in: filters.featureIds } },
+      some: { programFeatureId: { in: f.featureIds } },
     };
   }
 
-  if (filters?.matTypeIds?.length) {
+  if (f?.matTypeIds?.length) {
     where.programMATTypes = {
-      some: { matTypeId: { in: filters.matTypeIds } },
+      some: { matTypeId: { in: f.matTypeIds } },
     };
   }
 
-  if (filters?.substanceIds?.length) {
+  if (f?.substanceIds?.length) {
     where.programSubstances = {
-      some: { substanceId: { in: filters.substanceIds } },
+      some: { substanceId: { in: f.substanceIds } },
     };
   }
 
-  if (filters?.insurancePayerIds?.length) {
+  if (f?.insurancePayerIds?.length) {
     where.insurancePayers = {
-      some: { insurancePayerId: { in: filters.insurancePayerIds } },
+      some: { insurancePayerId: { in: f.insurancePayerIds } },
     };
   }
 
-  if (filters?.paymentOptionIds?.length) {
+  if (f?.paymentOptionIds?.length) {
     where.paymentOptions = {
-      some: { paymentOptionId: { in: filters.paymentOptionIds } },
+      some: { paymentOptionId: { in: f.paymentOptionIds } },
     };
   }
 
-  // -------- caching wrapper --------
+  // -------- caching wrapper (key ignores skip/take) --------
   let cacheKey: string | undefined;
   if (cacheManager && getCacheKey) {
-    cacheKey = getCacheKey('rehabPrograms:findMany', filters ?? {});
+    cacheKey = getCacheKey('rehabPrograms:findMany', filtersWithoutPagination);
     const cached = await cacheManager.get<RehabProgramModel[]>(cacheKey);
     if (cached) {
       return cached;

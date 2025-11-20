@@ -79,7 +79,13 @@ export class RehabOrgFilterInput {
 
   // full-text-ish search across name/description/tagline, etc.
   @Field({ nullable: true })
-  search?: string;
+  search?: string; 
+
+  @Field({nullable: true})  
+  skip?: number; 
+
+  @Field({nullable: true}) 
+  take?: number; 
 
   // -------- core fields --------
 
@@ -198,7 +204,13 @@ export class RehabCampusFilterInput {
   ids?: string[];
 
   @Field(() => [String], { nullable: true })
-  slugs?: string[];
+  slugs?: string[]; 
+
+  @Field({nullable: true})  
+  skip?: number; 
+
+  @Field({nullable: true}) 
+  take?: number; 
 
   @Field(() => [String], { nullable: true })
   rehabOrgIds?: string[];
@@ -341,7 +353,12 @@ export class RehabProgramFilterInput {
   ids?: string[];
 
   @Field(() => [String], { nullable: true })
-  slugs?: string[];
+  slugs?: string[]; 
+  @Field({nullable: true})  
+  skip?: number; 
+
+  @Field({nullable: true}) 
+  take?: number; 
 
   @Field(() => [String], { nullable: true })
   campusIds?: string[];

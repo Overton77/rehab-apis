@@ -1,5 +1,5 @@
 // scripts/export-snapshot.ts
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from 'prisma/generated/client';
 import fs from 'node:fs';
 import path from 'node:path';
 

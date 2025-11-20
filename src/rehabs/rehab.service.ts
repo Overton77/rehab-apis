@@ -6,9 +6,6 @@ import { UpsertRehabProgramInput } from './rehab-program.upsert.inputs';
 import { UpsertRehabCampusInput } from './rehab-campus.upsert.inputs';
 import { UpsertRehabOrgInput } from './rehab-org.upsert.inputs';
 import {
-  NetworkStatus,
-  InsuranceScope,
-  LevelOfCareType,
   RehabOrg as RehabOrgModel,
   RehabCampus as RehabCampusModel,
   RehabProgram as RehabProgramModel,
@@ -28,17 +25,12 @@ import {
   ProgramFeature as ProgramFeatureModel,
   PaymentOption as PaymentOptionModel,
   Substance as SubstanceModel,
-  Prisma,
-  PrismaClient,
 } from 'prisma/generated/client';
 
 import {
   RehabProgramFilterInput,
   RehabCampusFilterInput,
   RehabOrgFilterInput,
-  StringFilter,
-  IntRangeFilter,
-  FloatRangeFilter,
 } from './rehab-filters.input';
 
 import { upsertRehabCampusesWithConnectOrCreate } from './utils/upsertRehabCampusUtils';
@@ -56,9 +48,24 @@ import {
 import { createRehabCampus } from './utils/createRehabCampusUtils';
 import { createRehabProgram } from './utils/createRehabProgramUtils';
 import { createRehabOrg } from './utils/createRehabOrgUtils';
-function humanizeSlug(s: string) {
-  return s.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-}
+
+import {
+  LevelOfCareCreateInput,
+  DetoxServiceCreateInput,
+  MATTypeCreateInput,
+  ServiceCreateInput,
+  PopulationCreateInput,
+  AccreditationCreateInput,
+  LanguageCreateInput,
+  AmenityCreateInput,
+  EnvironmentCreateInput,
+  SettingStyleCreateInput,
+  LuxuryTierCreateInput,
+  ProgramFeatureCreateInput,
+  PaymentOptionCreateInput,
+  InsurancePayerCreateInput,
+  SubstanceCreateInput,
+} from './rehab-taxonomy.inputs';
 
 @Injectable()
 export class RehabService {
@@ -187,27 +194,32 @@ export class RehabService {
   async findManyRehabOrgs(
     filters?: RehabOrgFilterInput,
   ): Promise<RehabOrgModel[]> {
-    const rehabOrgs = await findManyRehabOrgsWithFilter(
+    const { skip = 0, take = 20, ...rest } = filters ?? {};
+    const all = await findManyRehabOrgsWithFilter(
       this.prisma,
-      filters,
+      { ...rest },
       this.cacheManager,
       (prefix, ...parts) => this.getCacheKey(prefix, ...parts),
       this.CACHE_TTL_RELATIONS,
     );
-
+    const rehabOrgs = all.slice(skip, skip + take);
     return rehabOrgs;
   }
 
   async findManyRehabCampuses(
     filters?: RehabCampusFilterInput,
   ): Promise<RehabCampusModel[]> {
-    const rehabCampuses = await findManyRehabCampusesWithFilter(
+    const { skip = 0, take = 20, ...rest } = filters ?? {};
+
+    const all = await findManyRehabCampusesWithFilter(
       this.prisma,
-      filters,
+      { ...rest },
       this.cacheManager,
       (prefix, ...parts) => this.getCacheKey(prefix, ...parts),
       this.CACHE_TTL_RELATIONS,
     );
+
+    const rehabCampuses = all.slice(skip, skip + take);
 
     return rehabCampuses;
   }
@@ -215,14 +227,16 @@ export class RehabService {
   async findManyRehabPrograms(
     filters?: RehabProgramFilterInput,
   ): Promise<RehabProgramModel[]> {
-    const rehabPrograms = await findManyRehabProgramsWithFilter(
+    const { skip = 0, take = 20, ...rest } = filters ?? {};
+    const all = await findManyRehabProgramsWithFilter(
       this.prisma,
-      filters,
+      { ...rest },
       this.cacheManager,
       (prefix, ...parts) => this.getCacheKey(prefix, ...parts),
       this.CACHE_TTL_RELATIONS,
     );
 
+    const rehabPrograms = all.slice(skip, skip + take);
     return rehabPrograms;
   }
 
@@ -364,11 +378,203 @@ export class RehabService {
     return { id };
   }
 
-  // ============================================
-  // RELATIONSHIP LOADERS (for Field Resolvers)
-  // ============================================
+  // Lookup tables and filters.
 
-  async getAllInsurancePayers(): Promise<InsurancePayerModel[]> {
+  async createManyLevelOfCare(items: LevelOfCareCreateInput[]) {
+    await this.prisma.levelOfCare.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.levelOfCare.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- DetoxService ----------
+  async createManyDetoxService(items: DetoxServiceCreateInput[]) {
+    await this.prisma.detoxService.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.detoxService.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- MATType ----------
+  async createManyMATType(items: MATTypeCreateInput[]) {
+    await this.prisma.mATType.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.mATType.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- Service ----------
+  async createManyService(items: ServiceCreateInput[]) {
+    await this.prisma.service.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.service.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- Population ----------
+  async createManyPopulation(items: PopulationCreateInput[]) {
+    await this.prisma.population.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.population.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- Accreditation ----------
+  async createManyAccreditation(items: AccreditationCreateInput[]) {
+    await this.prisma.accreditation.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.accreditation.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- Language ----------
+  async createManyLanguage(items: LanguageCreateInput[]) {
+    await this.prisma.language.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const codes = items.map((i) => i.code);
+    return this.prisma.language.findMany({
+      where: { code: { in: codes } },
+    });
+  }
+
+  // ---------- Amenity ----------
+  async createManyAmenity(items: AmenityCreateInput[]) {
+    await this.prisma.amenity.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.amenity.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- Environment ----------
+  async createManyEnvironment(items: EnvironmentCreateInput[]) {
+    await this.prisma.environment.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.environment.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- SettingStyle ----------
+  async createManySettingStyle(items: SettingStyleCreateInput[]) {
+    await this.prisma.settingStyle.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.settingStyle.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- LuxuryTier ----------
+  async createManyLuxuryTier(items: LuxuryTierCreateInput[]) {
+    await this.prisma.luxuryTier.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.luxuryTier.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- ProgramFeature ----------
+  async createManyProgramFeature(items: ProgramFeatureCreateInput[]) {
+    await this.prisma.programFeature.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.programFeature.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- PaymentOption ----------
+  async createManyPaymentOption(items: PaymentOptionCreateInput[]) {
+    await this.prisma.paymentOption.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.paymentOption.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- InsurancePayer ----------
+  async createManyInsurancePayer(items: InsurancePayerCreateInput[]) {
+    await this.prisma.insurancePayer.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.insurancePayer.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  // ---------- Substance ----------
+  async createManySubstance(items: SubstanceCreateInput[]) {
+    await this.prisma.substance.createMany({
+      data: items,
+      skipDuplicates: true,
+    });
+
+    const slugs = items.map((i) => i.slug);
+    return this.prisma.substance.findMany({
+      where: { slug: { in: slugs } },
+    });
+  }
+
+  async findAllInsurancePayers(): Promise<InsurancePayerModel[]> {
     const cacheKey = this.getCacheKey('all:insurancePayers');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -382,7 +588,7 @@ export class RehabService {
     return insurancePayers;
   }
 
-  async getAllPaymentOptions(): Promise<PaymentOptionModel[]> {
+  async findAllPaymentOptions(): Promise<PaymentOptionModel[]> {
     const cacheKey = this.getCacheKey('all:paymentOptions');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -400,7 +606,7 @@ export class RehabService {
     return paymentOptions;
   }
 
-  async getAllLevelsOfCare(): Promise<LevelOfCareModel[]> {
+  async findAllLevelsOfCare(): Promise<LevelOfCareModel[]> {
     const cacheKey = this.getCacheKey('all:levelsOfCare');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -417,7 +623,7 @@ export class RehabService {
     return levelsOfCare;
   }
 
-  async getAllServices(): Promise<ServiceModel[]> {
+  async findAllServices(): Promise<ServiceModel[]> {
     const cacheKey = this.getCacheKey('all:services');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -435,7 +641,7 @@ export class RehabService {
     return allServices;
   }
 
-  async getAllDetoxServices(): Promise<DetoxServiceModel[]> {
+  async findAllDetoxServices(): Promise<DetoxServiceModel[]> {
     const cacheKey = this.getCacheKey('all:detoxServices');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -453,7 +659,7 @@ export class RehabService {
     return allDetoxServices;
   }
 
-  async getAllMATTypeModels(): Promise<MATTypeModel[]> {
+  async findAllMATTypes(): Promise<MATTypeModel[]> {
     const cacheKey = this.getCacheKey('all:mattypeModels');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -471,7 +677,7 @@ export class RehabService {
     return allMATTypeModels;
   }
 
-  async getAllSubstances(): Promise<SubstanceModel[]> {
+  async findAllSubstances(): Promise<SubstanceModel[]> {
     const cacheKey = this.getCacheKey('all:substances');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -487,7 +693,7 @@ export class RehabService {
     return substances;
   }
 
-  async getAllPopulations(): Promise<PopulationModel[]> {
+  async findAllPopulations(): Promise<PopulationModel[]> {
     const cacheKey = this.getCacheKey('all:populations');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -501,7 +707,7 @@ export class RehabService {
     return population;
   }
 
-  async getAllAccreditations(): Promise<AccreditationModel[]> {
+  async findAllAccreditations(): Promise<AccreditationModel[]> {
     const cacheKey = this.getCacheKey('all:accreditations');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -515,7 +721,7 @@ export class RehabService {
     return relations;
   }
 
-  async getAllLanguages(): Promise<LanguageModel[]> {
+  async findAllLanguages(): Promise<LanguageModel[]> {
     const cacheKey = this.getCacheKey('all:languages');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -529,7 +735,7 @@ export class RehabService {
     return relations;
   }
 
-  async getAllAmenities(): Promise<AmenityModel[]> {
+  async findAllAmenities(): Promise<AmenityModel[]> {
     const cacheKey = this.getCacheKey('all:amenities');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -543,7 +749,7 @@ export class RehabService {
     return relations;
   }
 
-  async getAllEnvironments(): Promise<EnvironmentModel[]> {
+  async findAllEnvironments(): Promise<EnvironmentModel[]> {
     const cacheKey = this.getCacheKey('all:environments');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -557,7 +763,7 @@ export class RehabService {
     return relations;
   }
 
-  async getAllSettingStyles(): Promise<SettingStyleModel[]> {
+  async findAllSettingStyles(): Promise<SettingStyleModel[]> {
     const cacheKey = this.getCacheKey('all:settingStyles');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -571,7 +777,7 @@ export class RehabService {
     return relations;
   }
 
-  async getAllLuxuryTiers(): Promise<LuxuryTierModel[]> {
+  async findAllLuxuryTiers(): Promise<LuxuryTierModel[]> {
     const cacheKey = this.getCacheKey('all:luxuryTiers');
 
     const cached = await this.cacheManager.get(cacheKey);
@@ -585,7 +791,7 @@ export class RehabService {
     return relations;
   }
 
-  async getAllProgramFeatures(): Promise<ProgramFeatureModel[]> {
+  async findAllProgramFeatures(): Promise<ProgramFeatureModel[]> {
     const cacheKey = this.getCacheKey('all:programFeatures');
 
     const cached = await this.cacheManager.get(cacheKey);

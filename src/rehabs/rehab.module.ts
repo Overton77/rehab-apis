@@ -3,6 +3,7 @@ import { RehabOrgResolver } from './rehab-org.resolver';
 import { RehabService } from './rehab.service';
 import { RehabProgramResolver } from './rehab-program.resolver';
 import { RehabCampusResolver } from './rehab-campus.resolver';
+import { RehabTaxonomyResolver } from './rehab-taxonomy.resolver';
 import { PrismaService } from '../prisma.service';
 
 @Module({
@@ -10,6 +11,7 @@ import { PrismaService } from '../prisma.service';
     RehabOrgResolver,
     RehabProgramResolver,
     RehabCampusResolver,
+    RehabTaxonomyResolver,
     RehabService,
     PrismaService,
   ],

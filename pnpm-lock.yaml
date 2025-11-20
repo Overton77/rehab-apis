@@ -20,9 +20,6 @@ importers:
       '@keyv/redis':
         specifier: ^5.1.4
         version: 5.1.4(keyv@5.5.4)
-      '@liaoliaots/nestjs-redis':
-        specifier: ^10.0.0
-        version: 10.0.0(@nestjs/common@11.1.8(class-transformer@0.5.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.8)(ioredis@5.8.2)
       '@nestjs/apollo':
         specifier: ^13.2.1
         version: 13.2.1(@apollo/server@5.1.0(graphql@16.12.0))(@as-integrations/fastify@3.1.0(@apollo/server@5.1.0(graphql@16.12.0))(fastify@5.6.2))(@nestjs/common@11.1.8(class-transformer@0.5.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.8)(@nestjs/graphql@13.2.0(@nestjs/common@11.1.8(class-transformer@0.5.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.8)(class-transformer@0.5.1)(graphql@16.12.0)(reflect-metadata@0.2.2))(graphql@16.12.0)
@@ -47,9 +44,6 @@ importers:
       '@nestjs/platform-fastify':
         specifier: ^11.1.8
         version: 11.1.8(@nestjs/common@11.1.8(class-transformer@0.5.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.8)
-      '@prisma/client':
-        specifier: ^6.19.0
-        version: 6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3)
       cache-manager:
         specifier: ^7.2.4
         version: 7.2.4
@@ -83,9 +77,6 @@ importers:
       keyv:
         specifier: ^5.5.4
         version: 5.5.4
-      prisma:
-        specifier: ^6.19.0
-        version: 6.19.0(typescript@5.9.3)
       prisma-graphql-type-decimal:
         specifier: ^3.0.1
         version: 3.0.1(@prisma/client@6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3))(graphql@16.12.0)
@@ -123,6 +114,9 @@ importers:
       '@nestjs/testing':
         specifier: ^11.0.1
         version: 11.1.8(@nestjs/common@11.1.8(class-transformer@0.5.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.8)(@nestjs/platform-express@11.1.8)
+      '@prisma/client':
+        specifier: ^6.19.0
+        version: 6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3)
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.5
@@ -156,6 +150,9 @@ importers:
       prettier:
         specifier: ^3.4.2
         version: 3.6.2
+      prisma:
+        specifier: ^6.19.0
+        version: 6.19.0(typescript@5.9.3)
       prisma-nestjs-graphql:
         specifier: ^21.2.0
         version: 21.2.0
@@ -1548,14 +1545,6 @@ packages:
 
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
-
-  '@liaoliaots/nestjs-redis@10.0.0':
-    resolution: {integrity: sha512-uCTmlzM4q+UYADwsJEQph0mbf4u0MrktFhByi50M5fNy/+fJoWlhSqrgvjtVKjHnqydxy1gyuU6vHJEOBp9cjg==}
-    engines: {node: '>=16.13.0'}
-    peerDependencies:
-      '@nestjs/common': ^10.0.0
-      '@nestjs/core': ^10.0.0
-      ioredis: ^5.0.0
 
   '@lukeed/csprng@1.1.0':
     resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
@@ -4807,9 +4796,6 @@ packages:
   tslib@2.6.3:
     resolution: {integrity: sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==}
 
-  tslib@2.7.0:
-    resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
-
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
@@ -6991,13 +6977,6 @@ snapshots:
       keyv: 5.5.4
 
   '@keyv/serialize@1.1.1': {}
-
-  '@liaoliaots/nestjs-redis@10.0.0(@nestjs/common@11.1.8(class-transformer@0.5.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.8)(ioredis@5.8.2)':
-    dependencies:
-      '@nestjs/common': 11.1.8(class-transformer@0.5.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/core': 11.1.8(@nestjs/common@11.1.8(class-transformer@0.5.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.8)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      ioredis: 5.8.2
-      tslib: 2.7.0
 
   '@lukeed/csprng@1.1.0': {}
 
@@ -10608,8 +10587,6 @@ snapshots:
   tslib@2.4.1: {}
 
   tslib@2.6.3: {}
-
-  tslib@2.7.0: {}
 
   tslib@2.8.1: {}
 

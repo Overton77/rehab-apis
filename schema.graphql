@@ -15,6 +15,16 @@ input AccreditationConnectOrCreateInput {
   slug: String!
 }
 
+input AccreditationCreateInput {
+  description: String
+  displayName: String!
+  slug: String!
+}
+
+input AccreditationCreateManyInput {
+  items: [AccreditationCreateInput!]!
+}
+
 type Amenity {
   description: String
   displayName: String!
@@ -26,6 +36,16 @@ input AmenityConnectOrCreateInput {
   description: String
   displayName: String
   slug: String!
+}
+
+input AmenityCreateInput {
+  description: String
+  displayName: String!
+  slug: String!
+}
+
+input AmenityCreateManyInput {
+  items: [AmenityCreateInput!]!
 }
 
 input BooleanFilter {
@@ -280,6 +300,16 @@ input DetoxServiceConnectOrCreateInput {
   slug: String!
 }
 
+input DetoxServiceCreateInput {
+  description: String
+  displayName: String!
+  slug: String!
+}
+
+input DetoxServiceCreateManyInput {
+  items: [DetoxServiceCreateInput!]!
+}
+
 type Environment {
   description: String
   displayName: String!
@@ -291,6 +321,16 @@ input EnvironmentConnectOrCreateInput {
   description: String
   displayName: String
   slug: String!
+}
+
+input EnvironmentCreateInput {
+  description: String
+  displayName: String!
+  slug: String!
+}
+
+input EnvironmentCreateManyInput {
+  items: [EnvironmentCreateInput!]!
 }
 
 input FloatRangeFilter {
@@ -314,6 +354,18 @@ input InsurancePayerConnectOrCreateInput {
   id: String
   payerType: String
   slug: String
+}
+
+input InsurancePayerCreateInput {
+  companyName: String!
+  description: String
+  displayName: String!
+  payerType: String
+  slug: String!
+}
+
+input InsurancePayerCreateManyInput {
+  items: [InsurancePayerCreateInput!]!
 }
 
 type InsuranceProviderGQL {
@@ -348,6 +400,16 @@ input LanguageConnectOrCreateInput {
   displayName: String
 }
 
+input LanguageCreateInput {
+  code: String!
+  description: String
+  displayName: String!
+}
+
+input LanguageCreateManyInput {
+  items: [LanguageCreateInput!]!
+}
+
 type LevelOfCare {
   description: String
   displayName: String!
@@ -361,6 +423,17 @@ input LevelOfCareConnectOrCreateInput {
   displayName: String
   slug: String!
   type: LevelOfCareType
+}
+
+input LevelOfCareCreateInput {
+  description: String
+  displayName: String!
+  slug: String!
+  type: LevelOfCareType
+}
+
+input LevelOfCareCreateManyInput {
+  items: [LevelOfCareCreateInput!]!
 }
 
 enum LevelOfCareType {
@@ -390,6 +463,17 @@ input LuxuryTierConnectOrCreateInput {
   slug: String!
 }
 
+input LuxuryTierCreateInput {
+  description: String
+  displayName: String!
+  rank: Int
+  slug: String!
+}
+
+input LuxuryTierCreateManyInput {
+  items: [LuxuryTierCreateInput!]!
+}
+
 type MATType {
   description: String
   displayName: String!
@@ -405,9 +489,35 @@ input MATTypeConnectOrCreateInput {
   slug: String!
 }
 
+input MATTypeCreateInput {
+  description: String
+  displayName: String!
+  medicationClass: String
+  slug: String!
+}
+
+input MATTypeCreateManyInput {
+  items: [MATTypeCreateInput!]!
+}
+
 type Mutation {
   createInsuranceProvider(data: CreateInsuranceProviderInput!): InsuranceProviderGQL!
+  createManyAccreditation(input: AccreditationCreateManyInput!): [Accreditation!]!
+  createManyAmenity(input: AmenityCreateManyInput!): [Amenity!]!
+  createManyDetoxService(input: DetoxServiceCreateManyInput!): [DetoxService!]!
+  createManyEnvironment(input: EnvironmentCreateManyInput!): [Environment!]!
+  createManyInsurancePayer(input: InsurancePayerCreateManyInput!): [InsurancePayer!]!
+  createManyLanguage(input: LanguageCreateManyInput!): [Language!]!
+  createManyLevelOfCare(input: LevelOfCareCreateManyInput!): [LevelOfCare!]!
+  createManyLuxuryTier(input: LuxuryTierCreateManyInput!): [LuxuryTier!]!
+  createManyMATType(input: MATTypeCreateManyInput!): [MATType!]!
+  createManyPaymentOption(input: PaymentOptionCreateManyInput!): [PaymentOption!]!
+  createManyPopulation(input: PopulationCreateManyInput!): [Population!]!
+  createManyProgramFeature(input: ProgramFeatureCreateManyInput!): [ProgramFeature!]!
   createManyProspectiveRehabs(data: [CreateProspectiveRehabInput!]!): [ProspectiveRehab!]!
+  createManyService(input: ServiceCreateManyInput!): [Service!]!
+  createManySettingStyle(input: SettingStyleCreateManyInput!): [SettingStyle!]!
+  createManySubstance(input: SubstanceCreateManyInput!): [Substance!]!
   createProspectiveRehab(data: CreateProspectiveRehabInput!): ProspectiveRehab!
 
   """Create a new Rehab Campus with connect or create"""
@@ -576,6 +686,16 @@ input PaymentOptionConnectOrCreateInput {
   slug: String
 }
 
+input PaymentOptionCreateInput {
+  description: String
+  displayName: String!
+  slug: String!
+}
+
+input PaymentOptionCreateManyInput {
+  items: [PaymentOptionCreateInput!]!
+}
+
 type Population {
   description: String
   displayName: String!
@@ -587,6 +707,16 @@ input PopulationConnectOrCreateInput {
   description: String
   displayName: String
   slug: String!
+}
+
+input PopulationCreateInput {
+  description: String
+  displayName: String!
+  slug: String!
+}
+
+input PopulationCreateManyInput {
+  items: [PopulationCreateInput!]!
 }
 
 type ProgramFeature {
@@ -601,6 +731,16 @@ input ProgramFeatureConnectOrCreateInput {
   displayName: String
   id: String
   slug: String
+}
+
+input ProgramFeatureCreateInput {
+  description: String
+  displayName: String!
+  slug: String!
+}
+
+input ProgramFeatureCreateManyInput {
+  items: [ProgramFeatureCreateInput!]!
 }
 
 input ProgramFeatureGlobalConnectOrCreateInput {
@@ -701,6 +841,11 @@ type ProspectiveRehab {
 }
 
 type Query {
+  accreditations: [Accreditation!]!
+  amenities: [Amenity!]!
+  detoxServices: [DetoxService!]!
+  environments: [Environment!]!
+
   """Find many rehab campus with extensive filters"""
   findManyRehabCampuses(data: RehabCampusFilterInput!): [RehabCampus!]!
   findManyRehabOrgs(data: RehabOrgFilterInput!): [RehabOrg!]!
@@ -717,10 +862,21 @@ type Query {
 
   """Simple health check"""
   health: String!
+  insurancePayers: [InsurancePayer!]!
   insuranceProvider(id: Int!): InsuranceProviderGQL
   insuranceProviders(search: String, skip: Int, take: Int): [InsuranceProviderGQL!]!
+  languages: [Language!]!
+  levelOfCares: [LevelOfCare!]!
+  luxuryTiers: [LuxuryTier!]!
+  matTypes: [MATType!]!
+  paymentOptions: [PaymentOption!]!
+  populations: [Population!]!
+  programFeatures: [ProgramFeature!]!
   prospectiveRehab(id: Int!): ProspectiveRehab
   prospectiveRehabs(cursorId: Int, search: String, skip: Int, take: Int): [ProspectiveRehab!]!
+  services: [Service!]!
+  settingStyles: [SettingStyle!]!
+  substances: [Substance!]!
 }
 
 type RehabAccreditation {
@@ -893,8 +1049,10 @@ input RehabCampusFilterInput {
   radiusKm: Float
   rehabOrgIds: [String!]
   search: String
+  skip: Float
   slugs: [String!]
   states: [String!]
+  take: Float
 }
 
 type RehabCampusLanguage {
@@ -1067,8 +1225,10 @@ input RehabOrgFilterInput {
   search: String
   serviceIds: [String!]
   settingStyleIds: [String!]
+  skip: Float
   slugs: [String!]
   states: [String!]
+  take: Float
   verifiedExists: BooleanFilter
   yearFounded: IntRangeFilter
   zips: [String!]
@@ -1196,9 +1356,11 @@ input RehabProgramFilterInput {
   search: String
   serviceIds: [String!]
   sessionScheduleContains: String
+  skip: Float
   slugs: [String!]
   staffToPatientRatio: FloatRangeFilter
   substanceIds: [String!]
+  take: Float
   typicalLengthOfStayDays: IntRangeFilter
   waitlistCategories: [WaitlistCategory!]
 }
@@ -1273,6 +1435,16 @@ input ServiceConnectOrCreateInput {
   slug: String!
 }
 
+input ServiceCreateInput {
+  description: String
+  displayName: String!
+  slug: String!
+}
+
+input ServiceCreateManyInput {
+  items: [ServiceCreateInput!]!
+}
+
 type SettingStyle {
   description: String
   displayName: String!
@@ -1284,6 +1456,16 @@ input SettingStyleConnectOrCreateInput {
   description: String
   displayName: String
   slug: String!
+}
+
+input SettingStyleCreateInput {
+  description: String
+  displayName: String!
+  slug: String!
+}
+
+input SettingStyleCreateManyInput {
+  items: [SettingStyleCreateInput!]!
 }
 
 type SocialMediaProfile {
@@ -1334,6 +1516,17 @@ input SubstanceConnectOrCreateInput {
   description: String
   displayName: String
   slug: String!
+}
+
+input SubstanceCreateInput {
+  category: String
+  description: String
+  displayName: String!
+  slug: String!
+}
+
+input SubstanceCreateManyInput {
+  items: [SubstanceCreateInput!]!
 }
 
 input UpdateInsuranceProviderInput {
