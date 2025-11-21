@@ -308,7 +308,7 @@ export class RehabService {
       include: this.INCLUDE_RELATIONS_REHAB_ORG,
     });
 
-    this.cacheManager.set(cacheKey, rehabOrg, 120);
+    await this.cacheManager.set(cacheKey, rehabOrg, 120);
 
     return rehabOrg;
   }
@@ -858,55 +858,5 @@ export class RehabService {
 
     await this.cacheManager.set(cacheKey, relations, this.CACHE_TTL_RELATIONS);
     return relations;
-  }
-
-  // ============================================
-  // HELPER METHODS
-  // ============================================
-
-  // Cache invalidation helpers
-  private async invalidateRehabCaches(id: string, slug: string): Promise<void> {
-    // Invalidate specific rehab caches
-    await this.cacheManager.del(this.getCacheKey('rehab', id));
-    await this.cacheManager.del(this.getCacheKey('rehab:slug', slug));
-
-    // Invalidate all relationship caches for this rehab
-    const relationTypes = [
-      'insurancePayers',
-      'paymentOptions',
-      'levelsOfCare',
-      'services',
-      'detoxServices',
-      'populations',
-      'accreditations',
-      'languages',
-      'amenities',
-      'environments',
-      'settingStyles',
-      'luxuryTiers',
-      'programFeatures',
-    ];
-
-    for (const relationType of relationTypes) {
-      await this.cacheManager.del(
-        this.getCacheKey(`rehab:${relationType}`, id),
-      );
-    }
-
-    // Invalidate list caches
-    await this.invalidateListCaches();
-  }
-
-  private async invalidateListCaches(): Promise<void> {
-    // Note: In production, you might want a more sophisticated cache invalidation strategy
-    // For now, we'll invalidate specific list cache patterns
-    // You may want to track keys more explicitly or use Redis SCAN for pattern deletion
-
-    // Delete common list cache keys (simplified approach)
-    const listCacheKeys = ['rehabs:list', 'rehabs:count'];
-
-    for (const key of listCacheKeys) {
-      await this.cacheManager.del(key);
-    }
   }
 }
