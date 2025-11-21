@@ -74,10 +74,10 @@ export class Rehab {
 
 #### Cache Strategy
 
-- **TTL Settings**:
-  - Single rehabs: 10 minutes
+- **TTL Settings** (current defaults):
+  - Single rehabs: 5 minutes
   - Lists: 5 minutes
-  - Relationships: 10 minutes
+  - Relationships: 5 minutes
 
 #### Main Methods
 

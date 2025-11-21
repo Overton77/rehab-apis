@@ -161,6 +161,14 @@ export class RehabService {
       input,
     );
 
+    // Invalidate caches impacted by this change
+    if (rehabOrg?.id && rehabOrg?.slug) {
+      await this.invalidateRehabCaches(rehabOrg.id, rehabOrg.slug);
+    } else {
+      // Fallback: reset all caches if we cannot target keys
+      await this.cacheManager.reset();
+    }
+
     return rehabOrg;
   }
 
@@ -261,6 +269,9 @@ export class RehabService {
   ): Promise<RehabOrgModel> {
     const rehabOrg = await createRehabOrg(this.prisma, data);
 
+    // New org affects list/findMany caches; reset list caches
+    await this.invalidateListCaches();
+
     return rehabOrg;
   }
 
@@ -269,10 +280,20 @@ export class RehabService {
       throw new Error('Missing ID for this route');
     }
 
+    // Try cache first
+    const cacheKey = this.getCacheKey('rehab', id);
+    const cached = await this.cacheManager.get<RehabOrgModel>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const rehabOrg = await this.prisma.rehabOrg.findUniqueOrThrow({
       where: { id },
       include: this.INCLUDE_RELATIONS_REHAB_ORG,
     });
+
+    // Populate cache
+    await this.cacheManager.set(cacheKey, rehabOrg, this.CACHE_TTL_REHAB);
 
     return rehabOrg;
   }
@@ -321,7 +342,7 @@ export class RehabService {
   async deleteRehabOrg(id: string): Promise<{ id: string } | null> {
     const rehabOrg = await this.prisma.rehabOrg.findUnique({
       where: { id },
-      select: { id: true },
+      select: { id: true, slug: true },
     });
 
     if (!rehabOrg) {
@@ -329,6 +350,13 @@ export class RehabService {
     }
 
     await this.prisma.rehabOrg.delete({ where: { id } });
+
+    // Invalidate affected caches (entity + lists)
+    if (rehabOrg.slug) {
+      await this.invalidateRehabCaches(id, rehabOrg.slug);
+    } else {
+      await this.cacheManager.reset();
+    }
 
     return { id };
   }
@@ -843,15 +871,8 @@ export class RehabService {
   }
 
   private async invalidateListCaches(): Promise<void> {
-    // Note: In production, you might want a more sophisticated cache invalidation strategy
-    // For now, we'll invalidate specific list cache patterns
-    // You may want to track keys more explicitly or use Redis SCAN for pattern deletion
-
-    // Delete common list cache keys (simplified approach)
-    const listCacheKeys = ['rehabs:list', 'rehabs:count'];
-
-    for (const key of listCacheKeys) {
-      await this.cacheManager.del(key);
-    }
+    // Current strategy: full cache reset to ensure consistency for list queries.
+    // This is safe and simple; can be refined later with tag/pattern-based deletes.
+    await this.cacheManager.reset();
   }
 }
