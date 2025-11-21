@@ -19,8 +19,6 @@ import {
   ProgramFeatureGlobalConnectOrCreateInput,
   SocialMediaProfileConnectOrCreateInput,
   DetoxServiceConnectOrCreateInput,
-  RehabInsurancePayerConnectOrCreateInput,
-  RehabPaymentOptionConnectOrCreateInput,
 } from './rehab-org-create.input';
 
 // ------------------------------------------------------
@@ -351,12 +349,6 @@ export class CreateRehabCampusInput {
 
   @Field(() => [SocialMediaProfileConnectOrCreateInput], { nullable: true })
   socialMediaProfiles?: SocialMediaProfileConnectOrCreateInput[];
-
-  @Field(() => [RehabInsurancePayerConnectOrCreateInput], { nullable: true })
-  insurancePayers?: RehabInsurancePayerConnectOrCreateInput[];
-
-  @Field(() => [RehabPaymentOptionConnectOrCreateInput], { nullable: true })
-  paymentOptions?: RehabPaymentOptionConnectOrCreateInput[];
 }
 
 // ------------------------------------------------------
@@ -486,10 +478,4 @@ export class CreateRehabProgramInput {
 
   @Field(() => [ProgramStoryCreateInput], { nullable: true })
   stories?: ProgramStoryCreateInput[];
-
-  @Field(() => [RehabInsurancePayerConnectOrCreateInput], { nullable: true })
-  insurancePayers?: RehabInsurancePayerConnectOrCreateInput[];
-
-  @Field(() => [RehabPaymentOptionConnectOrCreateInput], { nullable: true })
-  paymentOptions?: RehabPaymentOptionConnectOrCreateInput[];
 }

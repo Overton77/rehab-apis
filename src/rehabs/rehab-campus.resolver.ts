@@ -24,14 +24,16 @@ import {
   LuxuryTier as ResolverLuxuryTier,
 } from './lookups.model';
 
-import { SocialMediaProfile } from './core.model';
+import { SocialMediaProfile, RehabProgram } from './core.model';
 
 import { RehabCampus } from './core.model';
 import { DeleteResult } from './mutation-results';
 import { CreateRehabCampusInput } from './rehab-program-create.input';
-import { RehabInsurancePayer, RehabPaymentOption } from './finance.model';
 import { RehabCampusFilterInput } from './rehab-filters.input';
 import { UpsertRehabCampusInput } from './rehab-campus.upsert.inputs';
+
+//  TODO ! : Resolve Type fields without include using where: Rehab_type in: {}
+// TODO ! Add The Rest of the Rehab Campus Resolvers
 
 @Resolver(() => RehabCampus)
 export class RehabCampusResolver {
@@ -94,29 +96,6 @@ export class RehabCampusResolver {
     return rehabCampus;
   }
 
-  @ResolveField(() => [RehabInsurancePayer], {
-    nullable: true,
-    description:
-      'Insurance payers accepted by this rehab with average admission prices',
-  })
-  insurancePayers(@Parent() rehabCampus: RehabCampus): RehabInsurancePayer[] {
-    console.log('RehabResolver: parent Rehab . InsurancePayers', rehabCampus);
-
-    if (rehabCampus.insurancePayers && rehabCampus.insurancePayers.length) {
-      return rehabCampus.insurancePayers;
-    }
-  }
-
-  @ResolveField(() => [RehabPaymentOption], {
-    nullable: true,
-    description: 'Payment options available at this rehab',
-  })
-  paymentOptions(@Parent() rehabCampus: RehabCampus): RehabPaymentOption[] {
-    if (rehabCampus.paymentOptions && rehabCampus.paymentOptions.length > 0) {
-      return rehabCampus.paymentOptions;
-    }
-  }
-
   @ResolveField(() => ResolverEnvironment, {
     nullable: true,
     description: 'Levels of care provided by this rehab',
@@ -131,7 +110,7 @@ export class RehabCampusResolver {
     nullable: true,
     description: 'Services and therapies offered at this rehab',
   })
-  services(@Parent() rehab: RehabCampus): ResolverSettingStyle {
+  primarySettingStyle(@Parent() rehab: RehabCampus): ResolverSettingStyle {
     if (rehab.primarySettingStyle) {
       return rehab.primarySettingStyle;
     }
@@ -141,7 +120,7 @@ export class RehabCampusResolver {
     nullable: true,
     description: 'Detoxification services available',
   })
-  detoxServices(@Parent() rehab: RehabCampus): ResolverLuxuryTier {
+  primaryLuxuryTier(@Parent() rehab: RehabCampus): ResolverLuxuryTier {
     if (rehab.primaryLuxuryTier) {
       return rehab.primaryLuxuryTier;
     }
@@ -151,7 +130,7 @@ export class RehabCampusResolver {
     nullable: true,
     description: 'Populations and specialty groups served',
   })
-  populations(@Parent() rehab: RehabCampus): RehabCampusAmenity[] {
+  campusAmenities(@Parent() rehab: RehabCampus): RehabCampusAmenity[] {
     if (rehab.campusAmenities && rehab.campusAmenities.length > 0) {
       return rehab.campusAmenities;
     }
@@ -161,7 +140,7 @@ export class RehabCampusResolver {
     nullable: true,
     description: 'Accreditations held by this rehab',
   })
-  accreditations(@Parent() rehab: RehabCampus): RehabCampusPopulation[] {
+  campusPopulations(@Parent() rehab: RehabCampus): RehabCampusPopulation[] {
     if (rehab.campusPopulations && rehab.campusPopulations.length > 0) {
       return rehab.campusPopulations;
     }
@@ -171,7 +150,7 @@ export class RehabCampusResolver {
     nullable: true,
     description: 'Languages spoken at this facility',
   })
-  languages(@Parent() rehab: RehabCampus): RehabCampusLanguage[] {
+  campusLanguages(@Parent() rehab: RehabCampus): RehabCampusLanguage[] {
     if (rehab.campusLanguages && rehab.campusLanguages.length > 0) {
       return rehab.campusLanguages;
     }
@@ -181,7 +160,7 @@ export class RehabCampusResolver {
     nullable: true,
     description: 'Setting style of the facility',
   })
-  settingStyles(@Parent() rehab: RehabCampus): RehabCampusSettingStyle[] {
+  campusSettingStyles(@Parent() rehab: RehabCampus): RehabCampusSettingStyle[] {
     if (rehab.campusSettingStyles && rehab.campusSettingStyles.length > 0) {
       return rehab.campusSettingStyles;
     }
@@ -191,7 +170,7 @@ export class RehabCampusResolver {
     nullable: true,
     description: 'Luxury tier classification',
   })
-  luxuryTiers(@Parent() rehab: RehabCampus): RehabCampusLuxuryTier[] {
+  campusLuxuryTiers(@Parent() rehab: RehabCampus): RehabCampusLuxuryTier[] {
     if (rehab.campusLuxuryTiers && rehab.campusLuxuryTiers.length > 0) {
       return rehab.campusLuxuryTiers;
     }
@@ -201,9 +180,28 @@ export class RehabCampusResolver {
     nullable: true,
     description: 'Program features and operational characteristics',
   })
-  programFeatures(@Parent() rehab: RehabCampus): SocialMediaProfile[] {
+  socialMediaProfiles(@Parent() rehab: RehabCampus): SocialMediaProfile[] {
     if (rehab.socialMediaProfiles && rehab.socialMediaProfiles.length > 0) {
       return rehab.socialMediaProfiles;
+    }
+  }
+  @ResolveField(() => [RehabCampusEnvironment], {
+    nullable: true,
+    description: 'Program features and operational characteristics',
+  })
+  campusEnvironments(@Parent() rehab: RehabCampus): RehabCampusEnvironment[] {
+    if (rehab.campusEnvironments && rehab.campusEnvironments.length > 0) {
+      return rehab.campusEnvironments;
+    }
+  }
+
+  @ResolveField(() => [RehabProgram], {
+    nullable: true,
+    description: 'Program features and operational characteristics',
+  })
+  programs(@Parent() rehab: RehabCampus): RehabProgram[] {
+    if (rehab.programs && rehab.programs.length > 0) {
+      return rehab.programs;
     }
   }
 }

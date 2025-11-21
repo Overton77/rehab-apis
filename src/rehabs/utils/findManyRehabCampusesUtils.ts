@@ -10,6 +10,11 @@ import { RehabCampusFilterInput } from '../rehab-filters.input';
 
 import { buildIntRangeFilter } from './findFiltersUtils';
 
+import {
+  REHAB_CAMPUS_LIST_TAG_KEY,
+  makeListCacheKey,
+} from './cache/rehab-cache.util';
+
 const INCLUDE_RELATIONS_REHAB_CAMPUS = {
   primaryEnvironment: true,
   primarySettingStyle: true,
@@ -24,8 +29,6 @@ const INCLUDE_RELATIONS_REHAB_CAMPUS = {
   campusTestimonials: true,
   campusLuxuryTiers: true,
   campusStories: true,
-  insurancePayers: true,
-  paymentOptions: true,
   socialMediaProfiles: true,
 };
 
@@ -33,7 +36,6 @@ export async function findManyRehabCampusesWithFilter(
   prisma: PrismaClient,
   filters: RehabCampusFilterInput | undefined,
   cacheManager?: Cache,
-  getCacheKey?: GetCacheKeyFn,
   ttlSeconds = 60,
 ): Promise<RehabCampusModel[]> {
   // Destructure out pagination – you'll handle this in the service layer
@@ -161,18 +163,6 @@ export async function findManyRehabCampusesWithFilter(
     };
   }
 
-  if (f?.insurancePayerIds?.length) {
-    where.insurancePayers = {
-      some: { insurancePayerId: { in: f.insurancePayerIds } },
-    };
-  }
-
-  if (f?.paymentOptionIds?.length) {
-    where.paymentOptions = {
-      some: { paymentOptionId: { in: f.paymentOptionIds } },
-    };
-  }
-
   // -------- program-derived filters (AND on the same relation) --------
   const programAndFilters: Prisma.RehabProgramWhereInput[] = [];
 
@@ -257,8 +247,13 @@ export async function findManyRehabCampusesWithFilter(
   // -------- caching wrapper (key ignores skip/take) --------
   let cacheKey: string | undefined;
 
-  if (cacheManager && getCacheKey) {
-    cacheKey = getCacheKey('rehabCampuses:findMany', filtersWithoutPagination);
+  if (cacheManager) {
+    cacheKey = await makeListCacheKey(
+      cacheManager,
+      REHAB_CAMPUS_LIST_TAG_KEY,
+      filtersWithoutPagination,
+      'findMany',
+    );
 
     const cached = await cacheManager.get<RehabCampusModel[]>(cacheKey);
     if (cached) {

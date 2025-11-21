@@ -126,6 +126,15 @@ Responsibilities:
 
 ## Current Gaps / TODOs (High Priority for You)
 
+> **Important:**  
+> These items represent **application-level gaps** and **future development priorities**, but they are **not** action items for every issue or every fix.
+>
+> You should _only_ work on these areas when a specific GitHub issue explicitly requests it.
+>
+> **Do not assume these items must be addressed on every run of the agent or in response to unrelated issues.**
+>
+> Treat them as long-term roadmap anchors, not automatic tasks.
+
 You should treat these as **core backlog items**:
 
 1. **Caching Strategy**

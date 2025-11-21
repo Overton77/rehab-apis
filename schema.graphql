@@ -165,13 +165,11 @@ input CreateRehabCampusInput {
   environments: [EnvironmentConnectOrCreateInput!]
   hasOnsiteMD: Boolean
   hasTwentyFourHourNursing: Boolean
-  insurancePayers: [RehabInsurancePayerConnectOrCreateInput!]
   languages: [LanguageConnectOrCreateInput!]
   latitude: Float
   longitude: Float
   luxuryTiers: [LuxuryTierConnectOrCreateInput!]
   name: String!
-  paymentOptions: [RehabPaymentOptionConnectOrCreateInput!]
   phone: String
   populations: [PopulationConnectOrCreateInput!]
   postalCode: String!
@@ -250,7 +248,6 @@ input CreateRehabProgramInput {
   features: [ProgramFeatureGlobalConnectOrCreateInput!]
   hasOnsiteMD: Boolean
   hasTwentyFourHourNursing: Boolean
-  insurancePayers: [RehabInsurancePayerConnectOrCreateInput!]
   intakeEmail: String
   intakePhone: String
   isDetoxPrimary: Boolean
@@ -261,7 +258,6 @@ input CreateRehabProgramInput {
   maxLengthOfStayDays: Int
   minLengthOfStayDays: Int
   name: String!
-  paymentOptions: [RehabPaymentOptionConnectOrCreateInput!]
   populations: [PopulationConnectOrCreateInput!]
   reviews: [ProgramReviewCreateInput!]
   services: [ServiceConnectOrCreateInput!]
@@ -893,9 +889,6 @@ type RehabAmenity {
 
 type RehabCampus {
   acceptsWalkIns: Boolean
-
-  """Accreditations held by this rehab"""
-  accreditations: [RehabCampusPopulation!]
   bedsDetox: Int
   bedsOutpatientCapacity: Int
   bedsResidential: Int
@@ -913,30 +906,16 @@ type RehabCampus {
   country: String!
   createdAt: DateTime!
   description: String
-
-  """Detoxification services available"""
-  detoxServices: LuxuryTier
   directionsSummary: String
   displayName: String
   email: String
   hasOnsiteMD: Boolean
   hasTwentyFourHourNursing: Boolean
   id: ID!
-  insurancePayers: [RehabInsurancePayer!]
-
-  """Languages spoken at this facility"""
-  languages: [RehabCampusLanguage!]
   latitude: Float
   longitude: Float
-
-  """Luxury tier classification"""
-  luxuryTiers: [RehabCampusLuxuryTier!]
   name: String!
-  paymentOptions: [RehabPaymentOption!]
   phone: String
-
-  """Populations and specialty groups served"""
-  populations: [RehabCampusAmenity!]
   postalCode: String!
   primaryEnvironment: Environment
   primaryEnvironmentId: String
@@ -944,18 +923,9 @@ type RehabCampus {
   primaryLuxuryTierId: String
   primarySettingStyle: SettingStyle
   primarySettingStyleId: String
-
-  """Program features and operational characteristics"""
-  programFeatures: [SocialMediaProfile!]
   programs: [RehabProgram!]
   rehabOrg: RehabOrg
   rehabOrgId: String!
-
-  """Services and therapies offered at this rehab"""
-  services: SettingStyle
-
-  """Setting style of the facility"""
-  settingStyles: [RehabCampusSettingStyle!]
   slug: String!
   socialMediaProfiles: [SocialMediaProfile!]
   state: String!
@@ -1273,7 +1243,6 @@ type RehabProgram {
   hasOnsiteMD: Boolean
   hasTwentyFourHourNursing: Boolean
   id: ID!
-  insurancePayers: [RehabInsurancePayer!]
   intakeEmail: String
   intakePhone: String
   isDetoxPrimary: Boolean
@@ -1283,7 +1252,6 @@ type RehabProgram {
   maxLengthOfStayDays: Int
   minLengthOfStayDays: Int
   name: String!
-  paymentOptions: [RehabPaymentOption!]
   programAmenities: [RehabProgramAmenity!]
   programDetoxServices: [RehabProgramDetoxService!]
   programFeatures: [RehabProgramFeature!]
@@ -1565,13 +1533,11 @@ input UpsertRehabCampusInput {
   hasOnsiteMD: Boolean
   hasTwentyFourHourNursing: Boolean
   id: String!
-  insurancePayers: [RehabInsurancePayerConnectOrCreateInput!]
   languages: [LanguageConnectOrCreateInput!]
   latitude: Float
   longitude: Float
   luxuryTiers: [LuxuryTierConnectOrCreateInput!]
   name: String
-  paymentOptions: [RehabPaymentOptionConnectOrCreateInput!]
   phone: String
   populations: [PopulationConnectOrCreateInput!]
   postalCode: String
@@ -1652,7 +1618,6 @@ input UpsertRehabProgramInput {
   hasOnsiteMD: Boolean
   hasTwentyFourHourNursing: Boolean
   id: String!
-  insurancePayers: [RehabInsurancePayerConnectOrCreateInput!]
   intakeEmail: String
   intakePhone: String
   isDetoxPrimary: Boolean
@@ -1663,7 +1628,6 @@ input UpsertRehabProgramInput {
   maxLengthOfStayDays: Int
   minLengthOfStayDays: Int
   name: String
-  paymentOptions: [RehabPaymentOptionConnectOrCreateInput!]
   populations: [PopulationConnectOrCreateInput!]
   reviews: [ProgramReviewCreateInput!]
   services: [ServiceConnectOrCreateInput!]

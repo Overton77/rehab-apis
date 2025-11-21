@@ -24,13 +24,13 @@ import {
   RehabProgramSubstance,
 } from './program-joins.model';
 
-import { RehabInsurancePayer, RehabPaymentOption } from './finance.model';
-
 import { CreateRehabProgramInput } from './rehab-program-create.input';
 
 import { UpsertRehabProgramInput } from './rehab-program.upsert.inputs';
 
 import { RehabProgramFilterInput } from './rehab-filters.input';
+
+//  TODO ! : Resolve Type fields without include using where: Rehab_type in: {}
 
 @Resolver(() => RehabProgram)
 export class RehabProgramResolver {
@@ -193,27 +193,6 @@ export class RehabProgramResolver {
   programSubstances(@Parent() program: RehabProgram): RehabProgramSubstance[] {
     if (program.programSubstances && program.programSubstances.length > 0) {
       return program.programSubstances;
-    }
-  }
-
-  @ResolveField(() => [RehabInsurancePayer], {
-    nullable: true,
-    description:
-      'Insurance payers accepted for this specific program, with cost metadata',
-  })
-  insurancePayers(@Parent() program: RehabProgram): RehabInsurancePayer[] {
-    if (program.insurancePayers && program.insurancePayers.length > 0) {
-      return program.insurancePayers;
-    }
-  }
-
-  @ResolveField(() => [RehabPaymentOption], {
-    nullable: true,
-    description: 'Payment options available for this program',
-  })
-  paymentOptions(@Parent() program: RehabProgram): RehabPaymentOption[] {
-    if (program.paymentOptions && program.paymentOptions.length > 0) {
-      return program.paymentOptions;
     }
   }
 }

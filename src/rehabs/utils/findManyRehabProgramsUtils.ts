@@ -11,7 +11,10 @@ import {
   buildStringFilter,
 } from './findFiltersUtils';
 
-import type { GetCacheKeyFn } from './cacheTypeFn';
+import {
+  REHAB_PROGRAM_LIST_TAG_KEY,
+  makeListCacheKey,
+} from './cache/rehab-cache.util';
 
 const INCLUDE_RELATIONS_REHAB_PROGRAM = {
   levelOfCare: true,
@@ -26,16 +29,13 @@ const INCLUDE_RELATIONS_REHAB_PROGRAM = {
   programReviews: true,
   programTestimonials: true,
   programStories: true,
-  insurancePayers: true,
-  paymentOptions: true,
 };
 
 export async function findManyRehabProgramsWithFilter(
   prisma: PrismaClient,
   filters: RehabProgramFilterInput | undefined,
   cacheManager?: Cache,
-  getCacheKey?: GetCacheKeyFn,
-  ttlSeconds = 60,
+  ttlSeconds = 120,
 ): Promise<RehabProgramModel[]> {
   // Strip pagination; handled in service layer
   const { skip, take, ...filtersWithoutPagination } = filters ?? {};
@@ -198,22 +198,15 @@ export async function findManyRehabProgramsWithFilter(
     };
   }
 
-  if (f?.insurancePayerIds?.length) {
-    where.insurancePayers = {
-      some: { insurancePayerId: { in: f.insurancePayerIds } },
-    };
-  }
-
-  if (f?.paymentOptionIds?.length) {
-    where.paymentOptions = {
-      some: { paymentOptionId: { in: f.paymentOptionIds } },
-    };
-  }
-
   // -------- caching wrapper (key ignores skip/take) --------
   let cacheKey: string | undefined;
-  if (cacheManager && getCacheKey) {
-    cacheKey = getCacheKey('rehabPrograms:findMany', filtersWithoutPagination);
+  if (cacheManager) {
+    cacheKey = await makeListCacheKey(
+      cacheManager,
+      REHAB_PROGRAM_LIST_TAG_KEY,
+      filtersWithoutPagination,
+      'findMany',
+    );
     const cached = await cacheManager.get<RehabProgramModel[]>(cacheKey);
     if (cached) {
       return cached;

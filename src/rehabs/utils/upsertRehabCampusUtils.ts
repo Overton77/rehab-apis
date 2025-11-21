@@ -70,8 +70,7 @@ export async function upsertRehabCampusesWithConnectOrCreate(
     testimonials,
     stories,
     socialMediaProfiles,
-    insurancePayers,
-    paymentOptions,
+
     ...campusCore
   } = data;
 
@@ -121,15 +120,6 @@ export async function upsertRehabCampusesWithConnectOrCreate(
   }
 
   // If user is trying to attach insurance/payment without a rehab, block.
-  if (
-    !rehabConnect &&
-    ((insurancePayers && insurancePayers.length) ||
-      (paymentOptions && paymentOptions.length))
-  ) {
-    throw new Error(
-      'Cannot attach insurancePayers/paymentOptions without a parent RehabOrg',
-    );
-  }
 
   // ---- build nested block reused for create/update ----
   const nested = {
@@ -309,69 +299,8 @@ export async function upsertRehabCampusesWithConnectOrCreate(
       : undefined,
 
     // -------- insurance (join requires rehab) --------
-    insurancePayers:
-      rehabConnect && insurancePayers?.length
-        ? {
-            create: insurancePayers.map((payer) => ({
-              scope: payer.scope ?? InsuranceScope.CAMPUS,
-              networkStatus: payer.networkStatus ?? NetworkStatus.UNKNOWN,
-              averageAdmissionPrice: payer.averageAdmissionPrice ?? null,
-              estimatedPatientOopMin: payer.estimatedPatientOopMin ?? null,
-              estimatedPatientOopMax: payer.estimatedPatientOopMax ?? null,
-              requiresPreauth: payer.requiresPreauth ?? null,
-              acceptsOutOfNetworkWithOopCap:
-                payer.acceptsOutOfNetworkWithOopCap ?? null,
-              notes: payer.notes ?? null,
-              overview: payer.overview ?? null,
-              rehab: { connect: rehabConnect! },
-              insurancePayer: {
-                connectOrCreate: {
-                  where: { slug: payer.insurancePayer.slug! },
-                  create: {
-                    slug: payer.insurancePayer.slug!,
-                    displayName:
-                      payer.insurancePayer.displayName ??
-                      humanizeSlug(payer.insurancePayer.slug!),
-                    ...(payer.insurancePayer.companyName && {
-                      companyName: payer.insurancePayer.companyName,
-                    }),
-                    ...(payer.insurancePayer.description && {
-                      description: payer.insurancePayer.description,
-                    }),
-                    ...(payer.insurancePayer.payerType && {
-                      payerType: payer.insurancePayer.payerType,
-                    }),
-                  },
-                },
-              },
-            })),
-          }
-        : undefined,
 
     // -------- payment options (join requires rehab) --------
-    paymentOptions:
-      rehabConnect && paymentOptions?.length
-        ? {
-            create: paymentOptions.map((po) => ({
-              descriptionOverride: po.descriptionOverride ?? null,
-              rehab: { connect: rehabConnect! },
-              paymentOption: {
-                connectOrCreate: {
-                  where: { slug: po.paymentOption.slug! },
-                  create: {
-                    slug: po.paymentOption.slug!,
-                    displayName:
-                      po.paymentOption.displayName ??
-                      humanizeSlug(po.paymentOption.slug!),
-                    ...(po.paymentOption.description && {
-                      description: po.paymentOption.description,
-                    }),
-                  },
-                },
-              },
-            })),
-          }
-        : undefined,
   };
 
   // ---- core scalar fields (no Prisma type here) ----
@@ -463,8 +392,6 @@ export async function upsertRehabCampusesWithConnectOrCreate(
       campusTestimonials: true,
       campusStories: true,
       socialMediaProfiles: true,
-      insurancePayers: { include: { insurancePayer: true } },
-      paymentOptions: { include: { paymentOption: true } },
     },
   });
 

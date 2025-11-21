@@ -72,6 +72,12 @@ export class UpsertRehabOrgInput {
   websiteUrl?: string;
 
   @Field({ nullable: true })
+  heroImageUrl?: string;
+
+  @Field({ nullable: true })
+  galleryImageUrls?: string[];
+
+  @Field({ nullable: true })
   mainPhone?: string;
 
   @Field({ nullable: true })

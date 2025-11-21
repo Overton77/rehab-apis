@@ -2,12 +2,16 @@ import { Cache } from 'cache-manager';
 
 import { RehabOrg as RehabOrgModel } from 'prisma/generated/client';
 import { RehabOrgFilterInput } from '../rehab-filters.input';
-import type { GetCacheKeyFn } from './cacheTypeFn';
 
 import type { Prisma } from 'prisma/generated/client';
 import { PrismaClient } from 'prisma/generated/internal/class';
 
 import { buildIntRangeFilter, buildStringFilter } from './findFiltersUtils';
+
+import {
+  REHAB_ORG_LIST_TAG_KEY,
+  makeListCacheKey,
+} from './cache/rehab-cache.util';
 
 const INCLUDE_RELATIONS_REHAB_ORG = {
   parentCompany: true,
@@ -35,8 +39,7 @@ export async function findManyRehabOrgsWithFilter(
   prisma: PrismaClient,
   filters: RehabOrgFilterInput | undefined,
   cacheManager?: Cache,
-  getCacheKey?: GetCacheKeyFn,
-  ttlSeconds = 60,
+  ttlSeconds = 120,
 ): Promise<RehabOrgModel[]> {
   // Strip pagination out; you'll handle skip/take in the service layer
   const { skip, take, ...filtersWithoutPagination } = filters ?? {};
@@ -238,8 +241,13 @@ export async function findManyRehabOrgsWithFilter(
 
   // -------- caching wrapper (key ignores skip/take) --------
   let cacheKey: string | undefined;
-  if (cacheManager && getCacheKey) {
-    cacheKey = getCacheKey('rehabOrgs:findMany', filtersWithoutPagination);
+  if (cacheManager) {
+    cacheKey = await makeListCacheKey(
+      cacheManager,
+      REHAB_ORG_LIST_TAG_KEY,
+      filtersWithoutPagination,
+      'findMany',
+    );
     const cached = await cacheManager.get<RehabOrgModel[]>(cacheKey);
     if (cached) {
       return cached;

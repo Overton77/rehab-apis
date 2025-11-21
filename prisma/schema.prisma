@@ -63,6 +63,14 @@ enum InsuranceScope {
   ORG
   CAMPUS
   PROGRAM
+} 
+
+enum InsuranceEligibilityStatus {
+  PENDING
+  VERIFIED
+  DENIED
+  ERROR
+  UNKNOWN
 }
 
 enum NetworkStatus {
@@ -113,7 +121,350 @@ enum LevelOfCareType {
   TELEHEALTH
   SOBER_LIVING
   OTHER
+}   
+
+
+enum PreAssessmentQuestionInputType {
+  SHORT_TEXT
+  LONG_TEXT
+  INTEGER
+  DECIMAL
+  BOOLEAN
+  SINGLE_SELECT
+  MULTI_SELECT
+  DATE
+  DATETIME
+  SCALE_1_10
 }
+
+// ----------------- 
+// Intake models 
+// ---------------- 
+
+
+model PreAssessmentForm {
+  id          String   @id @default(cuid())
+  slug        String   @unique          // "default-intake-v1"
+  name        String                  // "Default Intake Form v1"
+  description String?
+  version     Int      @default(1)
+  isActive    Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  questions   PreAssessmentFormQuestion[]
+  submissions UserPreAssessmentSubmission[]
+}
+
+model PreAssessmentFormQuestion {
+  id        String   @id @default(cuid())
+  formId    String
+
+  // Stable key for analytics / mapping even if label changes
+  questionKey String   // e.g. "primary_substance", "days_sober_last_30"
+
+  label       String   // Human-facing question text
+  description String?  // Helper text under the label
+
+  inputType   PreAssessmentQuestionInputType
+  isRequired  Boolean  @default(false)
+  sortOrder   Int      @default(0)
+
+  // For select questions: options, value-label pairs, etc.
+  // Example:
+  // [
+  //   { "value": "ALCOHOL", "label": "Alcohol" },
+  //   { "value": "OPIOIDS", "label": "Opioids" }
+  // ]
+  options     Json?
+
+  // You can stash conditional visibility logic here if you need it later
+  visibilityLogic Json? // e.g. { "showIf": { "questionKey": "has_dual_diagnosis", "equals": true } }
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  form       PreAssessmentForm @relation(fields: [formId], references: [id])
+  answers    UserPreAssessmentAnswer[]
+
+  @@index([formId])
+  @@unique([formId, questionKey])
+}   
+
+enum UserRole { 
+  LOVED_ONE  
+  USER 
+  ADMIN 
+  MASTER 
+}
+model AdminUser {  
+  id String @id @default(cuid())   
+  name String? 
+  email String @unique 
+  hashedPassword String  
+  role UserRole    
+  full_priveleges Boolean @default(false)
+
+}
+
+model UserPreAssessmentSubmission {
+  id                  String   @id @default(cuid())
+  userProfileId       String
+  preAssessmentFormId String
+
+  submittedAt         DateTime @default(now())
+  status              String?  // "COMPLETED", "IN_PROGRESS", etc.
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // History relation (profile -> many submissions)
+  userProfile UserProfile @relation("ProfilePreAssessmentSubmissions",fields: [userProfileId],references: [id])
+
+  // Back-reference for the "latest" pointer
+  // NOTE: no fields[]/references[] here because the FK
+  // lives on UserProfile.latestPreAssessmentSubmissionId
+  profileWhereLatest UserProfile? @relation("LatestPreAssessmentSubmission")
+
+  form    PreAssessmentForm       @relation(fields: [preAssessmentFormId], references: [id])
+  answers UserPreAssessmentAnswer[]
+
+  @@index([userProfileId])
+  @@index([preAssessmentFormId])
+  // @@unique([userProfileId, preAssessmentFormId]) // optional constraint
+}
+
+model UserPreAssessmentAnswer {
+  id           String   @id @default(cuid())
+  submissionId String
+  questionId   String
+
+  // Store the raw answer as JSON so it can handle:
+  // - text:       "Alcohol"
+  // - number:     7
+  // - boolean:    true
+  // - single:     "INPATIENT"
+  // - multi:      ["DEPRESSION", "ANXIETY"]
+  value        Json
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  submission   UserPreAssessmentSubmission @relation(fields: [submissionId], references: [id])
+  question     PreAssessmentFormQuestion   @relation(fields: [questionId], references: [id])
+
+  @@index([submissionId])
+  @@index([questionId])
+  @@unique([submissionId, questionId]) // one answer per question in that submission
+}
+
+// ------------------------------ 
+// User Models 
+// ---------------------------------------  
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  name           String?
+  hashedPassword String 
+
+  profileImageUrl String? 
+
+  // auth / status flags
+  emailVerifiedAt DateTime?
+  isActive        Boolean  @default(true)    
+
+  role UserRole @default(USER) 
+
+  
+
+
+
+
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  lastLoginAt    DateTime?
+
+  profile        UserProfile?
+  sessions       UserSession[]
+
+  savedRehabOrgs     UserSavedRehabOrg[]
+  savedRehabCampuses UserSavedRehabCampus[]
+  savedRehabPrograms UserSavedRehabProgram[] 
+ 
+ insuranceProfiles UserInsuranceProfile[] 
+
+  
+}  
+
+model UserInsuranceProfile {
+  id              String   @id @default(cuid())
+
+  // ownership
+  userId          String
+  insurancePayerId String
+
+  // optional: which rehab context this profile is associated with
+  rehabOrgId      String?
+  rehabCampusId   String?
+  rehabProgramId  String?
+
+  // core identity from the card
+  memberId        String
+  groupNumber     String?
+  planName        String?
+
+  // privacy-friendly fingerprint for dedupe
+  cardHash        String?   // e.g. SHA-256 of normalized card image
+
+  // eligibility / verification
+  eligibilityStatus      InsuranceEligibilityStatus @default(PENDING)
+  eligibilityCheckedAt   DateTime?
+  eligibilityReferenceId String? // ID from clearinghouse / payer API
+  eligibilityNotes       String?
+
+  // optional: only if you choose to actually keep images
+  frontImageKey    String? // e.g. "insurance-cards/{userId}/front-<uuid>.jpg"
+  backImageKey     String?
+
+  isPrimary        Boolean  @default(true)   // current “main” insurance for this user
+  isActive         Boolean  @default(true)   // soft-delete / historical tracking
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt 
+
+  pVerifyApprovalRun Json? // THe pverify run 
+
+  // ─── Relations ──────────────────────────────────────────────────────
+
+  user           User           @relation(fields: [userId], references: [id])
+  insurancePayer InsurancePayer @relation(fields: [insurancePayerId], references: [id])
+
+  rehabOrg       RehabOrg?      @relation(fields: [rehabOrgId], references: [id])
+
+
+  @@index([userId])
+  @@index([insurancePayerId])
+  @@index([rehabOrgId])
+  @@index([userId, isActive, isPrimary])
+}
+
+
+
+model UserSession {
+  id              String   @id @default(cuid())
+  userId          String
+
+  // Store hashed refresh tokens here, *not* raw tokens
+  refreshTokenHash String
+
+  userAgent       String?
+  ipAddress       String?
+
+  // Token lifecycle
+  expiresAt       DateTime
+  revokedAt       DateTime?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([refreshTokenHash])
+}
+
+// ------------------------------------------------------
+// User Profiles & Pre-Assessment
+// ------------------------------------------------------
+
+model UserProfile {
+  id      String @id @default(cuid())
+  userId  String @unique
+
+  // --- existing profile fields (name, phone, location, etc.) ---
+  firstName   String?
+  lastName    String?
+  phone       String?
+  preferredContactMethod String?
+  city        String?
+  state       String?
+  postalCode  String?
+  country     String?
+  dateOfBirth    DateTime?
+  genderIdentity String?
+  pronouns       String?
+
+  // High-level clinical flags
+  primaryConcern          String?
+  hasCoOccurringDisorders Boolean?
+  priorTreatmentHistory   String?
+
+  // Link to "main" form & submission if you want quick access
+  latestPreAssessmentSubmissionId String? @unique 
+
+
+  // This is the "latest" pointer
+  latestPreAssessmentSubmission UserPreAssessmentSubmission? @relation("LatestPreAssessmentSubmission",fields: [latestPreAssessmentSubmissionId],references: [id])
+
+  // This is the full history list
+  preAssessmentSubmissions UserPreAssessmentSubmission[] @relation("ProfilePreAssessmentSubmissions")
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user       User   @relation(fields: [userId], references: [id])
+}
+
+// ------------------------------------------------------
+// Saved rehabs (user favorites / shortlist)
+// ------------------------------------------------------
+
+model UserSavedRehabOrg {
+  userId    String
+  rehabOrgId String
+
+  savedAt   DateTime @default(now())
+  notes     String?
+
+  user      User    @relation(fields: [userId], references: [id])
+  rehabOrg  RehabOrg @relation(fields: [rehabOrgId], references: [id])
+
+  @@id([userId, rehabOrgId])
+  @@index([rehabOrgId])
+}
+
+model UserSavedRehabCampus {
+  userId      String
+  rehabCampusId String
+
+  savedAt     DateTime @default(now())
+  notes       String?
+
+  user        User       @relation(fields: [userId], references: [id])
+  rehabCampus RehabCampus @relation(fields: [rehabCampusId], references: [id])
+
+  @@id([userId, rehabCampusId])
+  @@index([rehabCampusId])
+}
+
+model UserSavedRehabProgram {
+  userId      String
+  rehabProgramId String
+
+  savedAt     DateTime @default(now())
+  notes       String?
+
+  user        User        @relation(fields: [userId], references: [id])
+  rehabProgram RehabProgram @relation(fields: [rehabProgramId], references: [id])
+
+  @@id([userId, rehabProgramId])
+  @@index([rehabProgramId])
+}
+
+
 
 // ------------------------------------------------------
 // Top-level org hierarchy
@@ -127,7 +478,10 @@ model ParentCompany {
   websiteUrl          String?
   description         String?
 
-  verifiedExists      Boolean  @default(false)
+  verifiedExists      Boolean  @default(false) 
+
+  heroImageUrl      String?  
+  galleryImageUrls   String[]
 
   headquartersStreet   String?
   headquartersCity     String?
@@ -197,7 +551,12 @@ model SocialMediaProfile {
 
 // ------------------------------------------------------
 // RehabOrg (brand-level org)
-// ------------------------------------------------------
+// ------------------------------------------------------  
+
+
+
+
+
 
 model RehabOrg {
   id              String   @id @default(cuid())
@@ -214,7 +573,9 @@ model RehabOrg {
   npi_number       String?  // NPI-2 where available
 
   description     String?
-  tagline         String?
+  tagline         String? 
+  heroImageUrl    String? 
+  galleryImageUrls String[]
 
   websiteUrl      String?
   mainPhone       String?
@@ -263,7 +624,11 @@ model RehabOrg {
 
   // Media
   youtubeChannels      YoutubeChannel[]
-  socialMediaProfiles  SocialMediaProfile[]
+  socialMediaProfiles  SocialMediaProfile[] 
+
+  savedByUsers UserSavedRehabOrg[] 
+
+  userInsuranceProfile UserInsuranceProfile[]
 }
 
 // ------------------------------------------------------
@@ -277,7 +642,10 @@ model RehabCampus {
   name                   String
   slug                   String   @unique
   displayName            String?
-  description            String?
+  description            String? 
+
+  heroImageUrl    String? 
+  galleryImageUrls String[]
 
   street                 String
   city                   String
@@ -331,10 +699,10 @@ model RehabCampus {
   campusTestimonials    CampusTestimonial[]
   campusStories         CampusStory[]
 
-  insurancePayers       RehabInsurancePayer[]
-  paymentOptions        RehabPaymentOption[]
 
-  socialMediaProfiles   SocialMediaProfile[]
+  socialMediaProfiles   SocialMediaProfile[] 
+
+  savedByUsers          UserSavedRehabCampus[]
 
   @@index([rehabOrgId])
 }
@@ -351,7 +719,10 @@ model RehabProgram {
   name                  String   @unique 
   slug                  String   @unique
   shortName             String?
-  description           String?
+  description           String? 
+
+    heroImageUrl    String? 
+  galleryImageUrls String[]
 
   targetPopulationSummary String?
   clinicalFocusSummary    String?
@@ -400,8 +771,9 @@ model RehabProgram {
   programTestimonials     ProgramTestimonial[]
   programStories          ProgramStory[]
 
-  insurancePayers         RehabInsurancePayer[]
-  paymentOptions          RehabPaymentOption[]
+
+
+  savedByUsers             UserSavedRehabProgram[]
 
   @@index([campusId])
   @@index([levelOfCareId])
@@ -557,14 +929,16 @@ model InsurancePayer {
   id          String @id @default(cuid())   
   companyName String @unique 
   slug        String @unique       // "aetna", "bcbs", ...
-  displayName String @unique 
+  displayName String @unique  
+  logoImageUrl String?
   description String?
 
   payerType   String?       
            // "commercial", "medicare", "medicaid", etc.
 
 
-  rehabs      RehabInsurancePayer[]
+  rehabs      RehabInsurancePayer[] 
+  users UserInsuranceProfile[]
 }
 
 model Substance {
@@ -869,8 +1243,6 @@ model RehabInsurancePayer {
   updatedAt DateTime @updatedAt
 
   rehab          RehabOrg      @relation(fields: [rehabId], references: [id])
-  campus         RehabCampus?  @relation(fields: [campusId], references: [id])
-  program        RehabProgram? @relation(fields: [programId], references: [id])
   insurancePayer InsurancePayer @relation(fields: [insurancePayerId], references: [id])
 
   @@index([rehabId])
@@ -893,8 +1265,6 @@ model RehabPaymentOption {
   updatedAt         DateTime @updatedAt
 
   rehab             RehabOrg      @relation(fields: [rehabId], references: [id])
-  campus            RehabCampus?  @relation(fields: [campusId], references: [id])
-  program           RehabProgram? @relation(fields: [programId], references: [id])
   paymentOption     PaymentOption @relation(fields: [paymentOptionId], references: [id])
 
   @@index([rehabId])
@@ -1121,6 +1491,38 @@ model ProgramStory {
 }
 
 
+enum MediaOwnerType {
+  REHAB_ORG
+  REHAB_CAMPUS
+  REHAB_PROGRAM
+  INSURANCE_PAYER 
+  PARENT_COMPANY 
+  USER  
 
+}
 
+enum MediaKind {
+  IMAGE
+  VIDEO
+}
 
+model MediaAsset {
+  id         String        @id @default(cuid())
+  ownerType  MediaOwnerType
+  ownerId    String        // id of RehabOrg / RehabCampus / RehabProgram / InsurancePayer
+  kind       MediaKind     @default(IMAGE)
+
+  role       String?       // "hero", "logo", "gallery", "floorplan", etc.
+  bucketKey  String        // e.g. "rehab-orgs/{id}/gallery/abc123.jpg"
+  cdnUrl     String        // fully resolved CDN URL
+
+  altText    String?
+  caption    String?
+  sortOrder  Int           @default(0)
+  isPrimary  Boolean       @default(false)
+
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@index([ownerType, ownerId])
+}

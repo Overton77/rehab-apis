@@ -11,8 +11,6 @@ import {
   SettingStyleConnectOrCreateInput,
   LuxuryTierConnectOrCreateInput,
   SocialMediaProfileConnectOrCreateInput,
-  RehabInsurancePayerConnectOrCreateInput,
-  RehabPaymentOptionConnectOrCreateInput,
 } from './rehab-org-create.input';
 
 import {
@@ -153,14 +151,4 @@ export class UpsertRehabCampusInput {
     nullable: true,
   })
   socialMediaProfiles?: SocialMediaProfileConnectOrCreateInput[];
-
-  @Field(() => [RehabInsurancePayerConnectOrCreateInput], {
-    nullable: true,
-  })
-  insurancePayers?: RehabInsurancePayerConnectOrCreateInput[];
-
-  @Field(() => [RehabPaymentOptionConnectOrCreateInput], {
-    nullable: true,
-  })
-  paymentOptions?: RehabPaymentOptionConnectOrCreateInput[];
 }

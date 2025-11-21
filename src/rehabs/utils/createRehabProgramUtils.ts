@@ -1,51 +1,9 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
-import { PrismaService } from '../../prisma.service';
-import { UpsertRehabProgramInput } from '../rehab-program.upsert.inputs';
-import { UpsertRehabCampusInput } from '../rehab-campus.upsert.inputs';
-import { UpsertRehabOrgInput } from '../rehab-org.upsert.inputs';
-import {
-  NetworkStatus,
-  InsuranceScope,
-  LevelOfCareType,
-  RehabOrg as RehabOrgModel,
-  RehabCampus as RehabCampusModel,
-  RehabProgram as RehabProgramModel,
-  ParentCompany as ParentCompanyModel,
-  InsurancePayer as InsurancePayerModel,
-  LevelOfCare as LevelOfCareModel,
-  DetoxService as DetoxServiceModel,
-  MATType as MATTypeModel,
-  Service as ServiceModel,
-  Population as PopulationModel,
-  Accreditation as AccreditationModel,
-  Language as LanguageModel,
-  Amenity as AmenityModel,
-  Environment as EnvironmentModel,
-  SettingStyle as SettingStyleModel,
-  LuxuryTier as LuxuryTierModel,
-  ProgramFeature as ProgramFeatureModel,
-  PaymentOption as PaymentOptionModel,
-  Substance as SubstanceModel,
-} from 'prisma/generated/client';
+import { RehabProgram as RehabProgramModel } from 'prisma/generated/client';
 
 import type { Prisma } from 'prisma/generated/client';
 import { PrismaClient } from 'prisma/generated/internal/class';
-import {
-  RehabProgramFilterInput,
-  RehabCampusFilterInput,
-  RehabOrgFilterInput,
-  StringFilter,
-  IntRangeFilter,
-  FloatRangeFilter,
-} from '../rehab-filters.input';
 
-import { CreateRehabOrgInput } from '../rehab-org-create.input';
-import {
-  CreateRehabCampusInput,
-  CreateRehabProgramInput,
-} from '../rehab-program-create.input';
+import { CreateRehabProgramInput } from '../rehab-program-create.input';
 
 import { humanizeSlug } from './general';
 
@@ -68,8 +26,7 @@ export async function createRehabProgram(
     reviews,
     testimonials,
     stories,
-    insurancePayers,
-    paymentOptions,
+
     ...programCore
   } = data;
 
@@ -92,7 +49,8 @@ export async function createRehabProgram(
     throw new Error('Campus or parent rehabOrg not found');
   }
 
-  const rehabConnect = { id: campusRow.rehabOrg.id };
+  // const rehabConnect = { id: campusRow.rehabOrg.id };
+  // RehabId is connected to incoming campus.
 
   // ---- explicit Prisma data ----
   const prismaData: Prisma.RehabProgramCreateInput = {
@@ -293,71 +251,8 @@ export async function createRehabProgram(
       : undefined,
 
     // -------- insurance (join requires rehab + program; attach campus) --------
-    insurancePayers: insurancePayers?.length
-      ? {
-          create: insurancePayers.map((payer) => ({
-            scope: payer.scope ?? InsuranceScope.PROGRAM,
-            networkStatus: payer.networkStatus ?? NetworkStatus.UNKNOWN,
-            averageAdmissionPrice: payer.averageAdmissionPrice ?? null,
-            estimatedPatientOopMin: payer.estimatedPatientOopMin ?? null,
-            estimatedPatientOopMax: payer.estimatedPatientOopMax ?? null,
-            requiresPreauth: payer.requiresPreauth ?? null,
-            acceptsOutOfNetworkWithOopCap:
-              payer.acceptsOutOfNetworkWithOopCap ?? null,
-            notes: payer.notes ?? null,
-            overview: payer.overview ?? null,
-
-            rehab: { connect: rehabConnect },
-            campus: { connect: campusConnect },
-
-            insurancePayer: {
-              connectOrCreate: {
-                where: { slug: payer.insurancePayer.slug! },
-                create: {
-                  slug: payer.insurancePayer.slug!,
-                  displayName:
-                    payer.insurancePayer.displayName ??
-                    humanizeSlug(payer.insurancePayer.slug!),
-                  ...(payer.insurancePayer.companyName && {
-                    companyName: payer.insurancePayer.companyName,
-                  }),
-                  ...(payer.insurancePayer.description && {
-                    description: payer.insurancePayer.description,
-                  }),
-                  ...(payer.insurancePayer.payerType && {
-                    payerType: payer.insurancePayer.payerType,
-                  }),
-                },
-              },
-            },
-          })),
-        }
-      : undefined,
 
     // -------- payment options (join requires rehab + program; attach campus) --------
-    paymentOptions: paymentOptions?.length
-      ? {
-          create: paymentOptions.map((po) => ({
-            descriptionOverride: po.descriptionOverride ?? null,
-            rehab: { connect: rehabConnect },
-            campus: { connect: campusConnect },
-            paymentOption: {
-              connectOrCreate: {
-                where: { slug: po.paymentOption.slug! },
-                create: {
-                  slug: po.paymentOption.slug!,
-                  displayName:
-                    po.paymentOption.displayName ??
-                    humanizeSlug(po.paymentOption.slug!),
-                  ...(po.paymentOption.description && {
-                    description: po.paymentOption.description,
-                  }),
-                },
-              },
-            },
-          })),
-        }
-      : undefined,
   };
   const rehabProgram = await prisma.rehabProgram.create({
     data: prismaData,
@@ -375,8 +270,6 @@ export async function createRehabProgram(
       programReviews: true,
       programTestimonials: true,
       programStories: true,
-      insurancePayers: { include: { insurancePayer: true } },
-      paymentOptions: { include: { paymentOption: true } },
     },
   });
 

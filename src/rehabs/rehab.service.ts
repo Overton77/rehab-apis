@@ -32,6 +32,12 @@ import {
   RehabCampusFilterInput,
   RehabOrgFilterInput,
 } from './rehab-filters.input';
+import {
+  bumpListTag,
+  REHAB_CAMPUS_LIST_TAG_KEY,
+  REHAB_ORG_LIST_TAG_KEY,
+  REHAB_PROGRAM_LIST_TAG_KEY,
+} from './utils/cache/rehab-cache.util';
 
 import { upsertRehabCampusesWithConnectOrCreate } from './utils/upsertRehabCampusUtils';
 
@@ -161,6 +167,10 @@ export class RehabService {
       input,
     );
 
+    if (this.cacheManager) {
+      await bumpListTag(this.cacheManager, REHAB_ORG_LIST_TAG_KEY);
+    }
+
     return rehabOrg;
   }
 
@@ -171,6 +181,10 @@ export class RehabService {
       this.prisma,
       data,
     );
+
+    if (this.cacheManager) {
+      await bumpListTag(this.cacheManager, REHAB_CAMPUS_LIST_TAG_KEY);
+    }
 
     return rehabCampus;
   }
@@ -186,6 +200,10 @@ export class RehabService {
       data,
     );
 
+    if (this.cacheManager) {
+      await bumpListTag(this.cacheManager, REHAB_PROGRAM_LIST_TAG_KEY);
+    }
+
     return rehabProgram;
   }
 
@@ -199,7 +217,6 @@ export class RehabService {
       this.prisma,
       { ...rest },
       this.cacheManager,
-      (prefix, ...parts) => this.getCacheKey(prefix, ...parts),
       this.CACHE_TTL_RELATIONS,
     );
     const rehabOrgs = all.slice(skip, skip + take);
@@ -215,7 +232,6 @@ export class RehabService {
       this.prisma,
       { ...rest },
       this.cacheManager,
-      (prefix, ...parts) => this.getCacheKey(prefix, ...parts),
       this.CACHE_TTL_RELATIONS,
     );
 
@@ -232,7 +248,6 @@ export class RehabService {
       this.prisma,
       { ...rest },
       this.cacheManager,
-      (prefix, ...parts) => this.getCacheKey(prefix, ...parts),
       this.CACHE_TTL_RELATIONS,
     );
 
@@ -245,6 +260,10 @@ export class RehabService {
   ): Promise<RehabCampusModel> {
     const rehabCampus = await createRehabCampus(this.prisma, data);
 
+    if (this.cacheManager) {
+      await bumpListTag(this.cacheManager, REHAB_CAMPUS_LIST_TAG_KEY);
+    }
+
     return rehabCampus;
   }
 
@@ -253,6 +272,10 @@ export class RehabService {
   ): Promise<RehabProgramModel> {
     const rehabProgram = await createRehabProgram(this.prisma, data);
 
+    if (this.cacheManager) {
+      await bumpListTag(this.cacheManager, REHAB_PROGRAM_LIST_TAG_KEY);
+    }
+
     return rehabProgram;
   }
 
@@ -260,6 +283,9 @@ export class RehabService {
     data: CreateRehabOrgInput,
   ): Promise<RehabOrgModel> {
     const rehabOrg = await createRehabOrg(this.prisma, data);
+    if (this.cacheManager) {
+      await bumpListTag(this.cacheManager, REHAB_ORG_LIST_TAG_KEY);
+    }
 
     return rehabOrg;
   }
@@ -269,10 +295,20 @@ export class RehabService {
       throw new Error('Missing ID for this route');
     }
 
+    const cacheKey = this.getCacheKey('rehab', id);
+
+    const cached = await this.cacheManager.get(cacheKey);
+
+    if (cached) {
+      return cached as RehabOrgModel;
+    }
+
     const rehabOrg = await this.prisma.rehabOrg.findUniqueOrThrow({
       where: { id },
       include: this.INCLUDE_RELATIONS_REHAB_ORG,
     });
+
+    this.cacheManager.set(cacheKey, rehabOrg, 120);
 
     return rehabOrg;
   }
@@ -330,6 +366,10 @@ export class RehabService {
 
     await this.prisma.rehabOrg.delete({ where: { id } });
 
+    if (this.cacheManager) {
+      await bumpListTag(this.cacheManager, REHAB_ORG_LIST_TAG_KEY);
+    }
+
     return { id };
   }
 
@@ -341,6 +381,10 @@ export class RehabService {
 
     if (!rehabCampus) {
       return null;
+    }
+
+    if (this.cacheManager) {
+      await bumpListTag(this.cacheManager, REHAB_CAMPUS_LIST_TAG_KEY);
     }
 
     await this.prisma.rehabCampus.delete({ where: { id } });
@@ -356,6 +400,10 @@ export class RehabService {
 
     if (!rehabProgram) {
       return null;
+    }
+
+    if (this.cacheManager) {
+      await bumpListTag(this.cacheManager, REHAB_PROGRAM_LIST_TAG_KEY);
     }
 
     await this.prisma.rehabProgram.delete({ where: { id } });
@@ -380,14 +428,21 @@ export class RehabService {
 
   // Lookup tables and filters.
 
-  async createManyLevelOfCare(items: LevelOfCareCreateInput[]) {
+  async createManyLevelOfCare(
+    items: LevelOfCareCreateInput[],
+  ): Promise<LevelOfCareModel[]> {
     await this.prisma.levelOfCare.createMany({
       data: items,
       skipDuplicates: true,
     });
 
     const slugs = items.map((i) => i.slug);
-    return this.prisma.levelOfCare.findMany({
+
+    if (this.cacheManager) {
+      await this.cacheManager.del('all:levelsOfCare');
+    }
+
+    return await this.prisma.levelOfCare.findMany({
       where: { slug: { in: slugs } },
     });
   }

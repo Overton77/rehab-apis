@@ -20,10 +20,6 @@ import {
   ProgramTestimonialCreateInput,
 } from './rehab-program-create.input';
 
-import { RehabInsurancePayerConnectOrCreateInput } from './rehab-org-create.input';
-
-import { RehabPaymentOptionConnectOrCreateInput } from './rehab-org-create.input';
-
 // ------------------------------------------------------
 // Vocab connect-or-create inputs (Detox, Service, etc.)
 // ------------------------------------------------------
@@ -170,14 +166,4 @@ export class UpsertRehabProgramInput {
 
   @Field(() => [ProgramStoryCreateInput], { nullable: true })
   stories?: ProgramStoryCreateInput[];
-
-  @Field(() => [RehabInsurancePayerConnectOrCreateInput], {
-    nullable: true,
-  })
-  insurancePayers?: RehabInsurancePayerConnectOrCreateInput[];
-
-  @Field(() => [RehabPaymentOptionConnectOrCreateInput], {
-    nullable: true,
-  })
-  paymentOptions?: RehabPaymentOptionConnectOrCreateInput[];
 }

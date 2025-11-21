@@ -156,6 +156,9 @@ export class ParentCompany {
   websiteUrl?: string;
 
   @Field({ nullable: true })
+  heroImageUrl?: string;
+
+  @Field({ nullable: true })
   description?: string;
 
   @Field()
@@ -215,6 +218,12 @@ export class RehabOrg {
 
   @Field({ nullable: true })
   country?: string;
+
+  @Field({ nullable: true })
+  heroImageUrl?: string;
+
+  @Field({ nullable: true })
+  galleryImageUrls?: string[];
 
   @Field()
   name!: string;
@@ -360,6 +369,12 @@ export class RehabCampus {
   displayName?: string;
 
   @Field({ nullable: true })
+  heroImageUrl?: string;
+
+  @Field({ nullable: true })
+  galleryImageUrls?: string[];
+
+  @Field({ nullable: true })
   description?: string;
 
   @Field()
@@ -478,12 +493,6 @@ export class RehabCampus {
   @Field(() => [CampusStory], { nullable: true })
   campusStories?: CampusStory[];
 
-  @Field(() => [RehabInsurancePayer], { nullable: true })
-  insurancePayers?: RehabInsurancePayer[];
-
-  @Field(() => [RehabPaymentOption], { nullable: true })
-  paymentOptions?: RehabPaymentOption[];
-
   @Field(() => [SocialMediaProfile], { nullable: true })
   socialMediaProfiles?: SocialMediaProfile[];
 }
@@ -514,6 +523,12 @@ export class RehabProgram {
 
   @Field({ nullable: true })
   description?: string;
+
+  @Field({ nullable: true })
+  heroImageUrl?: string;
+
+  @Field({ nullable: true })
+  galleryImageUrls?: string[];
 
   @Field({ nullable: true })
   targetPopulationSummary?: string;
@@ -618,10 +633,4 @@ export class RehabProgram {
 
   @Field(() => [ProgramStory], { nullable: true })
   programStories?: ProgramStory[];
-
-  @Field(() => [RehabInsurancePayer], { nullable: true })
-  insurancePayers?: RehabInsurancePayer[];
-
-  @Field(() => [RehabPaymentOption], { nullable: true })
-  paymentOptions?: RehabPaymentOption[];
 }

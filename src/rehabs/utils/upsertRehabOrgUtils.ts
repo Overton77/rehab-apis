@@ -1,54 +1,8 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
-import { PrismaService } from '../../prisma.service';
-import { UpsertRehabProgramInput } from '../rehab-program.upsert.inputs';
-import { UpsertRehabCampusInput } from '../rehab-campus.upsert.inputs';
 import { UpsertRehabOrgInput } from '../rehab-org.upsert.inputs';
-import {
-  NetworkStatus,
-  InsuranceScope,
-  LevelOfCareType,
-  RehabOrg as RehabOrgModel,
-  RehabCampus as RehabCampusModel,
-  RehabProgram as RehabProgramModel,
-  ParentCompany as ParentCompanyModel,
-  InsurancePayer as InsurancePayerModel,
-  LevelOfCare as LevelOfCareModel,
-  DetoxService as DetoxServiceModel,
-  MATType as MATTypeModel,
-  Service as ServiceModel,
-  Population as PopulationModel,
-  Accreditation as AccreditationModel,
-  Language as LanguageModel,
-  Amenity as AmenityModel,
-  Environment as EnvironmentModel,
-  SettingStyle as SettingStyleModel,
-  LuxuryTier as LuxuryTierModel,
-  ProgramFeature as ProgramFeatureModel,
-  PaymentOption as PaymentOptionModel,
-  Substance as SubstanceModel,
-} from 'prisma/generated/client';
+import { RehabOrg as RehabOrgModel } from 'prisma/generated/client';
 
 import type { Prisma } from 'prisma/generated/client';
 import { PrismaClient } from 'prisma/generated/internal/class';
-import {
-  RehabProgramFilterInput,
-  RehabCampusFilterInput,
-  RehabOrgFilterInput,
-  StringFilter,
-  IntRangeFilter,
-  FloatRangeFilter,
-} from '../rehab-filters.input';
-
-import { CreateRehabOrgInput } from '../rehab-org-create.input';
-import {
-  CreateRehabCampusInput,
-  CreateRehabProgramInput,
-} from '../rehab-program-create.input';
-function humanizeSlug(s: string) {
-  return s.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-}
 
 export async function upsertRehabOrgsWithConnectOrCreate(
   prisma: PrismaClient,
@@ -548,7 +502,7 @@ export async function upsertRehabOrgsWithConnectOrCreate(
   const nested = buildNested();
 
   // Core scalar fields (no Prisma type here; plain object)
-  const core = {
+  const coreBase = {
     ...(rehabCore.state !== undefined && { state: rehabCore.state }),
     ...(rehabCore.city !== undefined && { city: rehabCore.city }),
     ...(rehabCore.zip !== undefined && { zip: rehabCore.zip }),
@@ -558,6 +512,10 @@ export async function upsertRehabOrgsWithConnectOrCreate(
     ...(rehabCore.legalName !== undefined && {
       legalName: rehabCore.legalName,
     }),
+    ...(rehabCore.heroImageUrl !== undefined && {
+      heroImageUrl: rehabCore.heroImageUrl,
+    }),
+
     ...(rehabCore.npi_number !== undefined && {
       npi_number: rehabCore.npi_number,
     }),
@@ -600,20 +558,36 @@ export async function upsertRehabOrgsWithConnectOrCreate(
     }),
   };
 
-  const createData = {
-    ...core,
+  const createData: Prisma.RehabOrgCreateInput = {
+    ...coreBase,
+    ...(rehabCore.galleryImageUrls?.length
+      ? {
+          // On CREATE: just set the list
+          galleryImageUrls: {
+            set: rehabCore.galleryImageUrls,
+          },
+        }
+      : {}),
     ...nested,
   };
 
-  const updateData = {
-    ...core,
+  const updateData: Prisma.RehabOrgUpdateInput = {
+    ...coreBase,
+    ...(rehabCore.galleryImageUrls?.length
+      ? {
+          // On UPDATE: push onto the existing list
+          galleryImageUrls: {
+            push: rehabCore.galleryImageUrls,
+          },
+        }
+      : {}),
     ...nested,
   };
 
   const rehabOrg = await prisma.rehabOrg.upsert({
     where: { id },
-    create: createData as Prisma.RehabOrgCreateInput,
-    update: updateData as Prisma.RehabOrgUpdateInput,
+    create: createData,
+    update: updateData,
   });
 
   return rehabOrg;

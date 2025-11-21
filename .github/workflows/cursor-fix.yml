@@ -42,26 +42,44 @@ jobs:
                   curl https://cursor.com/install -fsS | bash
                   echo "$HOME/.cursor/bin" >> $GITHUB_PATH
 
-            - name: Load fix instructions
+            - name: Load fix instructions (with issue/PR body)
               id: load-instructions
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # for gh auth
               run: |
-                  # Get the issue or PR number from the event
-                  if [ "${{ github.event_name }}" == "issue_comment" ]; then
-                    ISSUE_NUMBER="${{ github.event.issue.number }}"
+                  # Determine whether this was triggered from an issue comment or PR review comment
+                  if [ "${{ github.event_name }}" = "issue_comment" ]; then
+                    ITEM_NUMBER="${{ github.event.issue.number }}"
+                    ITEM_KIND="issue"
                   else
-                    ISSUE_NUMBER="${{ github.event.pull_request.number }}"
+                    ITEM_NUMBER="${{ github.event.pull_request.number }}"
+                    ITEM_KIND="pull_request"
+                  fi
+
+                  # Fetch the full issue/PR body using GitHub CLI
+                  if [ "$ITEM_KIND" = "issue" ]; then
+                    ITEM_TEXT=$(gh issue view "$ITEM_NUMBER" --json title,body,number -q '"# " + .title + "\n\n" + .body' || echo "UNAVAILABLE")
+                  else
+                    ITEM_TEXT=$(gh pr view "$ITEM_NUMBER" --json title,body,number -q '"# " + .title + "\n\n" + .body' || echo "UNAVAILABLE")
                   fi
 
                   # Read the template and replace placeholders
                   INSTRUCTIONS=$(cat .github/issue_fix_prompt.md | sed 's/{AI_ASSISTANT}/cursor/g')
 
-                  # Prepend context
+                  # Build the full prompt file
                   echo "# GitHub Context" > /tmp/cursor_fix_prompt.txt
                   echo "- Repository: ${{ github.repository }}" >> /tmp/cursor_fix_prompt.txt
-                  echo "- Issue/PR Number: ${ISSUE_NUMBER}" >> /tmp/cursor_fix_prompt.txt
+                  echo "- Item Type: ${ITEM_KIND}" >> /tmp/cursor_fix_prompt.txt
+                  echo "- Issue/PR Number: ${ITEM_NUMBER}" >> /tmp/cursor_fix_prompt.txt
                   echo "- Triggered by: ${{ github.event.comment.user.login }}" >> /tmp/cursor_fix_prompt.txt
                   echo "" >> /tmp/cursor_fix_prompt.txt
-                  echo "$INSTRUCTIONS" >> /tmp/cursor_fix_prompt.txt
+
+                  echo "## Issue / PR Description" >> /tmp/cursor_fix_prompt.txt
+                  printf '%s\n' "$ITEM_TEXT" >> /tmp/cursor_fix_prompt.txt
+                  echo "" >> /tmp/cursor_fix_prompt.txt
+
+                  echo "## Fix Instructions" >> /tmp/cursor_fix_prompt.txt
+                  printf '%s\n' "$INSTRUCTIONS" >> /tmp/cursor_fix_prompt.txt
 
             - name: Run Cursor Fix
               env:

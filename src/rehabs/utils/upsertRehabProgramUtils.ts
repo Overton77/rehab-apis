@@ -69,8 +69,7 @@ export async function upsertRehabProgramsWithConnectOrCreate(
     reviews,
     testimonials,
     stories,
-    insurancePayers,
-    paymentOptions,
+
     ...programCore
   } = data;
 
@@ -130,17 +129,6 @@ export async function upsertRehabProgramsWithConnectOrCreate(
     if (!programCore.name || !programCore.slug) {
       throw new Error('name and slug are required to create a program');
     }
-  }
-
-  // If trying to attach finance edges but we don't know rehabOrg, block.
-  if (
-    !rehabConnect &&
-    ((insurancePayers && insurancePayers.length) ||
-      (paymentOptions && paymentOptions.length))
-  ) {
-    throw new Error(
-      'Cannot attach insurancePayers/paymentOptions without a parent RehabOrg',
-    );
   }
 
   // ---- nested joins block (same for create/update) ----
@@ -337,82 +325,15 @@ export async function upsertRehabProgramsWithConnectOrCreate(
       : undefined,
 
     // -------- insurance (join requires rehab & campus) --------
-    insurancePayers:
-      rehabConnect && insurancePayers?.length
-        ? {
-            create: insurancePayers.map((payer) => ({
-              scope: payer.scope ?? InsuranceScope.PROGRAM,
-              networkStatus: payer.networkStatus ?? NetworkStatus.UNKNOWN,
-              averageAdmissionPrice: payer.averageAdmissionPrice ?? null,
-              estimatedPatientOopMin: payer.estimatedPatientOopMin ?? null,
-              estimatedPatientOopMax: payer.estimatedPatientOopMax ?? null,
-              requiresPreauth: payer.requiresPreauth ?? null,
-              acceptsOutOfNetworkWithOopCap:
-                payer.acceptsOutOfNetworkWithOopCap ?? null,
-              notes: payer.notes ?? null,
-              overview: payer.overview ?? null,
-              rehab: { connect: rehabConnect! },
-              ...(campusRow && {
-                campus: { connect: { id: campusRow.id } },
-              }),
-              insurancePayer: {
-                connectOrCreate: {
-                  where: { slug: payer.insurancePayer.slug! },
-                  create: {
-                    slug: payer.insurancePayer.slug!,
-                    displayName:
-                      payer.insurancePayer.displayName ??
-                      humanizeSlug(payer.insurancePayer.slug!),
-                    ...(payer.insurancePayer.companyName && {
-                      companyName: payer.insurancePayer.companyName,
-                    }),
-                    ...(payer.insurancePayer.description && {
-                      description: payer.insurancePayer.description,
-                    }),
-                    ...(payer.insurancePayer.payerType && {
-                      payerType: payer.insurancePayer.payerType,
-                    }),
-                  },
-                },
-              },
-            })),
-          }
-        : undefined,
 
     // -------- payment options (join requires rehab & campus) --------
-    paymentOptions:
-      rehabConnect && paymentOptions?.length
-        ? {
-            create: paymentOptions.map((po) => ({
-              descriptionOverride: po.descriptionOverride ?? null,
-              rehab: { connect: rehabConnect! },
-              ...(campusRow && {
-                campus: { connect: { id: campusRow.id } },
-              }),
-              paymentOption: {
-                connectOrCreate: {
-                  where: { slug: po.paymentOption.slug! },
-                  create: {
-                    slug: po.paymentOption.slug!,
-                    displayName:
-                      po.paymentOption.displayName ??
-                      humanizeSlug(po.paymentOption.slug!),
-                    ...(po.paymentOption.description && {
-                      description: po.paymentOption.description,
-                    }),
-                  },
-                },
-              },
-            })),
-          }
-        : undefined,
   };
 
   // ---- create vs update payloads ----
   const createData = {
     ...programCore,
     campus: {
-      connect: campusRow ? { id: campusRow.id } : (campusConnect as any),
+      connect: campusRow ? { id: campusRow.id } : campusConnect,
     },
     levelOfCare: {
       connect: { slug: levelOfCareSlug! }, // validated for create
@@ -450,8 +371,6 @@ export async function upsertRehabProgramsWithConnectOrCreate(
       programReviews: true,
       programTestimonials: true,
       programStories: true,
-      insurancePayers: { include: { insurancePayer: true } },
-      paymentOptions: { include: { paymentOption: true } },
     },
   });
 
