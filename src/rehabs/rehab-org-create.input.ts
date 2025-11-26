@@ -64,6 +64,12 @@ export class RehabCampusCreateForOrgInput {
   @Field({ nullable: true })
   displayName?: string;
 
+  @Field(() => [String], { nullable: true })
+  galleryImageUrls?: string[];
+
+  @Field({ nullable: true })
+  heroImageUrl: string;
+
   @Field({ nullable: true })
   description?: string;
 
@@ -540,6 +546,12 @@ export class CreateRehabOrgInput {
 
   @Field({ nullable: true })
   legalName?: string;
+
+  @Field(() => [String], { nullable: true })
+  galleryImageUrls?: string[];
+
+  @Field({ nullable: true })
+  heroImageUrl: string;
 
   @Field({ nullable: true })
   npi_number?: string;

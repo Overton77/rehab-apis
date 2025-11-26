@@ -74,7 +74,7 @@ export class UpsertRehabOrgInput {
   @Field({ nullable: true })
   heroImageUrl?: string;
 
-  @Field({ nullable: true })
+  @Field(() => [String], { nullable: true })
   galleryImageUrls?: string[];
 
   @Field({ nullable: true })

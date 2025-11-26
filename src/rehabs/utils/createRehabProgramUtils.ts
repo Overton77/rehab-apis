@@ -58,6 +58,15 @@ export async function createRehabProgram(
 
     campus: { connect: campusConnect },
 
+    ...(programCore.heroImageUrl && {
+      heroImageUrl: programCore.heroImageUrl,
+    }),
+    ...(programCore.galleryImageUrls && {
+      galleryImageUrls: {
+        set: programCore.galleryImageUrls,
+      },
+    }),
+
     // -------- LevelOfCare (connect by slug) --------
     levelOfCare: {
       connect: { slug: levelOfCareSlug },

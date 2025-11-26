@@ -146,6 +146,7 @@ const mapRehabCampus = (
   bedsDetox: optInt(raw.bedsDetox),
   bedsResidential: optInt(raw.bedsResidential),
   bedsOutpatientCapacity: optInt(raw.bedsOutpatientCapacity),
+  heroImageUrl: optString(raw.heroImageUrl),
 
   acceptsWalkIns: optBool(raw.acceptsWalkIns),
   hasOnsiteMD: optBool(raw.hasOnsiteMD),
@@ -323,6 +324,8 @@ export function mapRehabOrgEnrichmentJsonToCreateRehabOrgInput(
 
     primarySourceUrl: optString(raw.primarySourceUrl),
     otherSourceUrls: asArray(raw.otherSourceUrls),
+    heroImageUrl: optString(raw.heroImageUrl),
+    galleryImageUrls: asArray(raw.galleryImageUrls),
 
     baseCurrency: optString(raw.baseCurrency),
     fullPrivatePrice: optInt(raw.fullPrivatePrice),

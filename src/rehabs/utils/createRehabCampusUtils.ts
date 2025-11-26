@@ -49,13 +49,22 @@ export async function createRehabCampus(
     throw new Error('RehabOrg not found');
   }
 
-  const rehabConnect = { id: orgRow.id };
+  // const rehabConnect = { id: orgRow.id };
 
   // ---- explicit Prisma data ----
   const prismaData: Prisma.RehabCampusCreateInput = {
     ...campusCore,
 
     rehabOrg: { connect: orgConnect },
+
+    ...(campusCore.heroImageUrl && {
+      heroImageUrl: campusCore.heroImageUrl,
+    }),
+    ...(campusCore.galleryImageUrls && {
+      galleryImageUrls: {
+        set: campusCore.galleryImageUrls,
+      },
+    }),
 
     // -------- Primary aesthetic descriptors --------
     ...(primaryEnvironmentSlug && {

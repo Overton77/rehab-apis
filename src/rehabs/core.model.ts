@@ -222,7 +222,7 @@ export class RehabOrg {
   @Field({ nullable: true })
   heroImageUrl?: string;
 
-  @Field({ nullable: true })
+  @Field(() => [String], { nullable: true })
   galleryImageUrls?: string[];
 
   @Field()
@@ -371,7 +371,7 @@ export class RehabCampus {
   @Field({ nullable: true })
   heroImageUrl?: string;
 
-  @Field({ nullable: true })
+  @Field(() => [String], { nullable: true })
   galleryImageUrls?: string[];
 
   @Field({ nullable: true })
@@ -527,7 +527,7 @@ export class RehabProgram {
   @Field({ nullable: true })
   heroImageUrl?: string;
 
-  @Field({ nullable: true })
+  @Field(() => [String], { nullable: true })
   galleryImageUrls?: string[];
 
   @Field({ nullable: true })

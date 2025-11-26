@@ -248,6 +248,12 @@ export class CreateRehabCampusInput {
   @Field({ nullable: true })
   description?: string;
 
+  @Field(() => [String], { nullable: true })
+  galleryImageUrls?: string[];
+
+  @Field({ nullable: true })
+  heroImageUrl: string;
+
   @Field()
   street!: string;
 
@@ -383,6 +389,12 @@ export class CreateRehabProgramInput {
 
   @Field({ nullable: true })
   shortName?: string;
+
+  @Field(() => [String], { nullable: true })
+  galleryImageUrls?: string[];
+
+  @Field({ nullable: true })
+  heroImageUrl: string;
 
   @Field({ nullable: true })
   description?: string;

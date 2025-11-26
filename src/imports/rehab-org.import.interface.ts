@@ -39,6 +39,8 @@ export interface RehabCampusCreateForOrgJSON {
   state: string;
   postalCode: string;
   country: string;
+  heroImageUrl?: string;
+  galleryImageUrls?: string[];
 
   latitude?: number;
   longitude?: number;
@@ -258,6 +260,9 @@ export interface RehabOrgEnrichmentJSON {
 
   primarySourceUrl?: string;
   otherSourceUrls?: string[];
+
+  heroImageUrl?: string;
+  galleryImageUrls?: string[];
 
   baseCurrency?: string;
   fullPrivatePrice?: number;

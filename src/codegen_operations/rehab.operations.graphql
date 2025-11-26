@@ -57,10 +57,6 @@ mutation CreateRehabOrgWithConnectOrCreate($data: CreateRehabOrgInput!) {
     websiteUrl
     tagline
     fullPrivatePrice
-    parentCompany {
-      name
-      id
-    }
   }
 }
 

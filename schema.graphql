@@ -163,8 +163,10 @@ input CreateRehabCampusInput {
   displayName: String
   email: String
   environments: [EnvironmentConnectOrCreateInput!]
+  galleryImageUrls: [String!]
   hasOnsiteMD: Boolean
   hasTwentyFourHourNursing: Boolean
+  heroImageUrl: String
   languages: [LanguageConnectOrCreateInput!]
   latitude: Float
   longitude: Float
@@ -202,6 +204,8 @@ input CreateRehabOrgInput {
   detoxServices: [DetoxServiceConnectOrCreateInput!]
   environments: [EnvironmentConnectOrCreateInput!]
   fullPrivatePrice: Int
+  galleryImageUrls: [String!]
+  heroImageUrl: String
   insurancePayers: [RehabInsurancePayerConnectOrCreateInput!]
   isNonProfit: Boolean
   languages: [LanguageConnectOrCreateInput!]
@@ -246,8 +250,10 @@ input CreateRehabProgramInput {
   description: String
   detoxServices: [DetoxServiceConnectOrCreateInput!]
   features: [ProgramFeatureGlobalConnectOrCreateInput!]
+  galleryImageUrls: [String!]
   hasOnsiteMD: Boolean
   hasTwentyFourHourNursing: Boolean
+  heroImageUrl: String
   intakeEmail: String
   intakePhone: String
   isDetoxPrimary: Boolean
@@ -643,6 +649,7 @@ type ParentCompany {
   headquartersPostalCode: String
   headquartersState: String
   headquartersStreet: String
+  heroImageUrl: String
   id: ID!
   name: String!
   rehabOrgs: [RehabOrg!]
@@ -909,8 +916,10 @@ type RehabCampus {
   directionsSummary: String
   displayName: String
   email: String
+  galleryImageUrls: [String!]
   hasOnsiteMD: Boolean
   hasTwentyFourHourNursing: Boolean
+  heroImageUrl: String
   id: ID!
   latitude: Float
   longitude: Float
@@ -959,8 +968,10 @@ input RehabCampusCreateForOrgInput {
   directionsSummary: String
   displayName: String
   email: String
+  galleryImageUrls: [String!]
   hasOnsiteMD: Boolean
   hasTwentyFourHourNursing: Boolean
+  heroImageUrl: String
   latitude: Float
   longitude: Float
   name: String!
@@ -1129,6 +1140,8 @@ type RehabOrg {
   detoxServices: [RehabDetoxService!]
   environments: [RehabEnvironment!]
   fullPrivatePrice: Int
+  galleryImageUrls: [String!]
+  heroImageUrl: String
   id: ID!
   insurancePayers: [RehabInsurancePayer!]
   isNonProfit: Boolean
@@ -1240,8 +1253,10 @@ type RehabProgram {
   clinicalFocusSummary: String
   createdAt: DateTime!
   description: String
+  galleryImageUrls: [String!]
   hasOnsiteMD: Boolean
   hasTwentyFourHourNursing: Boolean
+  heroImageUrl: String
   id: ID!
   intakeEmail: String
   intakePhone: String
@@ -1570,6 +1585,8 @@ input UpsertRehabOrgInput {
   detoxServices: [DetoxServiceConnectOrCreateInput!]
   environments: [EnvironmentConnectOrCreateInput!]
   fullPrivatePrice: Int
+  galleryImageUrls: [String!]
+  heroImageUrl: String
   id: String!
   insurancePayers: [RehabInsurancePayerConnectOrCreateInput!]
   isNonProfit: Boolean

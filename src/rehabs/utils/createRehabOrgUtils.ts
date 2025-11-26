@@ -185,6 +185,14 @@ export async function createRehabOrg(
                 ...(create.description && {
                   description: create.description,
                 }),
+                ...(create.heroImageUrl && {
+                  heroImageUrl: create.heroImageUrl,
+                }),
+                ...(create.galleryImageUrls && {
+                  galleryImageUrls: {
+                    set: create.galleryImageUrls,
+                  },
+                }),
 
                 street: create.street,
                 city: create.city,
